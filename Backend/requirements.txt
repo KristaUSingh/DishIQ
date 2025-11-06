@@ -1,0 +1,29 @@
+# === Core Framework ===
+fastapi
+uvicorn
+
+# === Data Models & Validation ===
+pydantic
+
+# === AI + Image Processing ===
+torch
+torchvision
+ftfy
+regex
+tqdm
+Pillow
+clip-anytorch
+git+https://github.com/openai/CLIP.git
+
+# === Utilities ===
+numpy
+requests
+python-multipart
+python-dotenv
+
+# === Database (if you use Supabase later) ===
+supabase
+postgrest
+
+# === Optional for local testing ===
+aiofiles
