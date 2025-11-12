@@ -1,9 +1,17 @@
 .header{
     height: 34vw;
-    margin: 30px auto;
-    background: url('/Header.jpg') no-repeat;
-    background-size: contain;
+    margin: 0 auto;
     position: relative;
+    
+
+    background-image:
+        linear-gradient(rgba(205, 232, 213, 0.3), rgba(205,232,213,0.8)),
+        url('./Header.jpg');
+    
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+
 }
 
 .header-contents{
@@ -12,21 +20,26 @@
     flex-direction: column;
     align-items: start;
     gap: 1.5vw;
-    max-width: 50%;
+    max-width: 1200px;
+    margin: 0 auto;
     bottom: 10%;
     left: 6vw;
+    right: 6vw;
     animation: fadeIn 3s;
 }
 
 .header-contents h2{
     font-weight: 500;
-    color: #f8f7f3;
+    color: #000000;
+    text-shadow: #FFFFFF 2px 4px 4px;
     font-size: max(4.5vw, 22px);
 }
 
-.header-contents{
-    color: #f8f7f3;
-    font-size: 1vw;
+.header-contents h3{
+    font-weight: 500;
+    color: #000000; 
+    text-shadow: #FFFFFF 2px 4px 4px;
+    font-size: 2vw;
 }
 
 .header-contents button{

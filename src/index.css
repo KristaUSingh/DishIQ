@@ -28,3 +28,11 @@ a{
     opacity: 1;
   }
 }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* Prevents horizontal scrollbar if elements slightly exceed width */
+    overflow-x: hidden; 
+}

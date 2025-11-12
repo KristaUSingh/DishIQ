@@ -1,9 +1,11 @@
 .navbar{
-    padding: 20px 0px;
+    padding: 20px 6vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+    background-color: #ffe59d;
+    max-width: 100 rem;
+ }
 
 .navbar .logo{
     width: 150px;
