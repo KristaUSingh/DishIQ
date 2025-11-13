@@ -1,9 +1,36 @@
-import React, { useState } from 'react'
-import './navbar.css'
-import { assets } from '../../assets/assets'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './navbar.css';
+import { assets } from '../../assets/assets';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkLogin = () => {
+      const token = localStorage.getItem('token'); 
+      setIsLoggedIn(!!token); 
+    };
+
+    checkLogin();
+
+    window.addEventListener('storage', checkLogin);
+
+    return () => window.removeEventListener('storage', checkLogin);
+  }, []);
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('role');   
+    setIsLoggedIn(false);              
+    navigate('/');                      // redirect to homepage
+  };
 
   return (
     <div className='navbar'>
@@ -21,10 +48,15 @@ const Navbar = () => {
           <img src={assets.basketIcon} alt="" />
           <div className="dot"></div>
         </div>
-        <button>Login</button>
+
+        {isLoggedIn ? (
+          <button onClick={handleLogoutClick}>Logout</button>
+        ) : (
+          <button onClick={handleLoginClick}>Login</button>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

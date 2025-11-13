@@ -9,11 +9,11 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #f0f2f5; /* light gray background */
+  background: #a3c4fa;
 }
 
 .login-card {
-  background: white;
+  background: #cde8d5;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
@@ -35,7 +35,7 @@ body {
 
 .login-card input {
   padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #cde8d5;
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease-in-out;
@@ -49,8 +49,8 @@ body {
 
 .login-card button {
   padding: 0.75rem 1rem;
-  background-color: #007bff;
-  color: white;
+  background-color: #ffe59d;
+  color: #333;
   font-weight: bold;
   border: none;
   border-radius: 8px;
