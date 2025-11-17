@@ -53,14 +53,13 @@ const Navbar = () => {
   return (
     <div className='navbar'>
       <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
+
       <ul className="navbar-menu">
-        {/* Public menu — always show */}
         <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
         <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
         <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
         <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
 
-        {/* Role-specific menu */}
         {isLoggedIn && role === "CHEF" && (
           <>
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
@@ -68,6 +67,7 @@ const Navbar = () => {
             <li onClick={() => navigate('/rating')}>Rating status</li>
           </>
         )}
+
         {isLoggedIn && role === "MANAGER" && (
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
@@ -78,6 +78,7 @@ const Navbar = () => {
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu items</li>
           </>
         )}
+
         {isLoggedIn && role === "DRIVER" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
@@ -89,10 +90,11 @@ const Navbar = () => {
 
       <div className="navbar-right">
         <img src={assets.searchIcon} alt="search" />
-        <div className="navbar-search-icon">
-          <Link to='/cart'><img src={assets.basketIcon} alt="" /></Link>
+
+        <Link to="/cart" className="navbar-search-icon">
+          <img src={assets.basketIcon} alt="cart" />
           <div className="dot"></div>
-        </div>
+        </Link>
 
         {!isLoggedIn ? (
           <button onClick={handleLoginClick}>Login</button>
