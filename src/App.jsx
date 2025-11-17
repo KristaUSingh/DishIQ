@@ -4,6 +4,7 @@ import Navbar from "./components/navbar/navbar";
 import Home from './pages/Home/Home';
 import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
+import Footer from './components/navbar/Footer/Footer';
 import Login from './pages/Login/Login';
 import ChefMenu from './pages/DashBoard/Chef/ChefMenu';
 import Feedback from './pages/DashBoard/Chef/Feedback';
@@ -14,6 +15,7 @@ import Signup from './pages/Signup/Signup';
 function App() {
   
   return (
+  <>
     <div className="app">
       <Navbar />
       <Routes>
@@ -29,7 +31,10 @@ function App() {
         <Route path='/Signup' element={<Signup/>}/>
       </Routes>
     </div>
-  );
+    <Footer />
+  </> 
+    
+  )
 }
 
 export default App;

@@ -51,8 +51,7 @@ const Navbar = () => {
 
   return (
     <div className='navbar'>
-      <img src={assets.logo} alt="logo" className="logo" />
-
+      <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
       <ul className="navbar-menu">
         {/* Public menu — always show */}
         <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
@@ -90,7 +89,7 @@ const Navbar = () => {
       <div className="navbar-right">
         <img src={assets.searchIcon} alt="search" />
         <div className="navbar-search-icon">
-          <img src={assets.basketIcon} alt="basket" />
+          <Link to='/cart'><img src={assets.basketIcon} alt="" /></Link>
           <div className="dot"></div>
         </div>
 
