@@ -3,7 +3,7 @@
 import React from "react";
 import { PermissionGate, PERMISSIONS } from "../../../roles.jsx";
 import MenuItem from "../../../components/MenuItem.jsx";
-import Rating from "../../../components/Rating.jsx";
+import Rating from "../Chef/Feedback.jsx";
 import ComplaintForm from "../../../components/ComplaintForm.jsx";
 
 const ManagerDashboard = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { PermissionGate, PERMISSIONS } from "../../../roles.jsx";
-import Rating from "../../../components/Rating.jsx";
+import Rating from "../Chef/Feedback.jsx";
 import ComplaintForm from "../../../components/ComplaintForm.jsx";
 
 const DriverDashboard = () => {

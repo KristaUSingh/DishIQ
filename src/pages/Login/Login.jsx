@@ -10,29 +10,32 @@ export default function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // 🔹 Dummy login logic
     let role = null;
 
     if (username === "chef" && password === "123") {
       role = "CHEF";
-      navigate("/ChefDashboard");
+      navigate("/chefmenu");
     } else if (username === "manager" && password === "123") {
       role = "MANAGER";
-      navigate("/ManagerDashboard");
+      navigate("/dashboard");
     } else if (username === "delivery" && password === "123") {
       role = "DRIVER";
-      navigate("/DriverDashboard");
+      navigate("/chefmenu");
+    } else if (username === "customer" && password === "123") {
+      role = "CUSTOMER";
+      navigate("/");
     } else {
       alert("Invalid credentials!");
       return;
     }
 
-    // 🔹 Save token and role to localStorage
-    localStorage.setItem("token", "dummyToken123"); // can be any string
+    localStorage.setItem("token", "dummyToken123");
     localStorage.setItem("role", role);
-
-    // 🔹 Trigger Navbar update (if listening to storage events)
     window.dispatchEvent(new Event("storage"));
+  };
+
+  const handleCreateAccount = () => {
+    navigate("/signup");
   };
 
   return (
@@ -52,8 +55,14 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button type="submit" className="login-btn">Login</button>
         </form>
+        <button 
+          className="create-account-btn" 
+          onClick={handleCreateAccount}
+        >
+          Create Account
+        </button>
       </div>
     </div>
   );
