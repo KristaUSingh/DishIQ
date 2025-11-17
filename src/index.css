@@ -34,3 +34,15 @@ body, html {
     /* Prevents horizontal scrollbar if elements slightly exceed width */
     overflow-x: hidden; 
 }
+
+/* In your global CSS file (e.g., index.css) */
+
+.main-content-wrapper {
+    /* 1. Center the content and prevent it from getting too wide on huge screens */
+    max-width: 1500px; /* Adjust this maximum width as needed */
+    margin: 0 auto;    /* Centers the div horizontally */
+    
+    /* 2. Add padding on the left and right sides */
+    /* This ensures content doesn't touch the screen edge on smaller windows */
+    padding: 0 20px; 
+}

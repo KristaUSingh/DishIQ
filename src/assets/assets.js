@@ -32,6 +32,7 @@ import add_icon_white from './add_icon_white.png'
 import remove_icon_red from './remove_icon_red.png'
 import rating_stars from './rating_stars.png'
 import cross_icon from './cross_icon.png'
+
     
 export const assets = {
     logo,
