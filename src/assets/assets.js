@@ -27,7 +27,11 @@ import citizenChickID10 from './Citizen Chicken ID10.jpg'
 import facebook_icon from './facebook_icon.png'
 import x_icon from './x_icon.png'
 import linkedin_icon from './linkedin_icon.png'
-
+import add_icon_green from './add_icon_green.png'
+import add_icon_white from './add_icon_white.png'
+import remove_icon_red from './remove_icon_red.png'
+import rating_stars from './rating_stars.png'
+import cross_icon from './cross_icon.png'
     
 export const assets = {
     logo,
@@ -59,6 +63,12 @@ export const assets = {
     facebook_icon,
     x_icon,
     linkedin_icon,
+    add_icon_green,
+    add_icon_white,
+    remove_icon_red, 
+    rating_stars,
+    cross_icon
+    
 }
 
 export const restaurant_list = [
