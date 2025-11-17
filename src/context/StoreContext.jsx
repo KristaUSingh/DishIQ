@@ -1,54 +1,59 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import { food_list } from "../assets/assets";
-import { useAsyncError } from "react-router-dom";
-export const StoreContext = createContext(null)
 
-const StoreContextProvider = (prop) => {
+export const StoreContext = createContext(null);
 
+const StoreContextProvider = (props) => {
+  const [cartItems, setCartItems] = useState({});
 
-    const[cartItems,setCartItems] = useState({});
-   
-    const addToCart = (itemId) => {
-        if(!cartItems[itemId]){
-            setCartItems((prev)=>({...prev,[itemId]:1}))
+  const addToCart = (itemId) => {
+    setCartItems((prev) => {
+      if (!prev[itemId]) {
+        return { ...prev, [itemId]: 1 };
+      }
+      return { ...prev, [itemId]: prev[itemId] + 1 };
+    });
+  };
+
+  const removeFromCart = (itemId) => {
+    setCartItems((prev) => {
+      if (!prev[itemId]) return prev;
+      return { ...prev, [itemId]: prev[itemId] - 1 };
+    });
+  };
+
+  const getTotalCartAmount = () => {
+    let totalAmount = 0;
+
+    for (const itemId in cartItems) {
+      if (cartItems[itemId] > 0) {
+        const itemInfo = food_list.find(
+          (product) => product._id === itemId
+        );
+
+        if (itemInfo) {
+          totalAmount += itemInfo.price * cartItems[itemId];
         }
-        else {
-            setCartItems((prev)=>({...prev,[itemId]:prec[itemId]+1}))
-        }
+      }
     }
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-    }
+    return totalAmount;
+  };
 
-    const getTotalCartAmount = () => {
-        let totalAmount = 0;
-        for(constitem in cartItems)
-        {
-            if(cartItems[item]>0){
-                let itemInfo = food_list.find((product)=>product._id === item)
-                totalAmount += itemInfo.price*cartItems[item];
-            }
-            
-        }
-        return totalAmount;
-    }
-    
+  const contextValue = {
+    food_list,
+    cartItems,
+    setCartItems,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+  };
 
-    const contextValue =  {
-        food_list,
-        cartItems,
-        setCartItems,
-        addToCart,
-        removeFromCart,
-        getTotalCartAmount
-   }
-
-   return (
+  return (
     <StoreContext.Provider value={contextValue}>
-        {children}
+      {props.children}
     </StoreContext.Provider>
-   )
-} 
+  );
+};
 
-export default StoreContextProvider
+export default StoreContextProvider;
