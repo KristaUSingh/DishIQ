@@ -1,18 +1,15 @@
-.header{
+.header {
     height: 34vw;
-    margin: 0 auto;
     position: relative;
-    
-
     background-image:
-        linear-gradient(rgba(205, 232, 213, 0.3), rgba(205,232,213,0.8)),
-        url('./Header.jpg');
-    
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: cover;
-
-}
+      linear-gradient(rgba(205, 232, 213, 0.3), rgba(205,232,213,0.8)),
+      url('./Header.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    margin: 0; /* remove auto centering */
+  }
+  
 
 .header-contents{
     position: absolute;

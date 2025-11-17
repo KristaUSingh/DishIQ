@@ -6,6 +6,8 @@
   font-family: Outfit;
 }
 
+
+
 body{
   min-height: 100vh;
 }
@@ -15,10 +17,12 @@ a{
   color: inherit;
 }
 
+/*
 .app{
   width: 80%;
   margin: auto;
 }
+*/
 
 @keyframes fadeIn{
   0%{
