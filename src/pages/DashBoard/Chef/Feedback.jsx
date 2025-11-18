@@ -6,14 +6,14 @@ const sampleFeedback = [
     id: 1,
     name: "Alice Johnson",
     rating: 4.5,
-    comment: "Absolutely delicious! The lamb biryani was perfectly spiced.",
+    comment: "Absolutely delicious! The food are all perfectly spiced.",
     date: "2025-11-15"
   },
   {
     id: 2,
     name: "Mohamed Ali",
     rating: 5,
-    comment: "Best shawarma I've had in years. Highly recommend!",
+    comment: "Best burger I've had in years. Highly recommend!",
     date: "2025-11-14"
   },
   {
