@@ -20,13 +20,14 @@ body {
   padding-bottom: 0.3rem;
 }
 
-/* Menu Container with scroll */
+/* Menu Container */
 .menu-container {
   max-height: 75vh;
   overflow-y: auto;
   padding-right: 10px;
 }
 
+/* Category Section */
 .category-section {
   margin-bottom: 2.5rem;
   border-bottom: 1px solid #ddd;
@@ -49,16 +50,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 1rem;
   background: #cde8d5;
   padding: 1rem;
-  box-shadow: 0 1px 5px rgb(0 0 0 / 0.05);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .menu-item:hover {
-  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .item-text {
@@ -105,13 +107,14 @@ body {
   cursor: pointer;
   border-radius: 8px;
   width: 150px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
   margin-top: 0.5rem;
 }
 
 .add-item-btn:hover {
   background-color: #52c41a;
   color: white;
+  transform: translateY(-2px);
 }
 
 /* Add Item Inline Form */
@@ -132,7 +135,7 @@ body {
   margin-bottom: 0.6rem;
   border-radius: 6px;
   border: 1.5px solid #c7c7c7;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-field:focus {
@@ -146,7 +149,6 @@ body {
   min-height: 50px;
 }
 
-
 .add-item-buttons {
   display: flex;
   gap: 10px;
@@ -159,9 +161,13 @@ body {
   cursor: pointer;
   border: none;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
   min-width: 80px;
   text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .save-btn {
@@ -188,7 +194,6 @@ body {
   text-align: center;
 }
 
-/* Add category button */
 .add-category-btn {
   background-color: transparent;
   color: #555;
@@ -198,15 +203,15 @@ body {
   cursor: pointer;
   border-radius: 8px;
   width: 180px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .add-category-btn:hover {
   background-color: #657080;
   color: #657080;
+  transform: translateY(-1px);
 }
 
-/* Add Category Form */
 .add-category-form {
   display: inline-block;
 }
@@ -221,4 +226,3 @@ body {
   justify-content: center;
   gap: 10px;
 }
-

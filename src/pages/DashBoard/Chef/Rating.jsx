@@ -40,6 +40,16 @@ const Rating = () => {
     ? sampleReviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
     : 0;
 
+  // Rewards or penalties logic
+  let rewardMessage = "";
+  if (avgRating >= 4.5) {
+    rewardMessage = "Excellent! You earns a reward 🎉";
+  } else if (avgRating >= 3.5) {
+    rewardMessage = "Good performance! Keep it up 👍";
+  } else {
+    rewardMessage = "Warning! You may incur a penalty ⚠️";
+  }
+
   return (
     <div className="chef-rating-container">
       <h2 className="rating-title">Chef Rating</h2>
@@ -50,6 +60,9 @@ const Rating = () => {
       </div>
 
       <p className="review-count">{totalReviews} review{totalReviews !== 1 ? 's' : ''}</p>
+
+      {/* Rewards / penalties message */}
+      <p className="reward-message">{rewardMessage}</p>
 
       <div className="reviews-list">
         {sampleReviews.map(review => (
