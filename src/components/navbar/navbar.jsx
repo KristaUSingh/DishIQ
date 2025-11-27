@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './navbar.css';
 import { assets } from '../../assets/assets';
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
@@ -10,33 +9,25 @@ const Navbar = () => {
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
 
+  // 🔥 FIX: Always read latest auth data
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-
-    if (token && storedRole) {
-      setIsLoggedIn(true);
-      setRole(storedRole);
-    } else {
-      setIsLoggedIn(false);
-      setRole(null);
-    }
-
-    const handleStorageChange = () => {
+    const updateAuth = () => {
       const token = localStorage.getItem("token");
       const storedRole = localStorage.getItem("role");
 
-      if (token && storedRole) {
-        setIsLoggedIn(true);
-        setRole(storedRole);
-      } else {
-        setIsLoggedIn(false);
-        setRole(null);
-      }
+      setIsLoggedIn(!!token);
+      setRole(storedRole ? storedRole.trim() : null);
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    // Run at mount
+    updateAuth();
+
+    // Listen for manual dispatches (from login/logout)
+    window.addEventListener("authChange", updateAuth);
+
+    return () => {
+      window.removeEventListener("authChange", updateAuth);
+    };
   }, []);
 
   const handleLoginClick = () => navigate('/login');
@@ -44,9 +35,12 @@ const Navbar = () => {
   const handleLogoutClick = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+
     setIsLoggedIn(false);
     setRole(null);
-    window.dispatchEvent(new Event("storage"));
+
+    window.dispatchEvent(new Event("authChange"));
+
     navigate('/');
   };
 
@@ -60,6 +54,7 @@ const Navbar = () => {
         <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
         <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
 
+        {/* ⭐ CHEF MENU */}
         {isLoggedIn && role === "CHEF" && (
           <>
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
@@ -68,17 +63,19 @@ const Navbar = () => {
           </>
         )}
 
+        {/* ⭐ MANAGER MENU */}
         {isLoggedIn && role === "MANAGER" && (
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
             <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
             <li onClick={() => navigate('/manager/ratings')}>Ratings</li>
             <li onClick={() => navigate('/manager/staff')}>Staff Performance</li>
-            <li onClick={() => navigate('/manager/finances')}>Restaurant finances</li>
-            <li onClick={() => navigate('/ChefMenu')}>Manage Menu items</li>
+            <li onClick={() => navigate('/manager/finances')}>Restaurant Finances</li>
+            <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
           </>
         )}
 
+        {/* ⭐ DRIVER MENU */}
         {isLoggedIn && role === "DRIVER" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
@@ -107,3 +104,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
