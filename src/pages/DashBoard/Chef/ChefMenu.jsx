@@ -45,7 +45,7 @@ const ChefMenu = () => {
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("role");
+    const storedRole = localStorage.getItem("role")?.trim().toUpperCase();
     setRole(storedRole);
   }, []);
 
@@ -106,7 +106,7 @@ const ChefMenu = () => {
 
   return (
     <div className="chef-dashboard-container">
-      <h2 className="dashboard-title">Menu</h2>
+      <h2 className="dashboard-title">Chef Menu</h2>
 
       <div className="menu-container">
         {menuCategories.length === 0 && (
