@@ -49,6 +49,8 @@ const ChefMenu = () => {
     setRole(storedRole);
   }, []);
 
+  const canEdit = role === "CHEF" || role === "MANAGER";
+
   // Add Category
   const handleAddCategory = () => {
     if (!newCategoryName.trim()) return alert("Please enter a category name.");
@@ -104,7 +106,7 @@ const ChefMenu = () => {
 
   return (
     <div className="chef-dashboard-container">
-      <h2 className="dashboard-title">Chef Menu</h2>
+      <h2 className="dashboard-title">Menu</h2>
 
       <div className="menu-container">
         {menuCategories.length === 0 && (
@@ -115,7 +117,7 @@ const ChefMenu = () => {
           <section key={category.id} className="category-section">
             <div className="category-header">
               <h3 className="category-title">{category.name}</h3>
-              {role === "CHEF" && (
+              {canEdit && (
                 <button className="btn delete-btn" onClick={() => handleDeleteCategory(category.id)}>
                   Delete Section
                 </button>
@@ -131,7 +133,7 @@ const ChefMenu = () => {
                     <p className="item-price">${item.price.toFixed(2)}</p>
                   </div>
                   {item.image && <img className="item-image" src={item.image} alt={item.name} />}
-                  {role === "CHEF" && (
+                  {canEdit && (
                     <button className="btn delete-btn" onClick={() => handleDeleteItem(category.id, item.id)}>
                       Delete Item
                     </button>
@@ -139,7 +141,7 @@ const ChefMenu = () => {
                 </div>
               ))}
 
-              {role === "CHEF" && addingItemCategoryId === category.id && (
+              {canEdit && addingItemCategoryId === category.id && (
                 <div className="menu-item add-item-form">
                   <div className="item-text">
                     <input
@@ -180,7 +182,7 @@ const ChefMenu = () => {
                 </div>
               )}
 
-              {role === "CHEF" && addingItemCategoryId !== category.id && (
+              {canEdit && addingItemCategoryId !== category.id && (
                 <button className="btn add-item-btn" onClick={() => handleAddItemClick(category.id)}>
                   + Add Item
                 </button>
@@ -189,7 +191,7 @@ const ChefMenu = () => {
           </section>
         ))}
 
-        {role === "CHEF" && (
+        {canEdit && (
           <div className="add-category-section">
             {addingCategory ? (
               <div className="add-category-form">
