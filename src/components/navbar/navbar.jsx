@@ -45,8 +45,7 @@ const Navbar = () => {
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
             <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
-            <li onClick={() => navigate('/manager/ratings')}>Ratings</li>
-            <li onClick={() => navigate('/manager/staff')}>Staff Performance</li>
+            <li onClick={() => navigate('/manager/staffrating')}>Staff Rating</li>
             <li onClick={() => navigate('/manager/finances')}>Restaurant Finances</li>
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
           </>

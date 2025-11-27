@@ -1,0 +1,117 @@
+.finances-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.finances-dashboard h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+.finance-summary {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.finance-card {
+  background-color: #cde8d5;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.finance-card h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.finance-card p {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #111;
+}
+
+/* Breakdown table */
+.breakdown-table {
+  background-color: #cde8d5;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.table-header, .table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.table-header {
+  font-weight: 700;
+  border-bottom: 1px solid #b2e0b0;
+}
+
+.table-row:nth-child(even) {
+  background-color: #d6f0d6;
+}
+
+.table-row span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Monthly chart */
+.monthly-chart {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-end; /* Align bars to the bottom */
+  height: 180px; /* Container height */
+  margin-bottom: 1rem;
+  border-left: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding-bottom: 1rem;
+}
+
+.month-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* Bars grow from bottom */
+}
+
+.revenue-bar {
+  width: 40px;
+  background-color: #52c41a;
+  border-radius: 6px 6px 0 0;
+  transition: height 0.4s ease;
+  margin-bottom: 2px;
+}
+
+.expenses-bar {
+  width: 40px;
+  background-color: #ff4d4f;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 2px;
+}
+
+.month-label {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #111; /* Ensure label is visible */
+}
+

@@ -11,7 +11,9 @@ import Feedback from './pages/DashBoard/Chef/Feedback';
 import Rating from './pages/DashBoard/Chef/Rating'
 import DriverDashboard from './pages/DashBoard/Driver/DriverDashboard';
 import UserRegistration from './pages/DashBoard/Manager/UserRegistration';
-import UserComplaints from './pages/Dashboard/Manager/UserComplaints';
+import UserComplaints from './pages/DashBoard/Manager/UserComplaints';
+import StaffRating from './pages/DashBoard/Manager/StaffRating';
+import Finances from './pages/DashBoard/Manager/Finances';
 import Signup from './pages/Signup/Signup';
 function App() {
   
@@ -34,6 +36,8 @@ function App() {
         {/*Manager route */}
         <Route path='/manager/user' element={<UserRegistration/>}/>
         <Route path='/manager/complaints' element={<UserComplaints/>}/>
+        <Route path='/manager/staffrating' element={<StaffRating/>}/>
+        <Route path='/manager/finances' element={<Finances/>}/>
 
         {/*Driver route */}
         <Route path='/DriverDashboard' element={<DriverDashboard/>}/>
