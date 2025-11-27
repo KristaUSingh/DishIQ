@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './navbar.css';
 import { assets } from '../../assets/assets';
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
@@ -51,17 +52,13 @@ const Navbar = () => {
 
   return (
     <div className='navbar'>
-      <img src={assets.logo} alt="logo" className="logo" />
+      <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
 
       <ul className="navbar-menu">
-        {(!isLoggedIn || role === "CUSTOMER") && (
-          <>
-            <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
-            <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
-            <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
-            <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
-          </>
-        )}
+        <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
+        <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
+        <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
+        <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
 
         {isLoggedIn && role === "CHEF" && (
           <>
@@ -93,10 +90,11 @@ const Navbar = () => {
 
       <div className="navbar-right">
         <img src={assets.searchIcon} alt="search" />
-        <div className="navbar-search-icon">
-          <img src={assets.basketIcon} alt="basket" />
+
+        <Link to="/cart" className="navbar-search-icon">
+          <img src={assets.basketIcon} alt="cart" />
           <div className="dot"></div>
-        </div>
+        </Link>
 
         {!isLoggedIn ? (
           <button onClick={handleLoginClick}>Login</button>
