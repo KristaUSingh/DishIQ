@@ -1,37 +1,87 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../api/supabaseClient"; 
 import './Login.css';
 
-export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+
+function Login({}) {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    let role = null;
+    try {
+      // Sign in with Supabase Auth
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (username === "chef" && password === "123") {
-      role = "CHEF";
-      navigate("/chefmenu");
-    } else if (username === "manager" && password === "123") {
-      role = "MANAGER";
-      navigate("/dashboard");
-    } else if (username === "delivery" && password === "123") {
-      role = "DRIVER";
-      navigate("/chefmenu");
-    } else if (username === "customer" && password === "123") {
-      role = "CUSTOMER";
-      navigate("/");
-    } else {
-      alert("Invalid credentials!");
-      return;
+      if (signInError) {
+        if (signInError.status === 400 && signInError.message.includes("email")) {
+          setError("Your email isn’t verified. Please check your inbox.");
+          return;
+        }
+
+        setError("Incorrect email or password.");
+        return;
+      }
+
+      const user = data.user;
+
+      if (!user) {
+        setError("Login failed. Please try again.");
+        return;
+      }
+
+      // Fetch user info from your 'users' table
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("role, first_name, last_name")
+        .eq("user_id", user.id)
+        .single();
+
+      if (userError || !userData) {
+        setError("Unable to find user information. Please contact support.");
+        return;
+      }
+
+      // Save to sessionStorage
+      sessionStorage.setItem(
+        "auth",
+        JSON.stringify({
+          isLoggedIn: true,
+          role: userData.role,
+          firstName: userData.first_name,
+          lastName: userData.last_name,
+        })
+      );
+
+      // Navigate based on role
+      switch (userData.role) {
+        case "customer":
+          navigate("/");
+          break;
+        case "delivery_person":
+          navigate("/driverdashboard");
+          break;
+        case "chef":
+          navigate("/chefmenu");
+          break;
+        case "manager":
+          navigate("/dashboard");
+          break;
+        default:
+          setError("Unknown role. Please contact support.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(err.message || "Something went wrong during login.");
     }
-
-    localStorage.setItem("token", "dummyToken123");
-    localStorage.setItem("role", role);
-    window.dispatchEvent(new Event("storage"));
   };
 
   const handleCreateAccount = () => {
@@ -42,12 +92,12 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <h1>Login</h1>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={onSubmit}>
           <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
@@ -67,3 +117,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;
