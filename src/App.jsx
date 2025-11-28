@@ -9,8 +9,13 @@ import Login from './pages/Login/Login';
 import ChefMenu from './pages/DashBoard/Chef/ChefMenu';
 import Feedback from './pages/DashBoard/Chef/Feedback';
 import Rating from './pages/DashBoard/Chef/Rating'
-import DriverDashboard from './pages/DashBoard/Driver/DriverDashboard';
-import ManagerDashboard from './pages/DashBoard/Manager/ManagerDashboard';
+import DriverBid from './pages/DashBoard/Driver/DriverBid';
+import DriverTransport from './pages/DashBoard/Driver/DriverTransport';
+import DriverRating from './pages/DashBoard/Driver/DriverRating';
+import UserRegistration from './pages/DashBoard/Manager/UserRegistration';
+import UserComplaints from './pages/DashBoard/Manager/UserComplaints';
+import StaffRating from './pages/DashBoard/Manager/StaffRating';
+import Finances from './pages/DashBoard/Manager/Finances';
 import Signup from './pages/Signup/Signup';
 function App() {
   
@@ -19,16 +24,31 @@ function App() {
     <div className="app main-content-wrapper">
       <Navbar />
       <Routes>
+        {/*Customer/Visitor route */}
         <Route path='/' element={<Home/>} />
         <Route path='/cart' element={<Cart/>} />
         <Route path='/order' element={<PlaceOrder/>}/>
         <Route path='/login' element={<Login/>}/>
+
+        {/*Chef route */}
         <Route path='/ChefMenu' element={<ChefMenu/>}/>
         <Route path='/Feedback' element={<Feedback/>}/>
         <Route path='/Rating' element={<Rating/>}/>
-        <Route path='/ManagerDashboard' element={<ManagerDashboard/>}/>
-        <Route path='/DriverDashboard' element={<DriverDashboard/>}/>
+
+        {/*Manager route */}
+        <Route path='/manager/user' element={<UserRegistration/>}/>
+        <Route path='/manager/complaints' element={<UserComplaints/>}/>
+        <Route path='/manager/staffrating' element={<StaffRating/>}/>
+        <Route path='/manager/finances' element={<Finances/>}/>
+
+        {/*Driver route */}
+        <Route path='/Driver/bids' element={<DriverBid/>}/>
+        <Route path='/Driver/transport' element={<DriverTransport/>}/>
+        <Route path='/Driver/Ratings' element={<DriverRating/>}/>
+
+
         <Route path='/Signup' element={<Signup/>}/>
+
       </Routes>
     </div>
     <Footer />

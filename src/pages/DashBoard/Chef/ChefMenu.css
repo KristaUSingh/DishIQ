@@ -1,9 +1,9 @@
-/*background color*/
+/* Page background */
 body {
   background-color: #a3c4f3;
 }
 
-/* Container and Title */
+/* Main container */
 .chef-dashboard-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -12,6 +12,7 @@ body {
   color: #333;
 }
 
+/* Page title */
 .dashboard-title {
   font-weight: 700;
   font-size: 2rem;
@@ -20,13 +21,14 @@ body {
   padding-bottom: 0.3rem;
 }
 
-/* Menu Container with scroll */
+/* Scrollable menu area */
 .menu-container {
   max-height: 75vh;
   overflow-y: auto;
   padding-right: 10px;
 }
 
+/* Category section */
 .category-section {
   margin-bottom: 2.5rem;
   border-bottom: 1px solid #ddd;
@@ -44,21 +46,22 @@ body {
   padding-left: 8px;
 }
 
-/* Menu Item */
+/* Menu item */
 .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 1rem;
   background: #cde8d5;
   padding: 1rem;
-  box-shadow: 0 1px 5px rgb(0 0 0 / 0.05);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .menu-item:hover {
-  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .item-text {
@@ -85,7 +88,7 @@ body {
   color: #555;
 }
 
-/* Image styling */
+/* Item image */
 .item-image {
   width: 120px;
   height: 90px;
@@ -95,7 +98,7 @@ body {
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
-/* Add Item Button */
+/* Add item button */
 .add-item-btn {
   background-color: transparent;
   color: #555;
@@ -105,16 +108,17 @@ body {
   cursor: pointer;
   border-radius: 8px;
   width: 150px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
   margin-top: 0.5rem;
 }
 
 .add-item-btn:hover {
   background-color: #52c41a;
   color: white;
+  transform: translateY(-2px);
 }
 
-/* Add Item Inline Form */
+/* Add item form */
 .add-item-form {
   background-color: #e8f5e9;
   box-shadow: 0 2px 10px rgba(82,196,26,0.25);
@@ -125,6 +129,7 @@ body {
   width: 100%;
 }
 
+/* Form inputs */
 .input-field {
   width: 100%;
   font-size: 1rem;
@@ -132,7 +137,7 @@ body {
   margin-bottom: 0.6rem;
   border-radius: 6px;
   border: 1.5px solid #c7c7c7;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-field:focus {
@@ -146,12 +151,12 @@ body {
   min-height: 50px;
 }
 
-
 .add-item-buttons {
   display: flex;
   gap: 10px;
 }
 
+/* Buttons */
 .btn {
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -159,9 +164,13 @@ body {
   cursor: pointer;
   border: none;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
   min-width: 80px;
   text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .save-btn {
@@ -188,7 +197,7 @@ body {
   text-align: center;
 }
 
-/* Add category button */
+/* Add Category Button (UPDATED TO MATCH ADD ITEM) */
 .add-category-btn {
   background-color: transparent;
   color: #555;
@@ -198,15 +207,17 @@ body {
   cursor: pointer;
   border-radius: 8px;
   width: 180px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  margin: 0 auto;
 }
 
 .add-category-btn:hover {
-  background-color: #657080;
-  color: #657080;
+  background-color: #52c41a;
+  color: white;
+  transform: translateY(-2px);
 }
 
-/* Add Category Form */
+/* Add category form */
 .add-category-form {
   display: inline-block;
 }
@@ -221,4 +232,3 @@ body {
   justify-content: center;
   gap: 10px;
 }
-

@@ -5,20 +5,23 @@ const sampleFeedback = [
   {
     id: 1,
     name: "Alice Johnson",
+    dish: "Spicy Chicken Burger",
     rating: 4.5,
-    comment: "Absolutely delicious! The lamb biryani was perfectly spiced.",
+    comment: "Absolutely delicious! The food are all perfectly spiced.",
     date: "2025-11-15"
   },
   {
     id: 2,
     name: "Mohamed Ali",
+    dish: "Classic Cheeseburger",
     rating: 5,
-    comment: "Best shawarma I've had in years. Highly recommend!",
+    comment: "Best burger I've had in years. Highly recommend!",
     date: "2025-11-14"
   },
   {
     id: 3,
     name: "Sofia Khan",
+    dish: "Veggie Pizza",
     rating: 3.5,
     comment: "Good flavors, but portion could be bigger.",
     date: "2025-11-13"
@@ -62,6 +65,10 @@ const Feedback = () => {
               <Stars rating={fb.rating} />
               <span className="feedback-date">{fb.date}</span>
             </div>
+
+            {/* Dish name */}
+            <p className="feedback-dish"><strong>Dish:</strong> {fb.dish}</p>
+
             <p className="feedback-comment">{fb.comment}</p>
 
             <div className="response-section">

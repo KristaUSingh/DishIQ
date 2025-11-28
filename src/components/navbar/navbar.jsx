@@ -1,52 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './navbar.css';
 import { assets } from '../../assets/assets';
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-
-    if (token && storedRole) {
-      setIsLoggedIn(true);
-      setRole(storedRole);
-    } else {
-      setIsLoggedIn(false);
-      setRole(null);
-    }
-
-    const handleStorageChange = () => {
-      const token = localStorage.getItem("token");
-      const storedRole = localStorage.getItem("role");
-
-      if (token && storedRole) {
-        setIsLoggedIn(true);
-        setRole(storedRole);
-      } else {
-        setIsLoggedIn(false);
-        setRole(null);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  // Read auth info every render
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role")?.trim().toUpperCase() || null;
+  const isLoggedIn = !!token;
 
   const handleLoginClick = () => navigate('/login');
-
   const handleLogoutClick = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    setIsLoggedIn(false);
-    setRole(null);
-    window.dispatchEvent(new Event("storage"));
     navigate('/');
   };
 
@@ -55,10 +24,14 @@ const Navbar = () => {
       <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
 
       <ul className="navbar-menu">
-        <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
-        <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
-        <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
-        <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
+        {!isLoggedIn && (
+          <>
+            <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
+            <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
+            <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
+            <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
+          </>
+        )}
 
         {isLoggedIn && role === "CHEF" && (
           <>
@@ -72,10 +45,9 @@ const Navbar = () => {
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
             <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
-            <li onClick={() => navigate('/manager/ratings')}>Ratings</li>
-            <li onClick={() => navigate('/manager/staff')}>Staff Performance</li>
-            <li onClick={() => navigate('/manager/finances')}>Restaurant finances</li>
-            <li onClick={() => navigate('/ChefMenu')}>Manage Menu items</li>
+            <li onClick={() => navigate('/manager/staffrating')}>Staff Rating</li>
+            <li onClick={() => navigate('/manager/finances')}>Restaurant Finances</li>
+            <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
           </>
         )}
 
@@ -90,7 +62,6 @@ const Navbar = () => {
 
       <div className="navbar-right">
         <img src={assets.searchIcon} alt="search" />
-
         <Link to="/cart" className="navbar-search-icon">
           <img src={assets.basketIcon} alt="cart" />
           <div className="dot"></div>

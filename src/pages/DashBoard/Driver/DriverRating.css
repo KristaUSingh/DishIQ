@@ -1,0 +1,112 @@
+.driver-rating-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #a3c4f3;
+}
+
+.driver-rating-dashboard h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+.driver-summary {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.driver-summary-card {
+  background-color: #cde8d5;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  flex: 1;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.driver-summary-card h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.driver-summary-card p {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #111;
+}
+
+/* Review Cards */
+.review-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-card {
+  background-color: #cde8d5;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.customer-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.review-date {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Rating stars */
+.stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.3rem;
+}
+
+.star.full {
+  color: #52c41a;
+}
+
+.star.half {
+  color: #a2d729;
+}
+
+.star.empty {
+  color: #eee;
+}
+
+.review-comment {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.review-score {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+}
+
