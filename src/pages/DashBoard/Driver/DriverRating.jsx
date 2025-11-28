@@ -1,59 +1,90 @@
-import React, { useState } from "react";
-import './DriverRating.css';
+import React, { useEffect, useState } from "react";
+import "./DriverRating.css";
+import { supabase } from "../../../api/supabaseClient";
 
-const sampleReviews = [
-  { id: 1, customer: "Alice Johnson", rating: 4.5, comment: "Fast and friendly delivery.", date: "2025-11-15" },
-  { id: 2, customer: "Mohamed Ali", rating: 5, comment: "Very punctual and careful with food.", date: "2025-11-14" },
-  { id: 3, customer: "Sofia Khan", rating: 3.5, comment: "Good but late by 15 mins.", date: "2025-11-13" },
-  { id: 4, customer: "John Smith", rating: 4, comment: "Handled my order well.", date: "2025-11-12" },
-];
+const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
-const RatingStars = ({ rating, maxRating = 5 }) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
-  const emptyStars = maxRating - fullStars - (halfStar ? 1 : 0);
+const RatingStars = ({ rating }) => {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
+  const empty = 5 - full - (half ? 1 : 0);
 
   return (
     <div className="stars">
-      {[...Array(fullStars)].map((_, i) => <span key={`full-${i}`} className="star full">★</span>)}
-      {halfStar && <span className="star half">★</span>}
-      {[...Array(emptyStars)].map((_, i) => <span key={`empty-${i}`} className="star empty">☆</span>)}
+      {[...Array(full)].map((_, i) => (
+        <span key={"f" + i} className="star full">★</span>
+      ))}
+      {half && <span className="star half">★</span>}
+      {[...Array(empty)].map((_, i) => (
+        <span key={"e" + i} className="star empty">☆</span>
+      ))}
     </div>
   );
 };
 
 const DriverRating = () => {
-  const totalReviews = sampleReviews.length;
-  const avgRating = totalReviews
-    ? sampleReviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
-    : 0;
+  const [reviews, setReviews] = useState([]);
+  const [driverId, setDriverId] = useState(null);
+
+  // Load driver ID
+  useEffect(() => {
+    const loadDriver = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) setDriverId(data.user.id);
+    };
+    loadDriver();
+  }, []);
+
+  // Fetch reviews
+  useEffect(() => {
+    if (!driverId) return;
+
+    const fetchRatings = async () => {
+      try {
+        const res = await fetch(`${BACKEND}/driver/ratings/${driverId}`);
+        const data = await res.json();
+        setReviews(data.reviews || []);
+      } catch (err) {
+        console.error("Error fetching ratings:", err);
+      }
+    };
+
+    fetchRatings();
+  }, [driverId]);
+
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((acc, r) => acc + r.delivery_rating, 0) /
+        reviews.length
+      : 0;
 
   return (
     <div className="driver-rating-dashboard">
-      <h2>Driver: Alex Johnson</h2>
+      <h2>Your Delivery Ratings</h2>
 
       <div className="driver-summary">
         <div className="driver-summary-card">
           <h3>Total Reviews</h3>
-          <p>{totalReviews}</p>
+          <p>{reviews.length}</p>
         </div>
+
         <div className="driver-summary-card">
           <h3>Average Rating</h3>
           <p>{avgRating.toFixed(1)} / 5</p>
+          <RatingStars rating={avgRating} />
         </div>
       </div>
 
-      <h3>Individual Reviews</h3>
+      <h3>Recent Feedback</h3>
       <div className="review-cards">
-        {sampleReviews.map(r => (
-          <div key={r.id} className="review-card">
-            <div className="review-header">
-              <span className="customer-name">{r.customer}</span>
-              <span className="review-date">{r.date}</span>
-            </div>
-            <RatingStars rating={r.rating} />
-            <p className="review-comment">{r.comment}</p>
-            <span className="review-score">{r.rating.toFixed(1)} / 5</span>
+        {reviews.map((r) => (
+          <div key={r.rating_id} className="review-card">
+            <p><strong>Rating:</strong> {r.delivery_rating} / 5</p>
+            <RatingStars rating={r.delivery_rating} />
+            <p><strong>Comment:</strong> {r.comment || "No comment"}</p>
+            <p className="review-date">
+              {new Date(r.created_at).toLocaleString()}
+            </p>
           </div>
         ))}
       </div>

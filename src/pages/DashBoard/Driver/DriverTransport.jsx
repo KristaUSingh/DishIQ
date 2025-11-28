@@ -1,34 +1,53 @@
-import React, { useState } from "react";
-import './DriverTransport.css';
+import React, { useEffect, useState } from "react";
+import "./DriverTransport.css";
+import { supabase } from "../../../api/supabaseClient";
 
-const sampleTransports = [
-  {
-    id: 1,
-    orderNumber: "ORD-101",
-    pickup: "Pizza Palace, Downtown",
-    dropoff: "John Doe, Elm Street",
-    payment: 12.5,
-    distance: "5 km",
-    status: "In Progress"
-  },
-  {
-    id: 2,
-    orderNumber: "ORD-104",
-    pickup: "Sushi Express, Midtown",
-    dropoff: "Anna Smith, Oak Avenue",
-    payment: 15.0,
-    distance: "7 km",
-    status: "In Progress"
-  }
-];
+const BACKEND = import.meta.env.VITE_BACKEND_URL;
 
 const DriverTransport = () => {
-  const [transports, setTransports] = useState(sampleTransports);
+  const [transports, setTransports] = useState([]);
+  const [driverId, setDriverId] = useState(null);
 
-  const handleMarkDelivered = (transportId) => {
-    alert(`Order ${transportId} marked as delivered!`);
-    // Remove or update transport
-    setTransports(prev => prev.filter(t => t.id !== transportId));
+  // Get logged-in driver ID
+  useEffect(() => {
+    const loadDriver = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) setDriverId(data.user.id);
+    };
+    loadDriver();
+  }, []);
+
+  // Load active deliveries
+  useEffect(() => {
+    if (!driverId) return;
+
+    const fetchTransports = async () => {
+      try {
+        const res = await fetch(`${BACKEND}/driver/transports/${driverId}`);
+        const data = await res.json();
+        setTransports(data.deliveries || []);
+      } catch (err) {
+        console.error("Error fetching transports:", err);
+      }
+    };
+
+    fetchTransports();
+  }, [driverId]);
+
+  // Mark delivered
+  const handleMarkDelivered = async (orderId) => {
+    try {
+      await fetch(`${BACKEND}/driver/transports/delivered`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: orderId, status: "Delivered" }),
+      });
+
+      setTransports((prev) => prev.filter((t) => t.order_id !== orderId));
+      alert(`Order ${orderId} marked as delivered.`);
+    } catch (err) {
+      console.error("Error updating status:", err);
+    }
   };
 
   return (
@@ -39,17 +58,24 @@ const DriverTransport = () => {
         <p className="empty-state-message">No active deliveries.</p>
       ) : (
         <div className="transport-cards">
-          {transports.map(t => (
-            <div key={t.id} className="transport-card">
+          {transports.map((t) => (
+            <div key={t.order_id} className="transport-card">
               <div className="transport-header">
-                <span className="transport-order">{t.orderNumber}</span>
+                <span className="transport-order">Order #{t.order_id}</span>
                 <span className="transport-status">{t.status}</span>
               </div>
-              <p className="transport-details"><strong>Pickup:</strong> {t.pickup}</p>
-              <p className="transport-details"><strong>Dropoff:</strong> {t.dropoff}</p>
-              <p className="transport-details"><strong>Distance:</strong> {t.distance}</p>
-              <p className="transport-details"><strong>Payment:</strong> ${t.payment.toFixed(2)}</p>
-              <button className="delivered-btn" onClick={() => handleMarkDelivered(t.id)}>
+
+              <p><strong>Total Price:</strong> ${Number(t.total_price).toFixed(2)}</p>
+
+              <p>
+                <strong>Created:</strong>{" "}
+                {new Date(t.created_at).toLocaleString()}
+              </p>
+
+              <button
+                className="delivered-btn"
+                onClick={() => handleMarkDelivered(t.order_id)}
+              >
                 Mark Delivered
               </button>
             </div>
