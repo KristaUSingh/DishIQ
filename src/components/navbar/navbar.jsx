@@ -84,7 +84,7 @@ const Navbar = () => {
         )}
 
         {/* DRIVER ROUTES */}
-        {isLoggedIn && role === "DRIVER" && (
+        {isLoggedIn && role === "DELIVERY_PERSON" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
             <li onClick={() => navigate('/driver/transport')}>Transport Orders</li>
