@@ -1,21 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './navbar.css';
+import { supabase } from "../../api/supabaseClient";
 import { assets } from '../../assets/assets';
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
+  const [role, setRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
 
-  // Read auth info every render
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role")?.trim().toUpperCase() || null;
-  const isLoggedIn = !!token;
+  // 🔥 Load Supabase Auth + Role on first render
+  useEffect(() => {
+    const loadAuthAndRole = async () => {
+      // 1. Get logged-in user
+      const { data: authData } = await supabase.auth.getUser();
+      const user = authData?.user;
 
-  const handleLoginClick = () => navigate('/login');
-  const handleLogoutClick = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+      if (!user) {
+        setIsLoggedIn(false);
+        setRole(null);
+        return;
+      }
+
+      setIsLoggedIn(true);
+
+      // 2. Fetch role from Supabase "users" table
+      const { data: profile, error } = await supabase
+        .from("users")
+        .select("role")
+        .eq("user_id", user.id)
+        .single();
+
+      if (!error && profile?.role) {
+        setRole(profile.role.trim().toUpperCase());
+      }
+    };
+
+    loadAuthAndRole();
+  }, []);
+
+  // Logout
+  const handleLogoutClick = async () => {
+    await supabase.auth.signOut();
+    setIsLoggedIn(false);
+    setRole(null);
     navigate('/');
   };
 
@@ -33,6 +63,7 @@ const Navbar = () => {
           </>
         )}
 
+        {/* CHEF ROUTES */}
         {isLoggedIn && role === "CHEF" && (
           <>
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
@@ -41,6 +72,7 @@ const Navbar = () => {
           </>
         )}
 
+        {/* MANAGER ROUTES */}
         {isLoggedIn && role === "MANAGER" && (
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
@@ -51,6 +83,7 @@ const Navbar = () => {
           </>
         )}
 
+        {/* DRIVER ROUTES */}
         {isLoggedIn && role === "DRIVER" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
@@ -68,7 +101,7 @@ const Navbar = () => {
         </Link>
 
         {!isLoggedIn ? (
-          <button onClick={handleLoginClick}>Login</button>
+          <button onClick={() => navigate('/login')}>Login</button>
         ) : (
           <button onClick={handleLogoutClick}>Logout</button>
         )}
