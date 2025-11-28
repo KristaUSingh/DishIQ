@@ -61,19 +61,19 @@ function Login({}) {
         })
       );
 
-      // Navigate based on role
+      
       switch (userData.role) {
         case "customer":
           navigate("/");
           break;
         case "delivery_person":
-          navigate("/driverdashboard");
+          navigate("/Driver/transport");
           break;
         case "chef":
-          navigate("/chefmenu");
+          navigate("/ChefMenu");
           break;
         case "manager":
-          navigate("/dashboard");
+          navigate("/manager/user");
           break;
         default:
           setError("Unknown role. Please contact support.");

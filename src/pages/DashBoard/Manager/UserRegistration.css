@@ -52,3 +52,29 @@
   margin: 2px 0;
   font-size: 14px;
 }
+
+.dropdown-button {
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown-button:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu {
+  display: none; 
+  position: absolute;
+  right: 0;
+  margin-top: 5px;
+  min-width: 120px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 100;
+}

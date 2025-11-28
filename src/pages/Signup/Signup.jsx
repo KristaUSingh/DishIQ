@@ -54,16 +54,23 @@ function Signup() {
       if (signUpError) throw signUpError;
 
       if (data.user) {
+        let salary = null;
+
+        if (role == "chef") salary = 70000;
+        if (role == "delivery_person") salary = 50000;
+        if (role == "manager") salary = 100000;
+
         const { error: dbError } = await supabase.from("users").insert([
           {
             email,
             user_id: data.user.id,
             role,
+            salary,
             first_name: firstName,
             last_name: lastName
           },
         ]);
-        
+
         //compares with the postgre code 23505 if the account already exists
         if (dbError?.code === "23505") {
           setError("Account already exists. Login or reset password.");
@@ -133,7 +140,7 @@ function Signup() {
             <option value="chef">Chef</option>
           </select>
 
-          {/* {["chef", "delivery_person", "manager"].includes(role) && (
+          {/* /* { {["chef", "delivery_person", "manager"].includes(role) && (
           <select 
             value={restaurant} 
             onChange={(e) => setRestaurant(e.target.value)}
@@ -144,7 +151,7 @@ function Signup() {
             <option value="">Da Brix</option>
             <option value="">Chef</option>
           </select>
-        )} */}
+        )} } */ }
 
           <button type="submit" className="signup-btn">Sign Up</button>
         </form>
