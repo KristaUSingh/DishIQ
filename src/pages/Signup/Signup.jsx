@@ -8,9 +8,9 @@ function Signup() {
   const { handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
   const [role, setRole] = useState("customer");
@@ -101,12 +101,6 @@ function Signup() {
             }}>
           <input
             type="text"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="text"
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -116,6 +110,12 @@ function Signup() {
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
