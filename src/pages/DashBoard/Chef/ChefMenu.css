@@ -1,9 +1,9 @@
-/*background color*/
+/* Page background */
 body {
   background-color: #a3c4f3;
 }
 
-/* Container and Title */
+/* Main container */
 .chef-dashboard-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -12,6 +12,7 @@ body {
   color: #333;
 }
 
+/* Page title */
 .dashboard-title {
   font-weight: 700;
   font-size: 2rem;
@@ -20,14 +21,14 @@ body {
   padding-bottom: 0.3rem;
 }
 
-/* Menu Container */
+/* Scrollable menu area */
 .menu-container {
   max-height: 75vh;
   overflow-y: auto;
   padding-right: 10px;
 }
 
-/* Category Section */
+/* Category section */
 .category-section {
   margin-bottom: 2.5rem;
   border-bottom: 1px solid #ddd;
@@ -45,7 +46,7 @@ body {
   padding-left: 8px;
 }
 
-/* Menu Item */
+/* Menu item */
 .menu-item {
   display: flex;
   justify-content: space-between;
@@ -87,7 +88,7 @@ body {
   color: #555;
 }
 
-/* Image styling */
+/* Item image */
 .item-image {
   width: 120px;
   height: 90px;
@@ -97,7 +98,7 @@ body {
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
-/* Add Item Button */
+/* Add item button */
 .add-item-btn {
   background-color: transparent;
   color: #555;
@@ -117,7 +118,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Add Item Inline Form */
+/* Add item form */
 .add-item-form {
   background-color: #e8f5e9;
   box-shadow: 0 2px 10px rgba(82,196,26,0.25);
@@ -128,6 +129,7 @@ body {
   width: 100%;
 }
 
+/* Form inputs */
 .input-field {
   width: 100%;
   font-size: 1rem;
@@ -154,6 +156,7 @@ body {
   gap: 10px;
 }
 
+/* Buttons */
 .btn {
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -194,6 +197,7 @@ body {
   text-align: center;
 }
 
+/* Add Category Button (UPDATED TO MATCH ADD ITEM) */
 .add-category-btn {
   background-color: transparent;
   color: #555;
@@ -204,14 +208,16 @@ body {
   border-radius: 8px;
   width: 180px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  margin: 0 auto;
 }
 
 .add-category-btn:hover {
-  background-color: #657080;
-  color: #657080;
-  transform: translateY(-1px);
+  background-color: #52c41a;
+  color: white;
+  transform: translateY(-2px);
 }
 
+/* Add category form */
 .add-category-form {
   display: inline-block;
 }

@@ -1,3 +1,4 @@
+/* Overall page container */
 .finances-dashboard {
   max-width: 900px;
   margin: 2rem auto;
@@ -14,6 +15,7 @@
   padding-bottom: 0.3rem;
 }
 
+/* Summary cards */
 .finance-summary {
   display: flex;
   gap: 1rem;
@@ -43,7 +45,7 @@
   color: #111;
 }
 
-/* Breakdown table */
+/* Category Breakdown Table */
 .breakdown-table {
   background-color: #cde8d5;
   border-radius: 10px;
@@ -51,7 +53,8 @@
   margin-bottom: 2rem;
 }
 
-.table-header, .table-row {
+.table-header,
+.table-row {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 1rem;
@@ -73,16 +76,13 @@
   justify-content: flex-start;
 }
 
-/* Monthly chart */
+/* Monthly profit chart */
 .monthly-chart {
   display: flex;
   gap: 0.8rem;
-  align-items: flex-end; /* Align bars to the bottom */
-  height: 180px; /* Container height */
-  margin-bottom: 1rem;
-  border-left: 1px solid #999;
-  border-bottom: 1px solid #999;
-  padding-bottom: 1rem;
+  align-items: flex-end;
+  height: 200px;
+  margin-top: 1rem;
 }
 
 .month-bar {
@@ -90,28 +90,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end; /* Bars grow from bottom */
 }
 
-.revenue-bar {
-  width: 40px;
+.profit-bar {
+  width: 45px;
   background-color: #52c41a;
   border-radius: 6px 6px 0 0;
   transition: height 0.4s ease;
-  margin-bottom: 2px;
-}
-
-.expenses-bar {
-  width: 40px;
-  background-color: #ff4d4f;
-  border-radius: 6px 6px 0 0;
-  margin-bottom: 2px;
 }
 
 .month-label {
   margin-top: 6px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: #111; /* Ensure label is visible */
+  font-weight: 700;
+  color: #222;
+  font-size: 0.9rem;
 }
 

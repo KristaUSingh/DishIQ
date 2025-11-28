@@ -26,12 +26,14 @@ const financesData = {
 };
 
 const Finances = () => {
-  const profitColor = financesData.summary.profit >= 0 ? "#52c41a" : "#ff4d4f";
+  // Calculate monthly profits
+  const monthlyProfits = financesData.monthly.map(m => ({
+    month: m.month,
+    profit: m.revenue - m.expenses
+  }));
 
-  // Calculate max value for scaling monthly bars
-  const maxRevenue = Math.max(...financesData.monthly.map(m => m.revenue));
-  const maxExpenses = Math.max(...financesData.monthly.map(m => m.expenses));
-  const maxValue = Math.max(maxRevenue, maxExpenses);
+  // For scaling bars correctly
+  const maxProfit = Math.max(...monthlyProfits.map(m => m.profit));
 
   return (
     <div className="finances-dashboard">
@@ -46,9 +48,11 @@ const Finances = () => {
           <h3>Total Expenses</h3>
           <p>${financesData.summary.totalExpenses.toLocaleString()}</p>
         </div>
-        <div className="finance-card" style={{ borderLeft: `6px solid ${profitColor}` }}>
-          <h3>Profit</h3>
-          <p style={{ color: profitColor }}>${financesData.summary.profit.toLocaleString()}</p>
+        <div className="finance-card">
+          <h3>Total Profit</h3>
+          <p style={{ color: "#52c41a" }}>
+            ${financesData.summary.profit.toLocaleString()}
+          </p>
         </div>
       </div>
 
@@ -62,31 +66,31 @@ const Finances = () => {
         </div>
         {financesData.breakdown.map(b => {
           const profit = b.revenue - b.expenses;
-          const profitCol = profit >= 0 ? "#52c41a" : "#ff4d4f";
           return (
             <div key={b.category} className="table-row">
               <span>{b.category}</span>
               <span>${b.revenue.toLocaleString()}</span>
               <span>${b.expenses.toLocaleString()}</span>
-              <span style={{ color: profitCol }}>${profit.toLocaleString()}</span>
+              <span style={{ color: profit >= 0 ? "#52c41a" : "#ff4d4f" }}>
+                ${profit.toLocaleString()}
+              </span>
             </div>
           );
         })}
       </div>
 
-      <h3>Monthly Performance</h3>
+      <h3>Monthly Profit</h3>
+
       <div className="monthly-chart">
-        {financesData.monthly.map(m => (
+        {monthlyProfits.map(m => (
           <div key={m.month} className="month-bar">
             <div
-              className="revenue-bar"
-              style={{ height: `${(m.revenue / maxValue) * 100}%` }}
-              title={`Revenue: $${m.revenue}`}
-            ></div>
-            <div
-              className="expenses-bar"
-              style={{ height: `${(m.expenses / maxValue) * 100}%` }}
-              title={`Expenses: $${m.expenses}`}
+              className="profit-bar"
+              style={{
+                height: `${(m.profit / maxProfit) * 100}%`,
+                backgroundColor: "#52c41a"
+              }}
+              title={`Profit: $${m.profit}`}
             ></div>
             <span className="month-label">{m.month}</span>
           </div>
