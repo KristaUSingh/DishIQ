@@ -18,9 +18,9 @@ export default function Login() {
     } else if (username === "manager" && password === "123") {
       role = "MANAGER";
       navigate("/dashboard");
-    } else if (username === "delivery" && password === "123") {
+    } else if (username === "driver" && password === "123") {
       role = "DRIVER";
-      navigate("/chefmenu");
+      navigate("/driver/bids");
     } else if (username === "customer" && password === "123") {
       role = "CUSTOMER";
       navigate("/");

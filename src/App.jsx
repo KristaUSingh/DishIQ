@@ -9,7 +9,9 @@ import Login from './pages/Login/Login';
 import ChefMenu from './pages/DashBoard/Chef/ChefMenu';
 import Feedback from './pages/DashBoard/Chef/Feedback';
 import Rating from './pages/DashBoard/Chef/Rating'
-import DriverDashboard from './pages/DashBoard/Driver/DriverDashboard';
+import DriverBid from './pages/DashBoard/Driver/DriverBid';
+import DriverTransport from './pages/DashBoard/Driver/DriverTransport';
+import DriverRating from './pages/DashBoard/Driver/DriverRating';
 import UserRegistration from './pages/DashBoard/Manager/UserRegistration';
 import UserComplaints from './pages/DashBoard/Manager/UserComplaints';
 import StaffRating from './pages/DashBoard/Manager/StaffRating';
@@ -40,7 +42,10 @@ function App() {
         <Route path='/manager/finances' element={<Finances/>}/>
 
         {/*Driver route */}
-        <Route path='/DriverDashboard' element={<DriverDashboard/>}/>
+        <Route path='/Driver/bids' element={<DriverBid/>}/>
+        <Route path='/Driver/transport' element={<DriverTransport/>}/>
+        <Route path='/Driver/Ratings' element={<DriverRating/>}/>
+
 
         <Route path='/Signup' element={<Signup/>}/>
 

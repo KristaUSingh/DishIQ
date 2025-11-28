@@ -1,0 +1,96 @@
+/* Background and container */
+.driver-transport-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #a3c4f3;
+}
+
+.driver-transport-dashboard h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+/* Cards container */
+.transport-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Individual transport card */
+.transport-card {
+  background-color: #cde8d5;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transport-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Card header */
+.transport-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.transport-order {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.transport-status {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #52c41a;
+}
+
+/* Transport details */
+.transport-details {
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.transport-details strong {
+  font-weight: 600;
+}
+
+/* Delivered button */
+.delivered-btn {
+  background-color: #52c41a;
+  color: white;
+  font-weight: 700;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delivered-btn:hover {
+  background-color: #73d13d;
+  transform: scale(1.05);
+}
+
+/* Empty state message */
+.empty-state-message {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #555;
+  margin-top: 2rem;
+}

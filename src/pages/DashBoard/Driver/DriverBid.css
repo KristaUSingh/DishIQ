@@ -1,0 +1,83 @@
+/* Background */
+.driver-bids-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Title */
+.driver-bids-dashboard h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+/* Bid cards container */
+.bid-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Individual bid card */
+.bid-card {
+  background-color: #cde8d5;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.bid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.bid-order {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.bid-payment {
+  font-weight: 700;
+  color: #52c41a;
+}
+
+.bid-details {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+/* Accept button */
+.accept-btn {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: #52c41a;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.accept-btn:hover {
+  background-color: #73d13d;
+}
+
+/* Empty state */
+.empty-state-message {
+  text-align: center;
+  font-weight: 500;
+  color: #555;
+  margin-top: 1rem;
+}
