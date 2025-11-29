@@ -1,52 +1,26 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './navbar.css';
 import { supabase } from "../../api/supabaseClient";
 import { assets } from '../../assets/assets';
+import { useAuth } from "../../context/useAuth";
 
 const Navbar = () => {
-  const [menu, setMenu] = useState("home");
-  const [role, setRole] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const navigate = useNavigate();
+  const { auth, setAuth } = useAuth();
 
-  // 🔥 Load Supabase Auth + Role on first render
-  useEffect(() => {
-    const loadAuthAndRole = async () => {
-      // 1. Get logged-in user
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData?.user;
+  const isLoggedIn = auth?.isLoggedIn || false;
+  const role = auth?.role || null;
 
-      if (!user) {
-        setIsLoggedIn(false);
-        setRole(null);
-        return;
-      }
-
-      setIsLoggedIn(true);
-
-      // 2. Fetch role from Supabase "users" table
-      const { data: profile, error } = await supabase
-        .from("users")
-        .select("role")
-        .eq("user_id", user.id)
-        .single();
-
-      if (!error && profile?.role) {
-        setRole(profile.role.trim());
-      }
-    };
-
-    loadAuthAndRole();
-  }, []);
-
-  // Logout
   const handleLogoutClick = async () => {
     await supabase.auth.signOut();
-    setIsLoggedIn(false);
-    setRole(null);
+
+    // Clear global auth state
+    setAuth(null);
+
+    // Clear local storage backup
+    localStorage.removeItem("auth");
+
     navigate('/');
   };
 
@@ -55,36 +29,45 @@ const Navbar = () => {
       <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
 
       <ul className="navbar-menu">
+
         {!isLoggedIn && (
           <>
-            <li onClick={() => navigate("/")} className={menu === "home" ? "active" : ""}>Home</li>
-            <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>Restaurants</li>
-            <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>Contact Us</li>
+            <li onClick={() => navigate("/")}>Home</li>
+            <li onClick={() => navigate("/restaurants")}>Restaurants</li>
+            <li onClick={() => navigate("/contact")}>Contact Us</li>
           </>
         )}
 
-        {/* CHEF ROUTES */}
+        {isLoggedIn && role === "customer" && (
+          <>
+            <li onClick={() => navigate("/")}>Home</li>
+            <li onClick={() => navigate("/restaurants")}>Restaurants</li>
+            <li onClick={() => navigate("/contact")}>Contact Us</li>
+          </>
+        )}
+
+        {/* CHEF MENU */}
         {isLoggedIn && role === "chef" && (
           <>
-            <li onClick={() => navigate('/chef/menu')}>Manage Menu Items</li>
+            <li onClick={() => navigate('/chef/menu')}>Manage Menu</li>
             <li onClick={() => navigate('/chef/orders')}>Orders</li>
-            <li onClick={() => navigate('/feedback')}>View Feedback</li>
-            <li onClick={() => navigate('/rating')}>Rating status</li>
+            <li onClick={() => navigate('/feedback')}>Feedback</li>
+            <li onClick={() => navigate('/rating')}>Rating</li>
           </>
         )}
 
-        {/* MANAGER ROUTES */}
+        {/* MANAGER MENU */}
         {isLoggedIn && role === "manager" && (
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
+            <li onClick={() => navigate('/manager/manage-bids')}>Manage Bids</li>
             <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
             <li onClick={() => navigate('/manager/staffrating')}>Staff Rating</li>
-            <li onClick={() => navigate('/manager/finances')}>Restaurant Finances</li>
-            <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
+            <li onClick={() => navigate('/manager/finances')}>Finances</li>
           </>
         )}
 
-        {/* DRIVER ROUTES */}
+        {/* DRIVER MENU */}
         {isLoggedIn && role === "delivery_person" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
@@ -92,13 +75,16 @@ const Navbar = () => {
             <li onClick={() => navigate('/driver/ratings')}>Delivery Ratings</li>
           </>
         )}
+
       </ul>
 
       <div className="navbar-right">
-        <Link to="/cart" className="navbar-search-icon">
-          <img src={assets.basketIcon} alt="cart" />
-          <div className="dot"></div>
-        </Link>
+        {isLoggedIn && (
+          <Link to="/cart" className="navbar-search-icon">
+            <img src={assets.basketIcon} alt="cart" />
+            <div className="dot"></div>
+          </Link>
+        )}
 
         {!isLoggedIn ? (
           <button onClick={() => navigate('/login')}>Login</button>

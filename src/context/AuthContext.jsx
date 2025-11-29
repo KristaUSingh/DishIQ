@@ -1,41 +1,43 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
+import { supabase } from "../api/supabaseClient";
 
-const AuthContext = createContext();
 
-// Provider wrapper for the entire app
+export const AuthContext = createContext();
+
 export function AuthProvider({ children }) {
   const [auth, setAuth] = useState(null);
 
-  // Load auth from localStorage on page load
+  // Load auth from localStorage
   useEffect(() => {
     const storedAuth = localStorage.getItem("auth");
     if (storedAuth) {
       try {
         setAuth(JSON.parse(storedAuth));
-      } catch (error) {
-        console.error("Error parsing stored auth:", error);
+      } catch {
         localStorage.removeItem("auth");
       }
     }
   }, []);
 
-  // Save auth to localStorage whenever it changes
+  // Save to localStorage
   useEffect(() => {
     if (auth) {
       localStorage.setItem("auth", JSON.stringify(auth));
     } else {
-      localStorage.removeItem("auth"); // for logout
+      localStorage.removeItem("auth");
     }
   }, [auth]);
 
+  // Logout helper
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setAuth(null);
+    localStorage.removeItem("auth");
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-// Custom hook so any component can call useAuth()
-export function useAuth() {
-  return useContext(AuthContext);
 }
