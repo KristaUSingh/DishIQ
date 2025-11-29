@@ -6,7 +6,7 @@ import { assets } from "../../../assets/assets";
 const Footer = () => {
   return (
     <div className='footer' id='footer'>
-      <div className="foot-content">
+      <div className="footer-content">
         <div className="footer-content-left">
             <img src={assets.logo} alt=""/>
             <div className="footer-social-icons">

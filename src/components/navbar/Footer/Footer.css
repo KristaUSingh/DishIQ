@@ -5,15 +5,16 @@
     flex-direction: column;
     gap: 20px;
     padding: 20px 8vw;
-    padding-top: 80px;
-    margin-top: 100px;
+    padding-top: 40px;
+    margin-top: 60px;
 }
 .footer-content{
     width: 100%;
     min-width: 500px;
     display: grid;
-    grid-template-columns: 2fr 1.5fr 1.5fr;
-    gap: 80px;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 60px;
 }
 .footer-content-left img{
     width: 200px;
@@ -43,7 +44,19 @@
 .footer hr{
     width: 100%;
     height: 1px;
-    margin: 40px 0 20px 0;
+    margin: 20px 0 5px 0;
     background-color: #657080;
     border: none;
 }
+
+.footer-content-left {
+    justify-content: center;
+}
+
+.footer-copyright {
+    text-align: center;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px; 
+}
+
