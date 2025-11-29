@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './navbar.css';
@@ -34,7 +35,7 @@ const Navbar = () => {
         .single();
 
       if (!error && profile?.role) {
-        setRole(profile.role.trim().toUpperCase());
+        setRole(profile.role.trim());
       }
     };
 
@@ -64,7 +65,7 @@ const Navbar = () => {
         )}
 
         {/* CHEF ROUTES */}
-        {isLoggedIn && role === "CHEF" && (
+        {isLoggedIn && role === "chef" && (
           <>
             <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
             <li onClick={() => navigate('/feedback')}>View Feedback</li>
@@ -73,7 +74,7 @@ const Navbar = () => {
         )}
 
         {/* MANAGER ROUTES */}
-        {isLoggedIn && role === "MANAGER" && (
+        {isLoggedIn && role === "manager" && (
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
             <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
@@ -84,7 +85,7 @@ const Navbar = () => {
         )}
 
         {/* DRIVER ROUTES */}
-        {isLoggedIn && role === "DELIVERY_PERSON" && (
+        {isLoggedIn && role === "delivery_person" && (
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
             <li onClick={() => navigate('/driver/transport')}>Transport Orders</li>
