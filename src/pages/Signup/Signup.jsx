@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../api/supabaseClient";
-import './Signup.css';
+import "./Signup.css";
 
 function Signup() {
   const { handleSubmit } = useForm();
@@ -14,9 +14,16 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
   const [role, setRole] = useState("customer");
+  const [restaurant, setRestaurant] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const restaurantOptions = [
+    "Chilaca",
+    "Citizen Chicken",
+    "Da Brix",
+  ];
 
   const test_password = (value) => {
     const newErrors = [];
@@ -28,11 +35,12 @@ function Signup() {
       newErrors.push("At least one special character (!@#$%^&*)");
     return newErrors;
   };
-  
+
   const onSubmit = async () => {
     setError("");
     setSuccess("");
 
+    // Password rules
     const check_password = test_password(password);
     if (check_password.length > 0) {
       setError("Password must include: " + check_password.join(", "));
@@ -44,7 +52,14 @@ function Signup() {
       return;
     }
 
+    // If chef/manager, restaurant required
+    if ((role === "chef" || role === "manager") && !restaurant) {
+      setError("Please select a restaurant.");
+      return;
+    }
+
     try {
+      // 1️⃣ Supabase Auth Signup
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -56,10 +71,11 @@ function Signup() {
       if (data.user) {
         let salary = null;
 
-        if (role == "chef") salary = 70000;
-        if (role == "delivery_person") salary = 50000;
-        if (role == "manager") salary = 100000;
+        if (role === "chef") salary = 70000;
+        if (role === "delivery_person") salary = 50000;
+        if (role === "manager") salary = 100000;
 
+        // 2️⃣ Insert into your Supabase "users" table
         const { error: dbError } = await supabase.from("users").insert([
           {
             email,
@@ -67,11 +83,12 @@ function Signup() {
             role,
             salary,
             first_name: firstName,
-            last_name: lastName
+            last_name: lastName,
+            restaurant_name:
+              role === "chef" || role === "manager" ? restaurant : null,
           },
         ]);
 
-        //compares with the postgre code 23505 if the account already exists
         if (dbError?.code === "23505") {
           setError("Account already exists. Login or reset password.");
           return;
@@ -95,10 +112,12 @@ function Signup() {
         {error && <p className="error-text">{error}</p>}
         {success && <p className="success-text">{success}</p>}
 
-        <form onSubmit={(e) => {
-              e.preventDefault();
-              onSubmit();
-            }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
           <input
             type="text"
             placeholder="First Name"
@@ -129,8 +148,10 @@ function Signup() {
             value={confirm_password}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <select 
-            value={role} 
+
+          {/* ROLE SELECT */}
+          <select
+            value={role}
             onChange={(e) => setRole(e.target.value)}
             className="role-select"
           >
@@ -140,20 +161,26 @@ function Signup() {
             <option value="chef">Chef</option>
           </select>
 
-          {/* /* { {["chef", "delivery_person", "manager"].includes(role) && (
-          <select 
-            value={restaurant} 
-            onChange={(e) => setRestaurant(e.target.value)}
-            className="restaurant-select"
-          >
-            <option value="chilaca">Chilaca</option>
-            <option value="Citizen_Chicken">Citizen Chicken</option>
-            <option value="">Da Brix</option>
-            <option value="">Chef</option>
-          </select>
-        )} } */ }
+          {/* RESTAURANT SELECT — ONLY CHEF OR MANAGER */}
+          {(role === "chef" || role === "manager") && (
+            <select
+              value={restaurant}
+              onChange={(e) => setRestaurant(e.target.value)}
+              className="restaurant-select"
+              required
+            >
+              <option value="">Select Restaurant</option>
+              {restaurantOptions.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          )}
 
-          <button type="submit" className="signup-btn">Sign Up</button>
+          <button type="submit" className="signup-btn">
+            Sign Up
+          </button>
         </form>
       </div>
     </div>
@@ -161,4 +188,3 @@ function Signup() {
 }
 
 export default Signup;
-

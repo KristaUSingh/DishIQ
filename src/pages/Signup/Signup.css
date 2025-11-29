@@ -34,7 +34,17 @@ body {
 }
 
 .signup-card input,
-.signup-card select.role-select {
+.signup-card select.role-select{
+  padding: 0.75rem 1rem;
+  border: 1px solid #cde8d5;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+}
+
+.signup-card input,
+.signup-card select.restaurant-select{
   padding: 0.75rem 1rem;
   border: 1px solid #cde8d5;
   border-radius: 8px;
