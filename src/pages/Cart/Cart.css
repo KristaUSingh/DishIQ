@@ -81,3 +81,89 @@
     color: white;
     border-radius: 4px;
 }
+
+/* Quantity box */
+.cart-qty-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .qty-btn {
+    background: #3c973c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .qty-btn:hover {
+    background: #2d7c2d;
+  }
+  
+  .qty-number {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  /* Trash icon */
+  .trash-icon {
+    width: 22px;
+    cursor: pointer;
+    filter: invert(32%) sepia(78%) saturate(2200%) hue-rotate(355deg) brightness(90%) contrast(95%);
+    transition: 0.2s;
+  }
+  
+  .trash-icon:hover {
+    transform: scale(1.15);
+  }
+  
+  /* Modal overlay */
+  .delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal box */
+  .delete-modal {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+  }
+  
+  .delete-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .cancel-btn {
+    background: #bbbbbb;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .confirm-btn {
+    background: #e63946;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  

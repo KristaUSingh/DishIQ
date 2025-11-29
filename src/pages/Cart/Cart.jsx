@@ -1,16 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
+import { assets } from "../../assets/assets"; // make sure trash icon is inside assets
 
 const Cart = () => {
   const {
-    menuItems,
     cartItems,
+    menuItems,
+    addToCart,
     removeFromCart,
+    deleteFromCart,
     getTotalCartAmount,
   } = useContext(StoreContext);
 
+  const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
   return (
@@ -28,36 +32,57 @@ const Cart = () => {
         <br />
         <hr />
 
-        {/* DISPLAY ONLY ITEMS THAT ARE IN CART */}
         {menuItems.map((item) => {
-          const qty = cartItems[item.dish_id];
+          if (cartItems[item.dish_id] > 0) {
+            return (
+              <div key={item.dish_id} className="cart-row">
+                <div className="cart-items-title cart-items-item">
+                  <img src={item.image_url} alt="" />
 
-          if (!qty || qty <= 0) return null;
+                  <p>{item.name}</p>
+                  <p>${Number(item.price).toFixed(2)}</p>
 
-          return (
-            <div key={item.dish_id}>
-              <div className="cart-items-title cart-items-item">
-                <img src={item.image_url} alt={item.name} />
+                  {/* QUANTITY BUTTONS */}
+                  <div className="cart-qty-box">
+                    <button
+                      className="qty-btn"
+                      onClick={() => removeFromCart(item.dish_id)}
+                    >
+                      −
+                    </button>
 
-                <p>{item.name}</p>
+                    <p className="qty-count">{cartItems[item.dish_id]}</p>
 
-                <p>${Number(item.price).toFixed(2)}</p>
+                    <button
+                      className="qty-btn"
+                      onClick={() => addToCart(item.dish_id)}
+                    >
+                      +
+                    </button>
+                  </div>
 
-                <p>{qty}</p>
+                  {/* ITEM TOTAL */}
+                  <p>
+                    $
+                    {(
+                      Number(item.price) * cartItems[item.dish_id]
+                    ).toFixed(2)}
+                  </p>
 
-                <p>${(item.price * qty).toFixed(2)}</p>
+                  {/* TRASH DELETE ICON */}
+                  <img
+                    src={assets.trash_icon_red}
+                    alt="delete"
+                    className="trash-icon"
+                    onClick={() => setItemToDelete(item.dish_id)}
+                  />
+                </div>
 
-                <p
-                  className="cross"
-                  onClick={() => removeFromCart(item.dish_id)}
-                >
-                  x
-                </p>
+                <hr />
               </div>
-
-              <hr />
-            </div>
-          );
+            );
+          }
+          return null;
         })}
       </div>
 
@@ -65,6 +90,7 @@ const Cart = () => {
       <div className="cart-bottom">
         <div className="cart-total">
           <h2>Cart Total</h2>
+
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
@@ -94,7 +120,6 @@ const Cart = () => {
           </button>
         </div>
 
-        {/* PROMO CODE */}
         <div className="cart-promocode">
           <div>
             <p>If you are a VIP customer, enter your promo code here</p>
@@ -106,6 +131,35 @@ const Cart = () => {
           </div>
         </div>
       </div>
+
+      {/* DELETE CONFIRMATION MODAL */}
+      {itemToDelete && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <h3>Remove Item?</h3>
+            <p>Are you sure you want to remove this item from your cart?</p>
+
+            <div className="delete-modal-buttons">
+              <button
+                className="delete-confirm"
+                onClick={() => {
+                  deleteFromCart(itemToDelete);
+                  setItemToDelete(null);
+                }}
+              >
+                Yes, Remove
+              </button>
+
+              <button
+                className="delete-cancel"
+                onClick={() => setItemToDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
