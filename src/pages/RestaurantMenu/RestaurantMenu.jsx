@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../api/supabaseClient";
 import "./RestaurantMenu.css";
+import { StoreContext } from "../../context/StoreContext";
 
 const RestaurantMenu = () => {
   const { restaurantName } = useParams();
+
+  // ⭐ USE GLOBAL CART SYSTEM
+  const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
+
   const [menuCategories, setMenuCategories] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Cart state stored locally (for now)
-  const [cart, setCart] = useState({});
-
-  // Load menu from Supabase
   useEffect(() => {
     const loadMenu = async () => {
       setLoading(true);
@@ -30,10 +31,8 @@ const RestaurantMenu = () => {
       // Group by category
       const grouped = {};
       data.forEach((item) => {
-        if (item.name === "Placeholder") return; // hide placeholder
-        if (!grouped[item.category]) {
-          grouped[item.category] = [];
-        }
+        if (item.name === "Placeholder") return;
+        if (!grouped[item.category]) grouped[item.category] = [];
         grouped[item.category].push(item);
       });
 
@@ -43,22 +42,6 @@ const RestaurantMenu = () => {
 
     loadMenu();
   }, [restaurantName]);
-
-  // Add item to cart
-  const addToCart = (item) => {
-    setCart((prev) => ({
-      ...prev,
-      [item.dish_id]: (prev[item.dish_id] || 0) + 1,
-    }));
-  };
-
-  // Remove item from cart
-  const removeFromCart = (item) => {
-    setCart((prev) => ({
-      ...prev,
-      [item.dish_id]: Math.max((prev[item.dish_id] || 0) - 1, 0),
-    }));
-  };
 
   if (loading) return <p>Loading menu...</p>;
 
@@ -81,22 +64,22 @@ const RestaurantMenu = () => {
                     <p className="item-description">{item.description}</p>
                     <p className="item-price">${Number(item.price).toFixed(2)}</p>
 
-                    {/* Add to Cart Buttons */}
+                    {/* ⭐ USE GLOBAL CART */}
                     <div className="cart-controls">
                       <button
                         className="cart-btn"
-                        onClick={() => removeFromCart(item)}
+                        onClick={() => removeFromCart(item.dish_id)}
                       >
-                        -
+                        –
                       </button>
 
                       <span className="quantity">
-                        {cart[item.dish_id] || 0}
+                        {cartItems[item.dish_id] || 0}
                       </span>
 
                       <button
                         className="cart-btn"
-                        onClick={() => addToCart(item)}
+                        onClick={() => addToCart(item.dish_id)}
                       >
                         +
                       </button>
