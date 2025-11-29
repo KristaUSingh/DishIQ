@@ -67,7 +67,7 @@ function Login({}) {
           navigate("/");
           break;
         case "delivery_person":
-          navigate("/Driver/transport");
+          navigate("/Driver/bids");
           break;
         case "chef":
           navigate("/ChefMenu");
@@ -92,6 +92,7 @@ function Login({}) {
     <div className="login-container">
       <div className="login-card">
         <h1>Login</h1>
+        {error && <p className="alert">{error}</p>}
         <form onSubmit={onSubmit}>
           <input
             type="email"
