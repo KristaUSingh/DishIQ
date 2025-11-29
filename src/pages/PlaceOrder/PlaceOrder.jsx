@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { supabase } from "../../api/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "./PlaceOrder.css";
@@ -60,7 +60,7 @@ const PlaceOrder = () => {
       const total_price = getTotalCartAmount();
 
       // Build full delivery address
-      const delivery_address = `${firstName} ${lastName}, ${street}, ${city}, ${stateVal} ${zip}, ${country}. Phone: ${phone}`;
+      const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
 
       // -----------------------------------------
       // 1️⃣ INSERT INTO ORDERS TABLE
@@ -200,7 +200,7 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <p>Subtotal</p>
-            <p>${getTotalCartAmount()}</p>
+            <p>${getTotalCartAmount().toFixed(2)}</p>
           </div>
 
           <div className="cart-total-details">
@@ -212,7 +212,7 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <b>Total</b>
-            <b>${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
+            <b>${getTotalCartAmount() === 0 ? 0 : (getTotalCartAmount() + 2).toFixed(2)}</b>
           </div>
 
           <button disabled={loading}>
