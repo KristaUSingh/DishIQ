@@ -33,6 +33,7 @@ import remove_icon_red from './remove_icon_red.png'
 import rating_stars from './rating_stars.png'
 import cross_icon from './cross_icon.png'
 import trash_icon_red from "./trash_icon_red.svg"
+import instagram_icon from "./instagram_icon.png"
 
     
 export const assets = {
@@ -70,8 +71,8 @@ export const assets = {
     remove_icon_red, 
     rating_stars,
     cross_icon,
-    trash_icon_red
-    
+    trash_icon_red,
+    instagram_icon
 }
 
 export const restaurant_list = [

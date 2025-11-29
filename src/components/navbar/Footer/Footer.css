@@ -14,8 +14,8 @@
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 60px;
 }
+
 .footer-content-left img{
     width: 200px;
     height: auto;
@@ -24,7 +24,7 @@
 .footer-content-left, .footer-content-right, .footer-content-center{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     gap: 15px;
 }
 .footer-content-left li, .footer-content-right li, .footer-content-center li{
@@ -36,11 +36,21 @@
 .footer-content-right h2, .footer-content-center h2{
     color: #f8f7f3;
 }
-.footer-social-icons img{
-    width: 40px;
-    margin-inline-start: 15px;
-    margin-right: 15px;
+
+.footer-social-icons {
+    display: flex;
+    align-items: center;     /* keeps all icons aligned */
+    justify-content: start;
+    gap: 20px;
 }
+
+.footer-social-icons img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin: 0;               /* remove old spacing from each icon */
+}
+
 .footer hr{
     width: 100%;
     height: 1px;
@@ -59,4 +69,15 @@
     margin-top: 5px;
     margin-bottom: 10px; 
 }
+
+/* Scale only the Instagram icon (2nd child) */
+.footer-social-icons img:nth-child(2) {
+    width: 58px;   /* slightly larger */
+    height: 58px;
+}
+
+.footer-content-left {
+    align-items: center !important;  /* center logo + icons */
+}
+
 
