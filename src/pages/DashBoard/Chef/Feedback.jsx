@@ -1,94 +1,127 @@
-import React, { useState } from "react";
-import './Feedback.css';
+import React, { useEffect, useState } from "react";
+import "./Feedback.css";
+import { supabase } from "../../../api/supabaseClient";
 
-const sampleFeedback = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    dish: "Spicy Chicken Burger",
-    rating: 4.5,
-    comment: "Absolutely delicious! The food are all perfectly spiced.",
-    date: "2025-11-15"
-  },
-  {
-    id: 2,
-    name: "Mohamed Ali",
-    dish: "Classic Cheeseburger",
-    rating: 5,
-    comment: "Best burger I've had in years. Highly recommend!",
-    date: "2025-11-14"
-  },
-  {
-    id: 3,
-    name: "Sofia Khan",
-    dish: "Veggie Pizza",
-    rating: 3.5,
-    comment: "Good flavors, but portion could be bigger.",
-    date: "2025-11-13"
-  }
-];
+const StarSVG = ({ className }) => (
+  <svg className={`star ${className}`} viewBox="0 0 24 24">
+    <path d="M12 17.27L18.18 21l-1.64-7.03L22 
+      9.24l-7.19-.61L12 2 9.19 8.63 
+      2 9.24l5.46 4.73L5.82 21z" />
+  </svg>
+);
 
-const Stars = ({ rating, maxRating = 5 }) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
-  const emptyStars = maxRating - fullStars - (halfStar ? 1 : 0);
+const HalfStarSVG = () => (
+  <svg className="star svg-half" viewBox="0 0 24 24">
+    <defs>
+      <linearGradient id="half-fill">
+        <stop offset="50%" stopColor="#4CAF50" />
+        <stop offset="50%" stopColor="#ddd" />
+      </linearGradient>
+    </defs>
+    <path fill="url(#half-fill)" d="M12 17.27L18.18 21l-1.64-7.03L22 
+      9.24l-7.19-.61L12 2 9.19 8.63 
+      2 9.24l5.46 4.73L5.82 21z" />
+  </svg>
+);
+
+const Stars = ({ rating }) => {
+  const full = Math.floor(rating);
+  const half = rating % 1 !== 0;
+  const empty = 5 - full - (half ? 1 : 0);
 
   return (
     <div className="stars">
-      {[...Array(fullStars)].map((_, i) => <span key={`full-${i}`} className="star full">★</span>)}
-      {halfStar && <span className="star half">★</span>}
-      {[...Array(emptyStars)].map((_, i) => <span key={`empty-${i}`} className="star empty">☆</span>)}
+      {Array(full)
+        .fill(0)
+        .map((_, i) => (
+          <StarSVG key={`f-${i}`} className="svg-full" />
+        ))}
+
+      {half && <HalfStarSVG />}
+
+      {Array(empty)
+        .fill(0)
+        .map((_, i) => (
+          <StarSVG key={`e-${i}`} className="svg-empty" />
+        ))}
     </div>
   );
 };
 
-const Feedback = () => {
-  const [responses, setResponses] = useState({});
+const Feedback = ({ restaurant_name }) => {
+  const [feedback, setFeedback] = useState([]);
 
-  const handleResponseChange = (id, value) => {
-    setResponses(prev => ({ ...prev, [id]: value }));
-  };
+  useEffect(() => {
+    if (restaurant_name) fetchFeedback();
+  }, [restaurant_name]); // <-- FIX: ensures it loads on refresh
 
-  const handleResponseSubmit = (id) => {
-    alert(`Response submitted for review ${id}: ${responses[id]}`);
-    setResponses(prev => ({ ...prev, [id]: "" }));
+  const fetchFeedback = async () => {
+    const { data, error } = await supabase
+      .from("ratings")
+      .select(`
+        rating_id,
+        food_rating,
+        delivery_rating,
+        comment,
+        created_at,
+        users:customer_id ( first_name, last_name )
+      `)
+      .eq("restaurant_name", restaurant_name);
+
+    if (error) {
+      console.error("Error loading feedback:", error);
+      return;
+    }
+
+    const formatted = data.map((item) => ({
+      id: item.rating_id,
+      customer: `${item.users.first_name} ${item.users.last_name}`,
+      food_rating: item.food_rating,
+      delivery_rating: item.delivery_rating,
+      comment: item.comment,
+      created_at: new Date(item.created_at).toLocaleString(),
+    }));
+
+    setFeedback(formatted);
   };
 
   return (
-    <div className="dashboard-container">
-      <h2 className="dashboard-title">Customer Feedback</h2>
-      <div className="feedback-list">
-        {sampleFeedback.map(fb => (
-          <div key={fb.id} className="feedback-card">
-            <div className="feedback-header">
-              <span className="feedback-name">{fb.name}</span>
-              <Stars rating={fb.rating} />
-              <span className="feedback-date">{fb.date}</span>
+    <div className="feedback-container">
+      <h2 className="feedback-title">Customer Feedback</h2>
+
+      {feedback.length === 0 ? (
+        <p>No feedback available yet.</p>
+      ) : (
+        feedback.map((fb) => (
+          <div key={fb.id} className="feedback-card-clean">
+            <div className="fb-header">
+              <span className="fb-name">{fb.customer}</span>
+              <span className="fb-date">{fb.created_at}</span>
             </div>
 
-            {/* Dish name */}
-            <p className="feedback-dish"><strong>Dish:</strong> {fb.dish}</p>
+            <div className="fb-row">
+              <span className="fb-label">
+                <strong>Food Rating:</strong>
+              </span>
+              <Stars rating={fb.food_rating} />
+            </div>
 
-            <p className="feedback-comment">{fb.comment}</p>
+            <div className="fb-row">
+              <span className="fb-label">
+                <strong>Delivery Rating:</strong>
+              </span>
+              <Stars rating={fb.delivery_rating} />
+            </div>
 
-            <div className="response-section">
-              <input
-                type="text"
-                placeholder="Type your response..."
-                value={responses[fb.id] || ""}
-                onChange={(e) => handleResponseChange(fb.id, e.target.value)}
-                className="response-input"
-              />
-              <button
-                className="btn response-btn"
-                onClick={() => handleResponseSubmit(fb.id)}
-              >
-                Respond
-              </button>
+            <div className="fb-row comment-row">
+              <span className="fb-label">
+                <strong>Comment:</strong>
+              </span>
+              <span className="fb-comment">{fb.comment}</span>
             </div>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 };
