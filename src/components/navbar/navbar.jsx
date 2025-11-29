@@ -57,10 +57,9 @@ const Navbar = () => {
       <ul className="navbar-menu">
         {!isLoggedIn && (
           <>
-            <li onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
-            <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
-            <li onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
-            <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
+            <li onClick={() => navigate("/")} className={menu === "home" ? "active" : ""}>Home</li>
+            <li onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>Restaurants</li>
+            <li onClick={() => setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>Contact Us</li>
           </>
         )}
 
@@ -95,7 +94,6 @@ const Navbar = () => {
       </ul>
 
       <div className="navbar-right">
-        <img src={assets.searchIcon} alt="search" />
         <Link to="/cart" className="navbar-search-icon">
           <img src={assets.basketIcon} alt="cart" />
           <div className="dot"></div>

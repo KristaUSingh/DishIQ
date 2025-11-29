@@ -33,7 +33,7 @@ export const ROLES = {
     ],
   },
   DELIVERY_PERSON: {
-    name: "Delivery Person",
+    name: "Delivery_Person",
     permissions: [
       PERMISSIONS.RATING_SYSTEM,
       PERMISSIONS.COMPLAINT_SYSTEM,
