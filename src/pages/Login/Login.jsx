@@ -42,8 +42,21 @@ function Login() {
         firstName: profile.first_name,
         lastName: profile.last_name,
         restaurant_name: profile.restaurant_name,
-        user_id: user.id
+        vip_flag: profile.vip_flag,
+        warnings: profile.warnings,
+        user_id: user.id,
       });
+
+      if (profile.role == "blacklist_customer") {
+        setError("You are currently blacklisted from the system. If you believe this is a mistake, please contact us at contact@dishiq.com.")
+        return;
+      }
+
+      if (profile.fired_flag == true) {
+        setError("Unfortunately, you were removed from the system because your employment was terminated. If this is an error, please contact us at contact@dishiq.com.")
+        return;
+      }
+
 
       // Redirect
       switch (profile.role) {

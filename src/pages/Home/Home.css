@@ -1,0 +1,27 @@
+.header-wrapper {
+  position: relative;
+}
+
+.warning-banner {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e98c89;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 50;
+}
+
+.vip-banner {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #cde8d5;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 50;
+}
