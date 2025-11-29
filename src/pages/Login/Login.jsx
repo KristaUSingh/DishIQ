@@ -70,7 +70,7 @@ function Login({}) {
           navigate("/Driver/bids");
           break;
         case "chef":
-          navigate("/ChefMenu");
+          navigate("/chef/menu");
           break;
         case "manager":
           navigate("/manager/user");
