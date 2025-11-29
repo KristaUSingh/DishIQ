@@ -17,13 +17,15 @@ import DriverTransport from "./pages/DashBoard/Driver/DriverTransport";
 import DriverRating from "./pages/DashBoard/Driver/DriverRating";
 
 import UserRegistration from "./pages/DashBoard/Manager/UserRegistration";
+import ManageBids from "./pages/DashBoard/Manager/ManageBids";
 import UserComplaints from "./pages/DashBoard/Manager/UserComplaints";
 import StaffRating from "./pages/DashBoard/Manager/StaffRating";
 import Finances from "./pages/DashBoard/Manager/Finances";
 
 import RestaurantMenu from "./pages/RestaurantMenu/RestaurantMenu";
 
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/useAuth";
+
 
 function App() {
   const { auth } = useAuth(); // <-- GLOBAL AUTH HERE
@@ -68,6 +70,7 @@ function App() {
           {/* ---------------------- MANAGER ROUTES ---------------------- */}
 
           <Route path="/manager/user" element={<UserRegistration />} />
+          <Route path="/manager/manage-bids" element={<ManageBids />} />
           <Route path="/manager/complaints" element={<UserComplaints />} />
           <Route path="/manager/staffrating" element={<StaffRating />} />
           <Route path="/manager/finances" element={<Finances />} />
