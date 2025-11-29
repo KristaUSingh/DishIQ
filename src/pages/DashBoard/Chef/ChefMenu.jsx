@@ -1,189 +1,329 @@
 import React, { useState, useEffect } from "react";
-import './ChefMenu.css';
+import "./ChefMenu.css";
+import { supabase } from "../../../api/supabaseClient";
 
 const ChefMenu = () => {
-  const [menuCategories, setMenuCategories] = useState([
-    {
-      id: 1,
-      name: "Top Dishes Near You",
-      items: [
-        {
-          id: 101,
-          name: "Halal Chicken Sandwich & Fries",
-          description: "Crispy chicken sandwich with golden fries",
-          price: 8.99,
-          image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400"
-        },
-        {
-          id: 102,
-          name: "Plant-Based Chicken Sandwich & Fries",
-          description: "Delicious plant-based chicken with crispy fries",
-          price: 9.49,
-          image: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=400"
-        },
-      ]
-    },
-    {
-      id: 2,
-      name: "Sides & Snacks",
-      items: [
-        {
-          id: 201,
-          name: "Chicken Tenders & Fries",
-          description: "Crispy breaded chicken tenders with fries",
-          price: 7.99,
-          image: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
-        },
-      ]
-    }
-  ]);
+  const [restaurantName, setRestaurantName] = useState(null);
+
+  const [menuCategories, setMenuCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [addingCategory, setAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [addingItemCategoryId, setAddingItemCategoryId] = useState(null);
-  const [newItem, setNewItem] = useState({ name: "", description: "", price: "", image: "" });
+
+  const [addingItemCategory, setAddingItemCategory] = useState(null);
+  const [newItem, setNewItem] = useState({
+    name: "",
+    description: "",
+    price: "",
+    image_url: "",
+  });
+
   const [role, setRole] = useState(null);
 
+
+  // ==============================
+  // LOAD USER ROLE + RESTAURANT NAME
+  // ==============================
   useEffect(() => {
-    const storedRole = localStorage.getItem("role")?.trim().toUpperCase();
-    setRole(storedRole);
+    const loadUserInfo = async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth?.user;
+
+      if (!user) return;
+
+      // fetch role + restaurant_name from "users" table
+      const { data: profile, error } = await supabase
+        .from("users")
+        .select("role, restaurant_name")
+        .eq("user_id", user.id)
+        .single();
+
+      if (!error && profile) {
+        setRole(profile.role.trim().toUpperCase());
+        setRestaurantName(profile.restaurant_name?.trim());
+      }
+    };
+
+    loadUserInfo();
   }, []);
+
 
   const canEdit = role === "CHEF" || role === "MANAGER";
 
-  // Add Category
-  const handleAddCategory = () => {
-    if (!newCategoryName.trim()) return alert("Please enter a category name.");
-    const newCat = { id: Date.now(), name: newCategoryName.trim(), items: [] };
-    setMenuCategories([...menuCategories, newCat]);
-    setNewCategoryName("");
-    setAddingCategory(false);
+
+  // ==============================
+  // LOAD MENU ITEMS FROM SUPABASE
+  // ==============================
+  const loadMenu = async (restName) => {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("menus")
+      .select("*")
+      .eq("restaurant_name", restName);
+
+    if (error) {
+      console.error("Load menu error:", error);
+      setLoading(false);
+      return;
+    }
+
+    // Group items by category
+    const grouped = {};
+    data.forEach((item) => {
+      if (!grouped[item.category]) {
+        grouped[item.category] = { name: item.category, items: [] };
+      }
+      grouped[item.category].items.push(item);
+    });
+
+    setMenuCategories(Object.values(grouped));
+    setLoading(false);
   };
 
-  // Add Item
-  const handleAddItemClick = (catId) => {
-    setAddingItemCategoryId(catId);
-    setNewItem({ name: "", description: "", price: "", image: "" });
+
+  // Load menu once restaurantName is ready
+  useEffect(() => {
+    if (restaurantName) loadMenu(restaurantName);
+  }, [restaurantName]);
+
+
+  // ==============================
+  // ADD CATEGORY
+  // ==============================
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) {
+      return alert("Please enter a category name.");
+    }
+  
+    const categoryName = newCategoryName.trim();
+  
+    const { error } = await supabase.from("menus").insert({
+      name: "Placeholder",
+      price: 0,
+      image_url: "",
+      description: "",
+      restaurant_name: restaurantName,
+      category: categoryName,
+    });
+  
+    if (error) {
+      console.error("Add category error:", error);
+      return;
+    }
+  
+    setNewCategoryName("");
+    setAddingCategory(false);
+    loadMenu(restaurantName);
   };
-  const handleNewItemChange = (field, value) => {
-    setNewItem(prev => ({ ...prev, [field]: value }));
-  };
-  const handleSaveNewItem = (catId) => {
-    if (!newItem.name.trim() || !newItem.price) return alert("Name and price are required.");
-    const newItemToAdd = {
-      id: Date.now(),
+  
+
+
+  // ==============================
+  // ADD ITEM
+  // ==============================
+  const handleSaveNewItem = async (categoryName) => {
+    if (!newItem.name.trim() || !newItem.price)
+      return alert("Name and price required.");
+
+    const { error } = await supabase.from("menus").insert({
       name: newItem.name.trim(),
       description: newItem.description.trim(),
       price: parseFloat(newItem.price),
-      image: newItem.image.trim()
-    };
-    setMenuCategories(menuCategories.map(cat =>
-      cat.id === catId ? { ...cat, items: [...cat.items, newItemToAdd] } : cat
-    ));
-    setAddingItemCategoryId(null);
-    setNewItem({ name: "", description: "", price: "", image: "" });
-  };
-  const handleCancelNewItem = () => {
-    setAddingItemCategoryId(null);
-    setNewItem({ name: "", description: "", price: "", image: "" });
+      image_url: newItem.image_url.trim(),
+      category: categoryName,
+      restaurant_name: restaurantName,
+    });
+
+    if (error) {
+      console.error("Add item error:", error);
+      return;
+    }
+
+    setAddingItemCategory(null);
+    setNewItem({ name: "", description: "", price: "", image_url: "" });
+    loadMenu(restaurantName);
   };
 
-  // Delete Category
-  const handleDeleteCategory = (catId) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      setMenuCategories(menuCategories.filter(cat => cat.id !== catId));
+
+  // ==============================
+  // DELETE ITEM
+  // ==============================
+  const handleDeleteItem = async (dish_id) => {
+    if (!window.confirm("Delete this dish?")) return;
+
+    const { error } = await supabase
+      .from("menus")
+      .delete()
+      .eq("dish_id", dish_id);
+
+    if (error) {
+      console.error("Delete item error:", error);
+      return;
     }
+
+    loadMenu(restaurantName);
   };
 
-  // Delete Item
-  const handleDeleteItem = (catId, itemId) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      setMenuCategories(menuCategories.map(cat =>
-        cat.id === catId ? { ...cat, items: cat.items.filter(item => item.id !== itemId) } : cat
-      ));
+
+  // ==============================
+  // DELETE CATEGORY (all dishes inside)
+  // ==============================
+  const handleDeleteCategory = async (categoryName) => {
+    if (!window.confirm("Delete entire category?")) return;
+
+    const { error } = await supabase
+      .from("menus")
+      .delete()
+      .eq("category", categoryName)
+      .eq("restaurant_name", restaurantName);
+
+    if (error) {
+      console.error("Delete category error:", error);
+      return;
     }
+
+    loadMenu(restaurantName);
   };
+
+
+  // ==============================
+  // RENDER UI
+  // ==============================
+  if (!restaurantName) return <p className="loading">Loading restaurant...</p>;
+  if (loading) return <p className="loading">Loading menu...</p>;
+
 
   return (
     <div className="chef-dashboard-container">
-      <h2 className="dashboard-title">Chef Menu</h2>
+      <h2 className="dashboard-title">{restaurantName} — Chef Menu</h2>
 
       <div className="menu-container">
-        {menuCategories.length === 0 && (
-          <p className="empty-state-message">No menu sections yet.</p>
-        )}
-
-        {menuCategories.map(category => (
-          <section key={category.id} className="category-section">
+        {menuCategories.map((category) => (
+          <section key={category.name} className="category-section">
             <div className="category-header">
               <h3 className="category-title">{category.name}</h3>
+
               {canEdit && (
-                <button className="btn delete-btn" onClick={() => handleDeleteCategory(category.id)}>
+                <button
+                  className="btn delete-btn"
+                  onClick={() => handleDeleteCategory(category.name)}
+                >
                   Delete Section
                 </button>
               )}
             </div>
 
             <div className="items-list">
-              {category.items.map(item => (
-                <div key={item.id} className="menu-item">
-                  <div className="item-text">
-                    <h4 className="item-name">{item.name}</h4>
-                    <p className="item-description">{item.description}</p>
-                    <p className="item-price">${item.price.toFixed(2)}</p>
-                  </div>
-                  {item.image && <img className="item-image" src={item.image} alt={item.name} />}
-                  {canEdit && (
-                    <button className="btn delete-btn" onClick={() => handleDeleteItem(category.id, item.id)}>
-                      Delete Item
-                    </button>
-                  )}
-                </div>
-              ))}
+              {category.items
+                .filter((item) => item.name !== "Placeholder")
+                .map((item) => (
+                  <div key={item.dish_id} className="menu-item">
+                    <div className="item-text">
+                      <h4 className="item-name">{item.name}</h4>
+                      <p className="item-description">{item.description}</p>
+                      <p className="item-price">
+                        ${Number(item.price).toFixed(2)}
+                      </p>
+                    </div>
 
-              {canEdit && addingItemCategoryId === category.id && (
+                    {item.image_url && (
+                      <img
+                        className="item-image"
+                        src={item.image_url}
+                        alt={item.name}
+                      />
+                    )}
+
+                    {canEdit && (
+                      <button
+                        className="btn delete-btn"
+                        onClick={() => handleDeleteItem(item.dish_id)}
+                      >
+                        Delete Item
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+              {/* ADD ITEM FORM */}
+              {canEdit && addingItemCategory === category.name && (
                 <div className="menu-item add-item-form">
                   <div className="item-text">
                     <input
                       type="text"
-                      value={newItem.name}
-                      onChange={(e) => handleNewItemChange('name', e.target.value)}
                       className="input-field"
                       placeholder="Item name"
+                      value={newItem.name}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem, name: e.target.value })
+                      }
                     />
+
                     <textarea
-                      value={newItem.description}
-                      onChange={(e) => handleNewItemChange('description', e.target.value)}
                       className="input-field textarea-field"
                       placeholder="Description"
                       rows={2}
+                      value={newItem.description}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem, description: e.target.value })
+                      }
                     />
+
                     <input
                       type="number"
-                      value={newItem.price}
-                      onChange={(e) => handleNewItemChange('price', e.target.value)}
                       className="input-field"
                       placeholder="Price"
-                      step="0.01"
-                      min="0"
+                      value={newItem.price}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem, price: e.target.value })
+                      }
                     />
+
                     <input
                       type="text"
-                      value={newItem.image}
-                      onChange={(e) => handleNewItemChange('image', e.target.value)}
                       className="input-field"
                       placeholder="Image URL"
+                      value={newItem.image_url}
+                      onChange={(e) =>
+                        setNewItem({ ...newItem, image_url: e.target.value })
+                      }
                     />
+
                     <div className="add-item-buttons">
-                      <button className="btn save-btn" onClick={() => handleSaveNewItem(category.id)}>Save</button>
-                      <button className="btn cancel-btn" onClick={handleCancelNewItem}>Cancel</button>
+                      <button
+                        className="btn save-btn"
+                        onClick={() => handleSaveNewItem(category.name)}
+                      >
+                        Save
+                      </button>
+
+                      <button
+                        className="btn cancel-btn"
+                        onClick={() => {
+                          setAddingItemCategory(null);
+                          setNewItem({
+                            name: "",
+                            description: "",
+                            price: "",
+                            image_url: "",
+                          });
+                        }}
+                      >
+                        Cancel
+                      </button>
                     </div>
                   </div>
                 </div>
               )}
 
-              {canEdit && addingItemCategoryId !== category.id && (
-                <button className="btn add-item-btn" onClick={() => handleAddItemClick(category.id)}>
+              {/* BUTTON TO OPEN NEW ITEM FORM */}
+              {canEdit && addingItemCategory !== category.name && (
+                <button
+                  className="btn add-item-btn"
+                  onClick={() => setAddingItemCategory(category.name)}
+                >
                   + Add Item
                 </button>
               )}
@@ -191,24 +331,39 @@ const ChefMenu = () => {
           </section>
         ))}
 
+        {/* ADD CATEGORY SECTION */}
         {canEdit && (
           <div className="add-category-section">
             {addingCategory ? (
               <div className="add-category-form">
                 <input
-                  type="text"
+                  className="input-field"
                   placeholder="New section name"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  className="input-field"
                 />
+
                 <div className="add-category-buttons">
-                  <button className="btn save-btn" onClick={handleAddCategory}>Add Section</button>
-                  <button className="btn cancel-btn" onClick={() => { setAddingCategory(false); setNewCategoryName(""); }}>Cancel</button>
+                  <button className="btn save-btn" onClick={handleAddCategory}>
+                    Add Section
+                  </button>
+
+                  <button
+                    className="btn cancel-btn"
+                    onClick={() => {
+                      setAddingCategory(false);
+                      setNewCategoryName("");
+                    }}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             ) : (
-              <button className="btn add-category-btn" onClick={() => setAddingCategory(true)}>
+              <button
+                className="btn add-category-btn"
+                onClick={() => setAddingCategory(true)}
+              >
                 + Add Section
               </button>
             )}
