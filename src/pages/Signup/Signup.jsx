@@ -109,7 +109,7 @@ function Signup() {
       <div className="signup-card">
         <h1>Create Account</h1>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && <p className="alert">{error}</p>}
         {success && <p className="success-text">{success}</p>}
 
         <form
