@@ -6,6 +6,7 @@ import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/navbar/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import OrderHistory from "./pages/OrderHistory/OrderHistory";
 
 import ChefMenu from "./pages/DashBoard/Chef/ChefMenu";
 import ChefOrders from "./pages/DashBoard/Chef/ChefOrders";
@@ -44,6 +45,8 @@ function App() {
           <Route path="/order" element={<PlaceOrder />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path='/order-history' element={<OrderHistory />} />
+
 
           {/* ---------------------- CHEF ROUTES ---------------------- */}
 
