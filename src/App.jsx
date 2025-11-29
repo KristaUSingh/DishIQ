@@ -7,6 +7,12 @@ import Footer from "./components/navbar/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 
+import RestaurantsPage from './pages/RestaurantPage/RestaurantsPage.jsx'; 
+import ContactPage from './pages/ContactUs/ContactPage.jsx';    
+
+// Image search creative feature
+import ImageSearchPage from './pages/ImageSearch/ImageSearchPage.jsx';
+
 import ChefMenu from "./pages/DashBoard/Chef/ChefMenu";
 import ChefOrders from "./pages/DashBoard/Chef/ChefOrders";
 import Feedback from "./pages/DashBoard/Chef/Feedback";
@@ -40,6 +46,8 @@ function App() {
 
           <Route path="/" element={<Home />} />
           <Route path="/restaurant/:restaurantName" element={<RestaurantMenu />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/image-search" element={<ImageSearchPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/order" element={<PlaceOrder />} />
           <Route path="/login" element={<Login />} />
