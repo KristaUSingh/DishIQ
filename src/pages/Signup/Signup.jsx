@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../api/supabaseClient";
+import { useAuth } from "../../context/useAuth";
+
 import "./Signup.css";
 
 function Signup() {
@@ -19,85 +21,100 @@ function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const restaurantOptions = [
-    "Chilaca",
-    "Citizen Chicken",
-    "Da Brix",
-  ];
+  const restaurantOptions = ["Chilaca", "Citizen Chicken", "Da Brix"];
 
+  // -----------------------------
+  // Password Validation
+  // -----------------------------
   const test_password = (value) => {
     const newErrors = [];
     if (value.length < 8) newErrors.push("At least 8 characters");
-    if (!/[A-Z]/.test(value)) newErrors.push("At least one uppercase letter");
-    if (!/[a-z]/.test(value)) newErrors.push("At least one lowercase letter");
+    if (!/[A-Z]/.test(value)) newErrors.push("At least one uppercase");
+    if (!/[a-z]/.test(value)) newErrors.push("At least one lowercase");
     if (!/[0-9]/.test(value)) newErrors.push("At least one number");
-    if (!/[!@#$%^&*]/.test(value))
-      newErrors.push("At least one special character (!@#$%^&*)");
+    if (!/[!@#$%^&*]/.test(value)) newErrors.push("At least one special character");
     return newErrors;
   };
 
+  // -----------------------------
+  // ON SUBMIT
+  // -----------------------------
   const onSubmit = async () => {
     setError("");
     setSuccess("");
 
-    // Password rules
+    // Validate passwords
     const check_password = test_password(password);
     if (check_password.length > 0) {
       setError("Password must include: " + check_password.join(", "));
       return;
     }
-
     if (password !== confirm_password) {
       setError("Passwords must match.");
       return;
     }
 
-    // If chef/manager, restaurant required
+    // Manager & Chef must choose a restaurant
     if ((role === "chef" || role === "manager") && !restaurant) {
       setError("Please select a restaurant.");
       return;
     }
 
     try {
-      // 1️⃣ Supabase Auth Signup
+      // -----------------------------------
+      // 1️⃣ CREATE USER IN SUPABASE AUTH
+      // -----------------------------------
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: "http://localhost:5173/login" },
+        options: {
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
       });
 
       if (signUpError) throw signUpError;
 
-      if (data.user) {
-        let salary = null;
-
-        if (role === "chef") salary = 70000;
-        if (role === "delivery_person") salary = 50000;
-        if (role === "manager") salary = 100000;
-
-        // 2️⃣ Insert into your Supabase "users" table
-        const { error: dbError } = await supabase.from("users").insert([
-          {
-            email,
-            user_id: data.user.id,
-            role,
-            salary,
-            first_name: firstName,
-            last_name: lastName,
-            restaurant_name:
-              role === "chef" || role === "manager" ? restaurant : null,
-          },
-        ]);
-
-        if (dbError?.code === "23505") {
-          setError("Account already exists. Login or reset password.");
-          return;
-        }
-        if (dbError) throw dbError;
+      if (!data.user) {
+        setError("Signup failed. Try again.");
+        return;
       }
 
+      // Determine default salary per role
+      let salary = null;
+      if (role === "chef") salary = 70000;
+      if (role === "delivery_person") salary = 50000;
+      if (role === "manager") salary = 100000;
+
+      // -----------------------------------
+      // 2️⃣ INSERT INTO "users" TABLE
+      // -----------------------------------
+      const { error: dbError } = await supabase.from("users").insert([
+        {
+          user_id: data.user.id,
+          email,
+          role,
+          salary,
+          first_name: firstName,
+          last_name: lastName,
+          restaurant_name:
+            role === "chef" || role === "manager" ? restaurant : null,
+        },
+      ]);
+
+      if (dbError?.code === "23505") {
+        setError("Account already exists. Please login.");
+        return;
+      }
+      if (dbError) throw dbError;
+
+      // -----------------------------------
+      // 3️⃣ SUCCESS MESSAGE
+      // -----------------------------------
       setSuccess("Signup successful! Please check your email to verify your account.");
+
+      // Redirect after short delay
       setTimeout(() => navigate("/login"), 2000);
+
     } catch (err) {
       console.error("Signup error:", err);
       setError(err.message || "Something went wrong during signup.");
@@ -123,30 +140,39 @@ function Signup() {
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            required
           />
+
           <input
             type="text"
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            required
           />
+
           <input
-            type="text"
+            type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
+
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
+
           <input
             type="password"
             placeholder="Confirm Password"
             value={confirm_password}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           />
 
           {/* ROLE SELECT */}
@@ -161,7 +187,7 @@ function Signup() {
             <option value="chef">Chef</option>
           </select>
 
-          {/* RESTAURANT SELECT — ONLY CHEF OR MANAGER */}
+          {/* RESTAURANT SELECT */}
           {(role === "chef" || role === "manager") && (
             <select
               value={restaurant}
