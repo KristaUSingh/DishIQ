@@ -1,49 +1,77 @@
-import { createContext, useState } from "react";
-import { food_list } from "../assets/assets";
+import { createContext, useState, useEffect } from "react";
+import { supabase } from "../api/supabaseClient";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState({});
+  const [menuItems, setMenuItems] = useState([]); // REAL menu from Supabase
+  const [cartItems, setCartItems] = useState({}); // dish_id → quantity
 
-  const addToCart = (itemId) => {
-    setCartItems((prev) => {
-      if (!prev[itemId]) {
-        return { ...prev, [itemId]: 1 };
+  // ================================
+  // LOAD MENU ITEMS FROM SUPABASE
+  // ================================
+  useEffect(() => {
+    const loadMenuItems = async () => {
+      const { data, error } = await supabase
+        .from("menus")
+        .select("*");
+
+      if (error) {
+        console.error("Supabase menu load error:", error);
+        return;
       }
-      return { ...prev, [itemId]: prev[itemId] + 1 };
-    });
-  };
 
-  const removeFromCart = (itemId) => {
+      setMenuItems(data || []);
+    };
+
+    loadMenuItems();
+  }, []);
+
+  // ================================
+  // ADD TO CART
+  // ================================
+  const addToCart = (dishId) => {
     setCartItems((prev) => {
-      if (!prev[itemId]) return prev;
-      return { ...prev, [itemId]: prev[itemId] - 1 };
+      const currentQty = prev[dishId] || 0;
+      return { ...prev, [dishId]: currentQty + 1 };
     });
   };
 
+  // ================================
+  // REMOVE FROM CART
+  // ================================
+  const removeFromCart = (dishId) => {
+    setCartItems((prev) => {
+      if (!prev[dishId]) return prev;
+
+      const updatedQty = prev[dishId] - 1;
+
+      return updatedQty > 0
+        ? { ...prev, [dishId]: updatedQty }
+        : { ...prev, [dishId]: 0 };
+    });
+  };
+
+  // ================================
+  // CART TOTAL
+  // ================================
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
+    let total = 0;
 
-    for (const itemId in cartItems) {
-      if (cartItems[itemId] > 0) {
-        const itemInfo = food_list.find(
-          (product) => product._id === itemId
-        );
+    for (const dishId in cartItems) {
+      const item = menuItems.find((i) => i.dish_id === Number(dishId));
 
-        if (itemInfo) {
-          totalAmount += itemInfo.price * cartItems[itemId];
-        }
+      if (item) {
+        total += item.price * cartItems[dishId];
       }
     }
 
-    return totalAmount;
+    return total;
   };
 
   const contextValue = {
-    food_list,
+    menuItems,       // <-- use this instead of food_list
     cartItems,
-    setCartItems,
     addToCart,
     removeFromCart,
     getTotalCartAmount,
