@@ -110,3 +110,18 @@
   color: #111;
 }
 
+.star {
+  width: 24px;
+  height: 24px;
+  margin-right: 3px;
+}
+
+.svg-full path {
+  fill: #4CAF50;
+}
+
+.svg-empty path {
+  fill: #ddd;
+}
+
+

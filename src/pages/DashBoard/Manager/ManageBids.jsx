@@ -1,3 +1,4 @@
+// FULL MANAGEBIDS.JSX FIXED
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../../api/supabaseClient";
 import "./ManageBids.css";
@@ -10,9 +11,7 @@ export default function ManageBids() {
   const [bidsByRequest, setBidsByRequest] = useState({});
   const [memoInputs, setMemoInputs] = useState({});
 
-  // ----------------------------------------------------------
-  // GET MANAGER PROFILE
-  // ----------------------------------------------------------
+  // Load manager
   useEffect(() => {
     const loadManager = async () => {
       const { data } = await supabase.auth.getUser();
@@ -33,9 +32,7 @@ export default function ManageBids() {
     loadManager();
   }, []);
 
-  // ----------------------------------------------------------
-  // FETCH REQUESTS
-  // ----------------------------------------------------------
+  // Fetch open requests
   useEffect(() => {
     if (restaurantName) fetchRequests();
   }, [restaurantName]);
@@ -53,9 +50,7 @@ export default function ManageBids() {
     fetchAllBids(data);
   };
 
-  // ----------------------------------------------------------
-  // FETCH BIDS FOR EACH REQUEST
-  // ----------------------------------------------------------
+  // Fetch bids for each request
   const fetchAllBids = async (requestList) => {
     let temp = {};
 
@@ -81,45 +76,37 @@ export default function ManageBids() {
     setBidsByRequest(temp);
   };
 
-  // ----------------------------------------------------------
-  // REJECT A SINGLE BID ONLY
-  // ----------------------------------------------------------
+  // Reject a bid
   const rejectBid = async (req, bid) => {
-    const request_id = req.request_id;
-
-    const { error: rejectErr } = await supabase
+    await supabase
       .from("bids")
       .update({ status: "rejected" })
       .eq("bid_id", bid.bid_id);
 
-    if (rejectErr) {
-      console.error("Reject Bid Error:", rejectErr);
-      alert("Failed to reject bid.");
-      return;
-    }
-
     alert(`Bid from ${bid.users.first_name} ${bid.users.last_name} rejected.`);
-
     fetchRequests();
   };
 
-  // ----------------------------------------------------------
-  // APPROVE BID → REJECT OTHERS → ASSIGN ORDER DRIVER
-  // ----------------------------------------------------------
+  // Approve a bid
   const approveBid = async (req, bid) => {
     const request_id = req.request_id;
     const bids = bidsByRequest[request_id];
-
+  
+    // ---------------------------
+    // Check if memo required
+    // ---------------------------
     const lowestPrice = Math.min(...bids.map((b) => b.bid_price));
     const memoRequired = bid.bid_price !== lowestPrice;
-
     const memo = memoInputs[request_id] || "";
+  
     if (memoRequired && memo.trim().length === 0) {
       alert("Please provide a memo explaining why you didn’t choose the lowest bid.");
       return;
     }
-
-    // STEP 1 — Accept selected bid
+  
+    // ---------------------------
+    // STEP 1 — Accept chosen bid
+    // ---------------------------
     const { error: acceptErr } = await supabase
       .from("bids")
       .update({
@@ -127,14 +114,19 @@ export default function ManageBids() {
         memo: memoRequired ? memo : null,
       })
       .eq("bid_id", bid.bid_id);
-
-    if (acceptErr) return console.error(acceptErr);
-
-    // STEP 2 — Reject all OTHER pending bids (but keep rejected bids untouched)
+  
+    if (acceptErr) {
+      console.error("Accept Bid Error:", acceptErr);
+      return;
+    }
+  
+    // ---------------------------
+    // STEP 2 — Reject other pending bids
+    // ---------------------------
     const pendingOthers = bids.filter(
       (b) => b.bid_id !== bid.bid_id && b.status === "pending"
     );
-
+  
     if (pendingOthers.length > 0) {
       await supabase
         .from("bids")
@@ -144,14 +136,28 @@ export default function ManageBids() {
           pendingOthers.map((b) => b.bid_id)
         );
     }
-
-    // STEP 3 — Mark request assigned
-    await supabase
+  
+    // ---------------------------
+    // STEP 3 — Update delivery_requests
+    // Save driver_id + mark as assigned
+    // ---------------------------
+    const { error: reqErr } = await supabase
       .from("delivery_requests")
-      .update({ status: "assigned" })
+      .update({
+        status: "assigned",
+        driver_id: bid.deliver_id,  // <--- IMPORTANT
+      })
       .eq("request_id", request_id);
-
-    // STEP 4 — Assign driver to order
+  
+    if (reqErr) {
+      console.error("Delivery Request Update Error:", reqErr);
+      alert("Bid approved but failed to store driver ID in delivery_requests.");
+      return;
+    }
+  
+    // ---------------------------
+    // STEP 4 — Update orders table
+    // ---------------------------
     const { error: orderErr } = await supabase
       .from("orders")
       .update({
@@ -159,26 +165,23 @@ export default function ManageBids() {
         status: "accepted",
       })
       .eq("order_id", req.order_id);
-
+  
     if (orderErr) {
       console.error("Order Update Error:", orderErr);
-      alert("Bid approved but driver could not be assigned to order.");
+      alert("Bid approved but driver could not be assigned to the order.");
       return;
     }
-
-    alert("Bid approved — driver assigned!");
+  
+    alert("Bid approved — driver assigned successfully!");
     fetchRequests();
-  };
+  };  
 
-  // ----------------------------------------------------------
-  // UI
-  // ----------------------------------------------------------
   return (
     <div className="manage-bids-dashboard">
       <h2>Manage Delivery Bids</h2>
 
       {requests.length === 0 ? (
-        <p className="empty-state-message">No delivery requests to review.</p>
+        <p>No delivery requests to review.</p>
       ) : (
         requests.map((req) => {
           const bids = bidsByRequest[req.request_id] || [];
@@ -186,9 +189,7 @@ export default function ManageBids() {
           return (
             <div key={req.request_id} className="manager-card">
               <h3>Delivery Request #{req.request_id}</h3>
-              <p>
-                <strong>Deliver To:</strong> {req.delivery_address}
-              </p>
+              <p><strong>Address:</strong> {req.delivery_address}</p>
 
               <h4>Driver Bids:</h4>
 
@@ -198,55 +199,35 @@ export default function ManageBids() {
                 <div className="bid-list">
                   {bids
                     .sort((a, b) => a.bid_price - b.bid_price)
-                    .map((bid) => {
-                      const isLowest =
-                        bid.bid_price === Math.min(...bids.map((b) => b.bid_price));
+                    .map((bid) => (
+                      <div key={bid.bid_id} className="bid-row">
+                        <p>
+                          <strong>
+                            {bid.users.first_name} {bid.users.last_name}
+                          </strong>{" "}
+                          — ${bid.bid_price}
+                        </p>
 
-                      const isRejected = bid.status === "rejected";
-
-                      return (
-                        <div
-                          key={bid.bid_id}
-                          className={`bid-row ${isRejected ? "rejected" : ""}`}
+                        <button
+                          className="approve-btn"
+                          onClick={() => approveBid(req, bid)}
                         >
-                          <p>
-                            <strong>
-                              {bid.users?.first_name} {bid.users?.last_name}
-                            </strong>{" "}
-                            — ${bid.bid_price}
-                            {!isRejected && isLowest && (
-                              <span className="lowest-tag">Lowest</span>
-                            )}
-                            {isRejected && (
-                              <span className="rejected-tag">Rejected</span>
-                            )}
-                          </p>
+                          Approve
+                        </button>
 
-                          {!isRejected && (
-                            <div className="bid-actions">
-                              <button
-                                className="approve-btn"
-                                onClick={() => approveBid(req, bid)}
-                              >
-                                Approve
-                              </button>
-
-                              <button
-                                className="reject-btn"
-                                onClick={() => rejectBid(req, bid)}
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                        <button
+                          className="reject-btn"
+                          onClick={() => rejectBid(req, bid)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    ))}
                 </div>
               )}
 
               <textarea
-                placeholder="Memo required if selecting a non-lowest bid"
+                placeholder="Memo required for non-lowest bid"
                 className="memo-box"
                 value={memoInputs[req.request_id] || ""}
                 onChange={(e) =>
