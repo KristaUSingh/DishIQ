@@ -35,3 +35,45 @@
     margin-top: 30px;
     background-color: #cde8d5;
 }
+
+.order-items-list {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .order-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .order-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  
+  .order-item-info {
+    flex: 1;
+    margin-left: 15px;
+  }
+  
+  .item-name {
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .item-sub {
+    font-size: 14px;
+    color: #444;
+    margin: 2px 0 0 0;
+  }
+  
+  .order-item-total {
+    font-weight: 600;
+  }
+  
