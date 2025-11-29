@@ -72,3 +72,9 @@
     cursor: pointer;
     border: none;
   }  
+
+  .disabled-review {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  

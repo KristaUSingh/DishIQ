@@ -2,32 +2,49 @@ import React, { useState } from "react";
 import "./ReviewModal.css";
 import { supabase } from "../../api/supabaseClient";
 
-const ReviewModal = ({ order, onClose }) => {
+const ReviewModal = ({ data, onClose }) => {
+  const { type, order, dish } = data;
+
   const [foodRating, setFoodRating] = useState(5);
   const [deliveryRating, setDeliveryRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [reviewType, setReviewType] = useState("review");   // NEW
+  const [reviewType, setReviewType] = useState("review");
   const [loading, setLoading] = useState(false);
 
   const submitReview = async () => {
     setLoading(true);
 
-    const { error } = await supabase.from("ratings").insert({
+    // Build the row payload
+    const payload = {
       order_id: order.order_id,
       customer_id: order.customer_id,
       restaurant_name: order.restaurant_name,
-      food_rating: foodRating,
-      delivery_rating: deliveryRating,
-      comment: comment,
-      review_type: reviewType,   // NEW FIELD
-    });
+      comment,
+      review_type: type, // "dish" or "driver"
+      created_at: new Date().toISOString(),
+    };
+
+    // For dish reviews
+    if (type === "dish") {
+      payload.food_rating = Number(foodRating);
+      payload.dish_id = dish.dish_id;
+      payload.chef_id = order.chef_id;
+    }
+
+    // For driver reviews
+    if (type === "driver") {
+      payload.delivery_rating = Number(deliveryRating);
+      payload.driver_id = order.deliver_id;
+    }
+
+    const { error } = await supabase.from("ratings").insert(payload);
 
     setLoading(false);
 
     if (!error) {
       onClose();
     } else {
-      console.error("Error saving review:", error);
+      console.error("Review submission error:", error);
       alert("There was an issue submitting your review.");
     }
   };
@@ -35,46 +52,59 @@ const ReviewModal = ({ order, onClose }) => {
   return (
     <div className="review-modal-overlay">
       <div className="review-modal">
-        <h2>Leave a Review</h2>
 
-        {/* REVIEW TYPE */}
+        {/* TITLE */}
+        <h2>
+          {type === "dish"
+            ? `Review Dish: ${dish.menus?.name}`
+            : "Review Delivery Driver"}
+        </h2>
+
+        {/* REVIEW CATEGORY */}
         <label>Review Type</label>
         <select
           value={reviewType}
           onChange={(e) => setReviewType(e.target.value)}
         >
-          <option value="review">Standard Review</option>
           <option value="complaint">Complaint</option>
           <option value="compliment">Compliment</option>
         </select>
 
-        {/* FOOD RATING */}
-        <label>Food Rating</label>
-        <select
-          value={foodRating}
-          onChange={(e) => setFoodRating(e.target.value)}
-        >
-          {[1, 2, 3, 4, 5].map((n) => (
-            <option key={n} value={n}>
-              {n} ★
-            </option>
-          ))}
-        </select>
+        {/* DISH RATING */}
+        {type === "dish" && (
+          <>
+            <label>Food Rating</label>
+            <select
+              value={foodRating}
+              onChange={(e) => setFoodRating(e.target.value)}
+            >
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>
+                  {n} ★
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
-        {/* DELIVERY RATING */}
-        <label>Delivery Rating</label>
-        <select
-          value={deliveryRating}
-          onChange={(e) => setDeliveryRating(e.target.value)}
-        >
-          {[1, 2, 3, 4, 5].map((n) => (
-            <option key={n} value={n}>
-              {n} ★
-            </option>
-          ))}
-        </select>
+        {/* DRIVER RATING */}
+        {type === "driver" && (
+          <>
+            <label>Delivery Rating</label>
+            <select
+              value={deliveryRating}
+              onChange={(e) => setDeliveryRating(e.target.value)}
+            >
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>
+                  {n} ★
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
-        {/* COMMENT BOX */}
+        {/* COMMENT */}
         <label>Comment</label>
         <textarea
           value={comment}
@@ -88,10 +118,12 @@ const ReviewModal = ({ order, onClose }) => {
           }
         />
 
+        {/* BUTTONS */}
         <div className="modal-buttons">
           <button onClick={onClose} className="cancel-btn">
             Cancel
           </button>
+
           <button
             onClick={submitReview}
             className="submit-btn"

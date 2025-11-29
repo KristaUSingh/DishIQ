@@ -64,4 +64,43 @@
     font-size: 15px;
     cursor: pointer;
   }
+
+  /* Space between each dish row */
+.dish-row {
+    margin-bottom: 14px;  /* ADD SPACE HERE */
+  }
+  
+  /* Add space under each review button */
+  .review-btn {
+    margin-top: 6px;
+    margin-bottom: 12px; /* ADD SPACE HERE */
+  }
+  
+  /* Extra spacing before the driver review button */
+  .driver-btn {
+    margin-top: 20px !important;
+  }
+
+  .dish-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .review-btn {
+    padding: 10px 16px;
+    margin-top: 5px;
+  }
+  
+  .driver-btn {
+    margin-top: 14px;
+  }
+  
+  .disabled-review {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  
   
