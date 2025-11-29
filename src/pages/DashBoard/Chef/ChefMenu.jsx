@@ -238,7 +238,7 @@ const ChefMenu = () => {
 
                     {canEdit && (
                       <button
-                        className="btn delete-btn"
+                        className="btn delete-item-btn"
                         onClick={() => handleDeleteItem(item.dish_id)}
                       >
                         Delete Item

@@ -232,3 +232,11 @@ body {
   justify-content: center;
   gap: 10px;
 }
+
+.delete-btn {
+  margin-bottom: 20px; 
+}
+
+.delete-item-btn {
+  margin-left: 40px; 
+}
