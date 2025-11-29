@@ -32,6 +32,7 @@ import add_icon_white from './add_icon_white.png'
 import remove_icon_red from './remove_icon_red.png'
 import rating_stars from './rating_stars.png'
 import cross_icon from './cross_icon.png'
+import trash_icon_red from "./trash_icon_red.svg"
 
     
 export const assets = {
@@ -68,7 +69,8 @@ export const assets = {
     add_icon_white,
     remove_icon_red, 
     rating_stars,
-    cross_icon
+    cross_icon,
+    trash_icon_red
     
 }
 
