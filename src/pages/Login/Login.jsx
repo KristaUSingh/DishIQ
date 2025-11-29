@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../api/supabaseClient"; 
-import './Login.css';
+import { supabase } from "../../api/supabaseClient";
+import { useAuth } from "../../context/AuthContext"; 
+import "./Login.css";
 
-
-function Login({}) {
+function Login() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();   // <-- SAVE GLOBAL AUTH HERE
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +17,7 @@ function Login({}) {
     setError("");
 
     try {
-      // Sign in with Supabase Auth
+      // Sign in with Supabase
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -38,10 +40,10 @@ function Login({}) {
         return;
       }
 
-      // Fetch user info from your 'users' table
+      // Fetch user profile from "users" table
       const { data: userData, error: userError } = await supabase
         .from("users")
-        .select("role, first_name, last_name")
+        .select("role, first_name, last_name, restaurant_name")
         .eq("user_id", user.id)
         .single();
 
@@ -50,24 +52,23 @@ function Login({}) {
         return;
       }
 
-      // Save to sessionStorage
-      sessionStorage.setItem(
-        "auth",
-        JSON.stringify({
-          isLoggedIn: true,
-          role: userData.role,
-          firstName: userData.first_name,
-          lastName: userData.last_name,
-        })
-      );
+      // Save user to AuthContext (auto-persist)
+      setAuth({
+        isLoggedIn: true,
+        role: userData.role,
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        restaurant_name: userData.restaurant_name || null,
+        user_id: user.id,
+      });
 
-      
+      // Redirect based on role
       switch (userData.role) {
         case "customer":
           navigate("/");
           break;
         case "delivery_person":
-          navigate("/Driver/bids");
+          navigate("/driver/bids");
           break;
         case "chef":
           navigate("/chef/menu");
@@ -78,14 +79,11 @@ function Login({}) {
         default:
           setError("Unknown role. Please contact support.");
       }
+
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Something went wrong during login.");
     }
-  };
-
-  const handleCreateAccount = () => {
-    navigate("/signup");
   };
 
   return (
@@ -93,6 +91,7 @@ function Login({}) {
       <div className="login-card">
         <h1>Login</h1>
         {error && <p className="alert">{error}</p>}
+
         <form onSubmit={onSubmit}>
           <input
             type="email"
@@ -100,18 +99,18 @@ function Login({}) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
           <button type="submit" className="login-btn">Login</button>
         </form>
-        <button 
-          className="create-account-btn" 
-          onClick={handleCreateAccount}
-        >
+
+        <button className="create-account-btn" onClick={() => navigate("/signup")}>
           Create Account
         </button>
       </div>

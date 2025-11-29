@@ -1,13 +1,16 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 import { supabase } from "../api/supabaseClient";
+import { useAuth } from "./AuthContext";   // ⬅️ ADD THIS
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-  const [menuItems, setMenuItems] = useState([]); // items from Supabase
+  const [menuItems, setMenuItems] = useState([]);
   const [cartItems, setCartItems] = useState({});
 
-  // Load all menu items once
+  const { auth } = useAuth(); // ⬅️ current logged-in user
+
+  // Load menu items once
   useEffect(() => {
     const fetchMenu = async () => {
       const { data, error } = await supabase.from("menus").select("*");
@@ -16,15 +19,30 @@ const StoreContextProvider = (props) => {
     fetchMenu();
   }, []);
 
-  // ADD
+  // ------------------------------------------
+  // ADD TO CART (CUSTOMER ONLY)
+  // ------------------------------------------
   const addToCart = (itemId) => {
+    // If not logged in at all
+    if (!auth) {
+      alert("You must be logged in as a customer to add items to your cart.");
+      return;
+    }
+
+    // If logged in but NOT a customer
+    if (auth.role !== "customer") {
+      alert("Only customers can place orders.");
+      return;
+    }
+
+    // Otherwise add item normally
     setCartItems((prev) => ({
       ...prev,
       [itemId]: (prev[itemId] || 0) + 1,
     }));
   };
 
-  // REMOVE ↓ (never below 0)
+  // REMOVE (never below 0)
   const removeFromCart = (itemId) => {
     setCartItems((prev) => {
       const current = prev[itemId] || 0;
@@ -46,7 +64,7 @@ const StoreContextProvider = (props) => {
     });
   };
 
-  // TOTAL
+  // TOTAL PRICE
   const getTotalCartAmount = () => {
     let total = 0;
 

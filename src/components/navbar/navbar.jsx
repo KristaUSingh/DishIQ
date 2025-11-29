@@ -66,7 +66,8 @@ const Navbar = () => {
         {/* CHEF ROUTES */}
         {isLoggedIn && role === "chef" && (
           <>
-            <li onClick={() => navigate('/ChefMenu')}>Manage Menu Items</li>
+            <li onClick={() => navigate('/chef/menu')}>Manage Menu Items</li>
+            <li onClick={() => navigate('/chef/orders')}>Orders</li>
             <li onClick={() => navigate('/feedback')}>View Feedback</li>
             <li onClick={() => navigate('/rating')}>Rating status</li>
           </>
