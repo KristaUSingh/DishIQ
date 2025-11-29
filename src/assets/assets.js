@@ -87,11 +87,6 @@ export const restaurant_list = [
         restaurant_name: "Da Brix",
         restaurant_image: daBrixMenu2,
         description: "New York-style pizza and Italian-American comfort dishes, perfect for sharing."
-    },
-    {
-        restaurant_name: "Breakfast & Snacks",
-        restaurant_image: cerealAndSnack,
-        description: "Grab a bag of chips for a snack or some cereal for a quick breakfast."
     }
 ]
 
