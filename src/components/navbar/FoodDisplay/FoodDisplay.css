@@ -1,15 +1,78 @@
-.food-display{
-    margin-top: 30px;
-    padding: 20px; 
+/*
+ * FOOD DISPLAY STYLES
+ * This code centers the card groups and includes the final layout fixes.
+ */
+
+/* MAIN WRAPPER */
+.food-display {
+    margin-top: 20px;
+    /* Slightly reduced padding for a better fit */
+    padding: 0 40px; 
+    width: 100%;
+    display: block; 
+  }
+  
+.food-item-info{
+    padding: 20px;
+    /* ⭐ FIX: Set a minimum height to accommodate 2-3 lines of text */
+    min-height: 100px; 
+    /* Or a fixed height, depending on your design preference: 
+    height: 120px; */
 }
-.food-display h2{
-    font-size: max(2vw,24px);
+  /* PAGE TITLE */
+  .food-display > h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  
+  /* --- SECTION WRAPPERS --- */
+  
+  /* Ensures the entire section takes its own row and full width */
+  .food-section {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    clear: both !important; 
+  }
+  
+  /* SUBSECTION TITLE */
+  .food-section-title {
+    font-size: 18px;
     font-weight: 600;
-}
-.food-display-list{
+    margin-bottom: 12px;
+    color: #222;
+    display: block;
+  }
+  
+  /* --- LIST OF FOOD CARDS (USING CSS GRID) --- */
+  
+  .food-display-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
-    margin-top: 30px;
-    gap: 30px;
-    row-gap: 50px;
-}
+    
+    /* Define three columns of fixed width */
+    grid-template-columns: repeat(3, 260px);
+    gap: 22px;
+    
+    /* ⭐ CRITICAL SPACING FIX: Centers the entire group of cards within the wrapper */
+    justify-content: center; 
+    
+    width: 100% !important;
+    margin-bottom: 35px !important; 
+    
+    display: grid;
+  }
+  
+  /* ⭐ CARD STYLING (FoodItem fix) */
+  .food-display-list > * {
+    max-width: 260px !important;
+    border-radius: 12px;
+  }
+  
+  /* ⭐ IMAGE STYLING */
+  .food-display-list .food-item-image { 
+    width: 100% !important;
+    height: 180px !important;
+    object-fit: cover;
+    border-radius: 12px;
+  }
