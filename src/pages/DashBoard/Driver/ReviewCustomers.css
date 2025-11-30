@@ -1,0 +1,139 @@
+.driver-review-page {
+    padding: 40px;
+    background-color: #aac8f0;
+    min-height: 100vh;
+  }
+  
+  .driver-review-page h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 25px;
+  }
+  
+  /* === CUSTOMER REVIEW CARD === */
+  .customer-review-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 6px solid #ffc947;
+  }
+  
+  .customer-review-card h4 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+  }
+  
+  .customer-review-card p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+  
+  /* === BUTTONS === */
+  .review-btn {
+    background: #ffc947;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s ease;
+  }
+  
+  .review-btn:hover {
+    background: #ffb623;
+  }
+  
+  .disabled-review {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* === MODAL OVERLAY === */
+  .review-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  /* === MODAL BOX === */
+  .review-modal {
+    background: #fff;
+    padding: 28px;
+    width: 420px;
+    max-width: 90%;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+  
+  .review-modal h3 {
+    margin-bottom: 18px;
+    font-size: 1.4rem;
+    color: #002f6c;
+  }
+  
+  /* === FORM ELEMENTS === */
+  .review-modal label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+  
+  .review-modal select,
+  .review-modal textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    font-size: 1rem;
+    background: #f8f8f8;
+  }
+  
+  .review-modal textarea {
+    min-height: 90px;
+    resize: none;
+  }
+  
+  /* === MODAL BUTTON ROW === */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  /* Buttons inside modal */
+  .cancel-btn,
+  .submit-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .cancel-btn {
+    background: #ddd;
+  }
+  
+  .cancel-btn:hover {
+    background: #c8c8c8;
+  }
+  
+  .submit-btn {
+    background: #ffc947;
+  }
+  
+  .submit-btn:hover {
+    background: #ffb623;
+  }  
