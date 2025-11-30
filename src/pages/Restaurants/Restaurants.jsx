@@ -1,7 +1,8 @@
 import React from 'react';
 import './Restaurants.css'; 
 import { useNavigate } from 'react-router-dom';
-// Import the restaurant data from your assets file
+
+import AIChatbot from '../../components/AIChatbot/AIChatbot';
 import { restaurant_list } from '../../assets/assets'; 
 
 const CHILACA_IMAGE_URL = "https://www.ninosalvaggio.com/wp-content/uploads/2020/04/Ninos_Mexican-FOOD-1024x683.jpg";
@@ -29,56 +30,61 @@ const Restaurants = () => {
     navigate(`/restaurant/${restaurantName}`); 
   };
 
-  return (
-    <div className='restaurants-page'>
-      <div className="restaurants-header-full">
-        <h1 className='title'>Explore Our Restaurants</h1>
-        <p className='subtitle'>
-          Choose your next meal from our diverse collection of restaurants, each featuring a delectable array of unique and satisfying dishes.
-        </p>
-      </div>
-        {/* The list will now be styled as a vertical stack or grid using the new CSS */}
-      <div className="restaurants-list-full-vertical"> 
-        {restaurant_list.map((item, index) => {
+ return (
+    <> 
+      <div className='restaurants-page'>
+        <div className="restaurants-header-full">
+          <h1 className='title'>Explore Our Restaurants</h1>
+          <p className='subtitle'>
+            Choose your next meal from our diverse collection of restaurants, each featuring a delectable array of unique and satisfying dishes.
+          </p>
+        </div>
           
-          // Override original images
-          let imageUrl = item.restaurant_image;
+        <div className="restaurants-list-full-vertical"> 
+          {restaurant_list.map((item, index) => {
+            
+            let imageUrl = item.restaurant_image;
 
-          if (item.restaurant_name === 'Chilaca') {
-            imageUrl = CHILACA_IMAGE_URL;
-          } else if (item.restaurant_name === 'Citizen Chicken') {
-            imageUrl = CITIZEN_CHICKEN_IMAGE_URL; 
-          } else if (item.restaurant_name === 'Da Brix') {
-            imageUrl = DA_BRIX_IMAGE_URL; // Using the new URL for Da Brix
-          }
+            if (item.restaurant_name === 'Chilaca') {
+              imageUrl = CHILACA_IMAGE_URL;
+            } else if (item.restaurant_name === 'Citizen Chicken') {
+              imageUrl = CITIZEN_CHICKEN_IMAGE_URL; 
+            } else if (item.restaurant_name === 'Da Brix') {
+              imageUrl = DA_BRIX_IMAGE_URL; 
+            }
 
-          return (
-            <div 
-              key={index} 
-              className="restaurant-card-vertical"
-              onClick={() => handleRestaurantClick(item.restaurant_name)} 
-            >
-              {/* Image on top, text below - Vertical Layout */}
-              <div className='restaurant-image-container-vertical'>
-                 <img 
-                   src={imageUrl} // Use the conditionally determined URL
-                   alt={item.restaurant_name} 
-                   className='restaurant-image-vertical' 
-                 />
+            return (
+              <div 
+                key={index} 
+                className="restaurant-card-vertical"
+                onClick={() => handleRestaurantClick(item.restaurant_name)} 
+              >
+                <div className='restaurant-image-container-vertical'>
+                   <img 
+                     src={imageUrl} 
+                     alt={item.restaurant_name} 
+                     className='restaurant-image-vertical' 
+                   />
+                </div>
+
+                <div className='restaurant-details-vertical'>
+                    <h2 className='restaurant-name-vertical'>{item.restaurant_name}</h2>
+                    <p className='restaurant-description-vertical'>
+                        {getDetailedDescription(item.restaurant_name)}
+                    </p>
+                    <button className='view-menu-btn'>View Menu</button>
+                </div>
               </div>
-
-              <div className='restaurant-details-vertical'>
-                  <h2 className='restaurant-name-vertical'>{item.restaurant_name}</h2>
-                  <p className='restaurant-description-vertical'>
-                      {getDetailedDescription(item.restaurant_name)}
-                  </p>
-                  <button className='view-menu-btn'>View Menu</button>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+      
+      {/* Added Chatbot wrapper */}
+      <div className="chatbot-wrapper">
+        <AIChatbot />
+      </div>
+    </>
   );
 };
 
