@@ -45,83 +45,137 @@ const PlaceOrder = () => {
       restaurant_name: item.restaurant_name,
     }));
 
-  // ----------------------------
-  // HANDLE PLACE ORDER
-  // ----------------------------
   const handlePlaceOrder = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!auth || auth.role !== "customer") {
-      alert("You must be logged in as a customer to place an order.");
+  if (!auth || auth.role !== "customer") {
+    alert("You must be logged in as a customer to place an order.");
+    return;
+  }
+
+  if (cartDetails.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const customer_id = auth.user_id;
+    const restaurant_name = cartDetails[0].restaurant_name;
+    const total_price = finalTotal; 
+    const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
+
+    // --------------------------------------------------
+    // 1️⃣ GET CUSTOMER BALANCE FROM FINANCE
+    // --------------------------------------------------
+    const { data: financeData, error: financeError } = await supabase
+      .from("finance")
+      .select("balance, num_orders, total_spent")
+      .eq("customer_id", auth.user_id)
+      .single();
+
+    if (financeError) throw financeError;
+
+    const balance = financeData?.balance ?? 0;
+
+    // --------------------------------------------------
+    // 2️⃣ NOT ENOUGH FUNDS → ADD WARNING, DO NOT PLACE ORDER
+    // --------------------------------------------------
+    if (balance < finalTotal) {
+      const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("warnings")
+      .eq("user_id", customer_id)
+      .single();
+
+    if (userError) throw userError;
+
+    const currentWarnings = userData?.warnings ?? 0;
+
+    // 2️⃣ Update warnings
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ warnings: currentWarnings + 1 })
+      .eq("user_id", customer_id);
+
+    if (updateError) throw updateError;
+
+      alert("Insufficient funds! Your balance is too low. A warning has been added to your account.");
+      setLoading(false);
       return;
     }
 
-    if (cartDetails.length === 0) {
-      alert("Your cart is empty.");
-      return;
-    }
+    // --------------------------------------------------
+    // 3️⃣ ENOUGH FUNDS → START ORDER PROCESS
+    // --------------------------------------------------
+    const { data: orderData, error: orderError } = await supabase
+      .from("orders")
+      .insert([
+        {
+          customer_id,
+          restaurant_name,
+          status: "pending",
+          total_price,
+          delivery_address,
+        },
+      ])
+      .select()
+      .single();
 
-    setLoading(true);
+    if (orderError) throw orderError;
 
-    try {
-      const customer_id = auth.user_id;
-      const restaurant_name = cartDetails[0].restaurant_name;
-      const total_price = finalTotal; //check here
+    const order_id = orderData.order_id;
 
-      // Build full delivery address
-      const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
+    // --------------------------------------------------
+    // 4️⃣ INSERT ORDER ITEMS
+    // --------------------------------------------------
+    const itemsToInsert = cartDetails.map((item) => ({
+      order_id,
+      dish_id: item.dish_id,
+      quantity: item.quantity,
+      price: item.price,
+    }));
 
-      // -----------------------------------------
-      // 1️⃣ INSERT INTO ORDERS TABLE
-      // -----------------------------------------
-      const { data: orderData, error: orderError } = await supabase
-        .from("orders")
-        .insert([
-          {
-            customer_id,
-            restaurant_name,
-            status: "pending",
-            total_price,
-            delivery_address,
-          },
-        ])
-        .select()
-        .single();
+    const { error: itemsError } = await supabase
+      .from("order_items")
+      .insert(itemsToInsert);
 
-      if (orderError) throw orderError;
+    if (itemsError) throw itemsError;
 
-      const order_id = orderData.order_id;
+    // --------------------------------------------------
+    // 5️⃣ UPDATE FINANCE RECORD
+    // --------------------------------------------------
+    const newBalance = balance - finalTotal;
+    const newNumOrders = financeData.num_orders + 1;
+    const newTotalSpent = financeData.total_spent + total_price;
 
-      // -----------------------------------------
-      // 2️⃣ INSERT INTO ORDER_ITEMS TABLE
-      // -----------------------------------------
-      const itemsToInsert = cartDetails.map((item) => ({
-        order_id,
-        dish_id: item.dish_id,
-        quantity: item.quantity,
-        price: item.price,
-      }));
+    const { error: financeUpdateError } = await supabase
+      .from("finance")
+      .update({
+        balance: newBalance,
+        num_orders: newNumOrders,
+        total_spent: newTotalSpent,
+      })
+      .eq("customer_id", customer_id);
 
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(itemsToInsert);
+    if (financeUpdateError) throw financeUpdateError;
 
-      if (itemsError) throw itemsError;
+    // --------------------------------------------------
+    // 6️⃣ CLEAR CART + SUCCESS
+    // --------------------------------------------------
+    cartDetails.forEach((item) => deleteFromCart(item.dish_id));
 
-      // Clear cart
-      cartDetails.forEach((item) => deleteFromCart(item.dish_id));
+    alert("Order placed successfully!");
+    navigate("/");
 
-      alert("Order placed successfully!");
-      navigate("/");
+  } catch (err) {
+    console.error("Order Error:", err);
+    alert("Something went wrong placing your order. Try again.");
+  }
 
-    } catch (err) {
-      console.error("Order Error:", err);
-      alert("Something went wrong placing your order. Try again.");
-    }
-
-    setLoading(false);
-  };
-
+  setLoading(false);
+};
 
   return (
     <form className="place-order" onSubmit={handlePlaceOrder}>
