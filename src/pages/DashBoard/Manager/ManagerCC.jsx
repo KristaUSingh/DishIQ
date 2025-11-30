@@ -98,7 +98,7 @@ const ManagerCC = () => {
         : r.review_type === "complaint";
 
     const targetRole =
-      r.review_target === "chef"
+        r.review_target === "chef"
         ? "chef"
         : r.review_target === "driver"
         ? "driver"
@@ -152,7 +152,7 @@ const ManagerCC = () => {
         filtered.map((r) => {
           // WHO the complaint/compliment is about
           const target =
-            r.review_target === "chef"
+              r.review_target === "chef"
               ? r.chef
               : r.review_target === "driver"
               ? r.driver

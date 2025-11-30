@@ -71,6 +71,7 @@ const Navbar = () => {
             <li onClick={() => navigate('/manager/manage-bids')}>Manage Bids</li>
             <li onClick={() => navigate('/manager/compliment-complaint')}>Compliments/Complaints</li>
             <li onClick={() => navigate('/manager/staffrating')}>Staff Rating</li>
+            <li onClick={() => navigate('/manager/kb-review')}>Knowledge Base Review</li>
             <li onClick={() => navigate('/manager/finances')}>Finances</li>
           </>
         )}

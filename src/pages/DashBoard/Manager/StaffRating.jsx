@@ -123,7 +123,7 @@ const StaffRating = () => {
       let targetId = null;
       let starValue = null;
 
-      if (r.review_target === "dish") {
+      if (r.review_target === "chef") {
         targetId = r.chef_id;
         starValue = r.food_rating ? Number(r.food_rating) : null;
       }
