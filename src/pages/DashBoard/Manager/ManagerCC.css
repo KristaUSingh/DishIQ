@@ -1,0 +1,103 @@
+.manager-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .manager-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .manager-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .manager-tabs button {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: 2px solid #111;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .active-tab {
+    background: #ffc947;
+  }
+  
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+  }
+  
+  .filter-row select {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+  
+  .no-results {
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-top: 2rem;
+  }
+  
+  .manager-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .manager-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .manager-actions {
+    margin-top: 15px;
+  }
+  
+  .dismiss-btn,
+  .warning-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: 600;
+  }
+  
+  .dismiss-btn {
+    background: #4caf50;
+    color: white;
+  }
+  
+  .warning-btn {
+    background: #ff5252;
+    color: white;
+  }
+  
+  .pending-msg {
+    color: #ff9800;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .resolved-msg {
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  
