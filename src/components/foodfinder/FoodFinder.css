@@ -1,0 +1,110 @@
+.finder-container {
+    padding: 10px;
+    color: #333;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+  
+  .finder-title {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .finder-subtitle {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 15px;
+    opacity: 0.75;
+  }
+  
+  /* Upload box */
+  .finder-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: #fafafa;
+  }
+  
+  .finder-label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .finder-input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .finder-preview {
+    margin-top: 8px;
+    width: 100%;
+    border-radius: 6px;
+  }
+  
+  .finder-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    background: #ffe59d;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* RESULTS */
+  .finder-results {
+    margin-top: 10px;
+  }
+  
+  .result-card {
+    display: flex;
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+  }
+  
+  .result-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .result-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .dish-name {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .restaurant-name {
+    font-size: 14px;
+    color: #666;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  
+  
+  .similarity {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  
+  .loading-msg {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
