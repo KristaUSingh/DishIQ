@@ -73,3 +73,27 @@
   font-size: 0.9rem;
   color: #555;
 }
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  width: 24px;
+  height: 24px;
+}
+
+.svg-full path {
+  fill: #4CAF50;
+}
+
+.svg-empty path {
+  fill: #657080
+}
+
+.svg-half path {
+  fill: url(#half-fill);
+}
+
