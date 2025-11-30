@@ -7,6 +7,7 @@ import Footer from "./components/navbar/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import OrderHistory from "./pages/OrderHistory/OrderHistory";
+import CustomerFeedback from "./pages/CustomerFeedback/CustomerFeedback";
 
 import ChefMenu from "./pages/DashBoard/Chef/ChefMenu";
 import ChefOrders from "./pages/DashBoard/Chef/ChefOrders";
@@ -15,11 +16,12 @@ import Rating from "./pages/DashBoard/Chef/Rating";
 
 import DriverBid from "./pages/DashBoard/Driver/DriverBid";
 import DriverTransport from "./pages/DashBoard/Driver/DriverTransport";
+import ReviewCustomers from "./pages/DashBoard/Driver/ReviewCustomers";
 import DriverRating from "./pages/DashBoard/Driver/DriverRating";
 
 import UserRegistration from "./pages/DashBoard/Manager/UserRegistration";
 import ManageBids from "./pages/DashBoard/Manager/ManageBids";
-import UserComplaints from "./pages/DashBoard/Manager/UserComplaints";
+import ManagerCC from "./pages/DashBoard/Manager/ManagerCC";
 import StaffRating from "./pages/DashBoard/Manager/StaffRating";
 import Finances from "./pages/DashBoard/Manager/Finances";
 
@@ -46,6 +48,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path='/order-history' element={<OrderHistory />} />
+          <Route path='/customer-feedback' element={<CustomerFeedback />} />
 
 
           {/* ---------------------- CHEF ROUTES ---------------------- */}
@@ -74,7 +77,7 @@ function App() {
 
           <Route path="/manager/user" element={<UserRegistration />} />
           <Route path="/manager/manage-bids" element={<ManageBids />} />
-          <Route path="/manager/complaints" element={<UserComplaints />} />
+          <Route path="/manager/compliment-complaint" element={<ManagerCC />} />
           <Route path="/manager/staffrating" element={<StaffRating />} />
           <Route path="/manager/finances" element={<Finances />} />
 
@@ -82,6 +85,7 @@ function App() {
 
           <Route path="/driver/bids" element={<DriverBid />} />
           <Route path="/driver/transport" element={<DriverTransport />} />
+          <Route path="/driver/review-customers" element={<ReviewCustomers />} />
           <Route path="/driver/ratings" element={<DriverRating />} />
 
         </Routes>
