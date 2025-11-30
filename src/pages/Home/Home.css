@@ -25,3 +25,10 @@
   font-weight: bold;
   z-index: 50;
 }
+
+.chatbot-wrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+

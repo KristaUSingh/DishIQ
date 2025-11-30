@@ -3,6 +3,7 @@ import "./Home.css";
 import { AuthContext } from "../../context/AuthContext"; // useContext directly
 
 import Header from "../../components/navbar/Header/Header";
+import AIChatbot from "../../components/AIChatbot/AIChatbot";
 import ExploreRestaurants from "../../components/navbar/ExploreRestaurants/ExploreRestaurants";
 import FoodDisplay from "../../components/navbar/FoodDisplay/FoodDisplay";
 
@@ -42,6 +43,11 @@ const Home = () => {
 
       <ExploreRestaurants category={category} setCategory={setCategory} />
       <FoodDisplay category={category} />
+
+      <div className="chatbot-wrapper">
+        <AIChatbot />
+      </div>
+
     </>
   );
 };
