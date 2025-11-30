@@ -68,7 +68,7 @@ const Feedback = ({ restaurant_name }) => {
         customer:customer_id ( first_name, last_name )
       `)
       .eq("restaurant_name", restaurant_name)
-      .eq("review_target", "dish"); // Only reviews targeted at the chef
+      .eq("review_target", "chef"); // Only reviews targeted at the chef
 
     if (error) {
       console.error("Error loading feedback:", error);

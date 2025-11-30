@@ -51,7 +51,7 @@ const OrderHistory = () => {
 
       {orders.map((order) => {
         // Disable only reviews SPECIFIC to dish/driver
-        const dishReviews = order.ratings.filter(r => r.review_target === "dish");
+        const dishReviews = order.ratings.filter(r => r.review_target === "chef");
         const driverReviews = order.ratings.filter(r => r.review_target === "driver");
 
         return (

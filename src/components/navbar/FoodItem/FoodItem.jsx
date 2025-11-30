@@ -23,9 +23,9 @@ const FoodItem = ({ item }) => {
 
   // ⭐ rating logic (no default)
   const rating = item.rating;
-  const fullStars = rating ? Math.floor(rating) : 0;
-  const halfStar = rating ? rating % 1 !== 0 : false;
-  const emptyStars = rating ? 5 - fullStars - (halfStar ? 1 : 0) : 0;
+  const fullStars = rating != null ? Math.floor(rating) : 0;
+  const halfStar = rating != null ? rating % 1 !== 0 : false;
+  const emptyStars = rating != null ? 5 - fullStars - (halfStar ? 1 : 0) : 0;  
 
   const FullStar = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#259f4c">
