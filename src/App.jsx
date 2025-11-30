@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar/navbar";
 import Home from "./pages/Home/Home";
+import Restaurants from "./pages/Restaurants/Restaurants";
 import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/navbar/Footer/Footer";
@@ -44,6 +45,7 @@ function App() {
 
           <Route path="/" element={<Home />} />
           <Route path="/restaurant/:restaurantName" element={<RestaurantMenu />} />
+          <Route path="/restaurants" element={<Restaurants />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/order" element={<PlaceOrder />} />
           <Route path="/login" element={<Login />} />
