@@ -4,6 +4,7 @@ import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets"; // make sure trash icon is inside assets
 
+
 const Cart = () => {
   const {
     cartItems,
@@ -12,10 +13,55 @@ const Cart = () => {
     removeFromCart,
     deleteFromCart,
     getTotalCartAmount,
+    finalTotal,
+    setFinalTotal
   } = useContext(StoreContext);
+
+  const [promoCode, setPromoCode] = useState("");
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const isVip = auth?.vip_flag === true;
+
 
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
+
+  React.useEffect(() => {
+  const subtotal = getTotalCartAmount();
+  const delivery = subtotal === 0 ? 0 : 2;
+
+  let finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+  let total = (finalSubtotal + delivery).toFixed(2);
+  setTotal(total);
+  setFinalTotal(total);
+  }, [cartItems, discountApplied]);
+
+  
+  const handlePromoSubmit = () => {
+
+    if (promoCode !== "CUNYVIP") {
+    alert("Invalid promo code");
+    }
+
+    if (!isVip) {
+      alert("Promo Code can only be applied by VIP customers");
+      return;
+    }
+
+    if (discountApplied) {
+      alert("Promo code already applied");
+      return;
+    }
+
+    if (promoCode === "CUNYVIP") {
+      setDiscountApplied(true);
+      alert("Promo code applied!");
+    } else {
+      alert("Invalid promo code");
+    }
+};
+
 
   return (
     <div className="cart">
@@ -106,12 +152,8 @@ const Cart = () => {
 
             <div className="cart-total-details">
               <b>Total</b>
-              <b>
-                $
-                {getTotalCartAmount() === 0
-                  ? "0.00"
-                  : (getTotalCartAmount() + 2).toFixed(2)}
-              </b>
+
+              <b>${total}</b>
             </div>
           </div>
 
@@ -119,14 +161,17 @@ const Cart = () => {
             PROCEED TO CHECKOUT
           </button>
         </div>
-
         <div className="cart-promocode">
           <div>
             <p>If you are a VIP customer, enter your promo code here</p>
-
             <div className="cart-promocode-input">
-              <input type="text" placeholder="promo code" />
-              <button>Submit</button>
+            <input 
+              type="text" 
+              placeholder="promo code"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+            />
+              <button onClick={handlePromoSubmit}>Submit</button>
             </div>
           </div>
         </div>

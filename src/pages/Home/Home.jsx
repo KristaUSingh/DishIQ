@@ -35,7 +35,7 @@ const Home = () => {
         {/* VIP banner at the bottom */}
         {auth?.vip_flag && (
           <div className="vip-banner">
-            ⭐ VIP Customer: Use Promo Code "CUNYVIP" for 5 percent off your next order!
+            ⭐ VIP Customer: Use Promo Code "CUNYVIP" for 5% off your next order!
           </div>
         )}
       </div>

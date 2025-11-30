@@ -8,6 +8,8 @@ const StoreContextProvider = (props) => {
   const [menuItems, setMenuItems] = useState([]);
   const [cartItems, setCartItems] = useState({});
 
+  const [finalTotal, setFinalTotal] = useState(null);
+
   const { auth } = useAuth(); // ⬅️ current logged-in user
 
   // Load menu items once
@@ -85,6 +87,8 @@ const StoreContextProvider = (props) => {
         removeFromCart,
         deleteFromCart,
         getTotalCartAmount,
+        finalTotal, 
+        setFinalTotal
       }}
     >
       {props.children}

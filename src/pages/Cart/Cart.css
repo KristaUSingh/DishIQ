@@ -166,4 +166,11 @@
     border-radius: 6px;
     cursor: pointer;
   }
+
+  .login-card .alert {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
   

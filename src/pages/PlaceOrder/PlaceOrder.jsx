@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./PlaceOrder.css";
 
 const PlaceOrder = () => {
-  const { cartItems, menuItems, getTotalCartAmount, deleteFromCart } =
+  const { cartItems, menuItems, finalTotal, getTotalCartAmount, deleteFromCart } =
     useContext(StoreContext);
 
   const { auth } = useAuth();
@@ -57,7 +57,7 @@ const PlaceOrder = () => {
     try {
       const customer_id = auth.user_id;
       const restaurant_name = cartDetails[0].restaurant_name;
-      const total_price = getTotalCartAmount();
+      const total_price = finalTotal ?? getTotalCartAmount();
 
       // Build full delivery address
       const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
@@ -200,6 +200,7 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <p>Subtotal</p>
+
             <p>${getTotalCartAmount().toFixed(2)}</p>
           </div>
 
@@ -212,10 +213,18 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <b>Total</b>
-            <b>${getTotalCartAmount() === 0 ? 0 : (getTotalCartAmount() + 2).toFixed(2)}</b>
-          </div>
+            <b>{"$"}{finalTotal ?? "0.00"}</b>
+          </div> 
 
-          <button disabled={loading}>
+          <div className="cart-total-details" style={{ marginLeft: "auto" }}>
+          {/* original price */}
+          {((getTotalCartAmount() + 2).toFixed(2) !== Number(finalTotal).toFixed(2) && getTotalCartAmount() !== 0)&& (
+            <div style={{ fontSize: "0.9rem", color: "#777" }}>
+              Original price without discount: ${(getTotalCartAmount()+2).toFixed(2)}
+            </div>
+          )} </div>
+
+          <button style={{ marginLeft: "auto" }} disabled={loading}>
             {loading ? "Placing Order..." : "PROCEED TO PAYMENT"}
           </button>
         </div>
