@@ -3,6 +3,8 @@ import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets"; // make sure trash icon is inside assets
+import { useAuth } from "../../context/useAuth"; 
+import { supabase } from "../../api/supabaseClient";
 
 
 const Cart = () => {
@@ -14,7 +16,9 @@ const Cart = () => {
     deleteFromCart,
     getTotalCartAmount,
     finalTotal,
-    setFinalTotal
+    setFinalTotal,
+    delivery,
+    setDelivery
   } = useContext(StoreContext);
 
   const [promoCode, setPromoCode] = useState("");
@@ -22,22 +26,68 @@ const Cart = () => {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isVip = auth?.vip_flag === true;
 
+  const { setAuth } = useAuth();
+
 
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
+  const [find_delivery, global_delivery] = useState(0); 
 
-  React.useEffect(() => {
+React.useEffect(() => {
   const subtotal = getTotalCartAmount();
-  const delivery = subtotal === 0 ? 0 : 2;
 
-  let finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-  let total = (finalSubtotal + delivery).toFixed(2);
-  setTotal(total);
-  setFinalTotal(total);
-  }, [cartItems, discountApplied]);
+  if (subtotal === 0) {
+    const delivery = 0;
+    setDelivery(delivery);
+    global_delivery(delivery);
 
-  
+    const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+    const totalAmount = (finalSubtotal + delivery).toFixed(2);
+    setTotal(totalAmount);
+    setFinalTotal(totalAmount);
+    return;
+  }
+
+  // Fetch number of orders directly from Supabase
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("finance")
+        .select("num_orders")
+        .eq("customer_id", auth.user_id)
+        .single();
+
+      if (error) throw error;
+
+      const numOrders = data?.num_orders ?? 0;
+
+      // Every 3rd order is free for VIP only
+      const delivery = ((numOrders + 1) % 3 === 0 && isVip) ? 0 : 2;
+
+      setDelivery(delivery);
+      global_delivery(delivery);
+
+      const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+      const totalAmount = (finalSubtotal + delivery).toFixed(2);
+      setTotal(totalAmount);
+      setFinalTotal(totalAmount);
+    } catch (err) {
+      console.error("Failed to fetch order info from Supabase:", err);
+      const delivery = 2;
+      setDelivery(delivery);
+      global_delivery(delivery);
+
+      const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+      const totalAmount = (finalSubtotal + delivery).toFixed(2);
+      setTotal(totalAmount);
+      setFinalTotal(totalAmount);
+    }
+  };
+
+  fetchOrders();
+}, [cartItems, discountApplied, auth, isVip]);
+
   const handlePromoSubmit = () => {
 
     if (promoCode !== "CUNYVIP") {
@@ -145,7 +195,7 @@ const Cart = () => {
 
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? "0.00" : "2.00"}</p>
+              <p>${delivery}</p>
             </div>
 
             <hr />

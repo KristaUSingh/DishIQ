@@ -9,6 +9,7 @@ const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
 
   const [finalTotal, setFinalTotal] = useState(null);
+  const [delivery, setDelivery] = useState(null); 
 
   const { auth } = useAuth(); // ⬅️ current logged-in user
 
@@ -88,7 +89,9 @@ const StoreContextProvider = (props) => {
         deleteFromCart,
         getTotalCartAmount,
         finalTotal, 
-        setFinalTotal
+        setFinalTotal,
+        delivery,
+        setDelivery
       }}
     >
       {props.children}

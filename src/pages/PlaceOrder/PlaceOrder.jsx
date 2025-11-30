@@ -5,8 +5,17 @@ import { supabase } from "../../api/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "./PlaceOrder.css";
 
+//adding
+//inefficent funds and give a warning
+
+//success
+//subtract from balance
+//ADD TO ORDER COUNT WHEN TRANSCATION GOES THROUGH
+//add finalTotal to total_spent
+
+
 const PlaceOrder = () => {
-  const { cartItems, menuItems, finalTotal, getTotalCartAmount, deleteFromCart } =
+  const { cartItems, menuItems, delivery, finalTotal, getTotalCartAmount, deleteFromCart } =
     useContext(StoreContext);
 
   const { auth } = useAuth();
@@ -57,7 +66,7 @@ const PlaceOrder = () => {
     try {
       const customer_id = auth.user_id;
       const restaurant_name = cartDetails[0].restaurant_name;
-      const total_price = finalTotal ?? getTotalCartAmount();
+      const total_price = finalTotal; //check here
 
       // Build full delivery address
       const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
@@ -112,6 +121,7 @@ const PlaceOrder = () => {
 
     setLoading(false);
   };
+
 
   return (
     <form className="place-order" onSubmit={handlePlaceOrder}>
@@ -206,7 +216,7 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <p>Delivery Fee</p>
-            <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+            <p>${delivery ?? "0.00"}</p>
           </div>
 
           <hr />
@@ -218,9 +228,9 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details" style={{ marginLeft: "auto" }}>
           {/* original price */}
-          {((getTotalCartAmount() + 2).toFixed(2) !== Number(finalTotal).toFixed(2) && getTotalCartAmount() !== 0)&& (
+          {((getTotalCartAmount() + delivery).toFixed(2) !== Number(finalTotal).toFixed(2) && getTotalCartAmount() !== 0)&& (
             <div style={{ fontSize: "0.9rem", color: "#777" }}>
-              Original price without discount: ${(getTotalCartAmount()+2).toFixed(2)}
+              Original price without discount: ${(getTotalCartAmount() + delivery).toFixed(2)}
             </div>
           )} </div>
 

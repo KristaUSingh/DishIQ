@@ -101,6 +101,15 @@ function Signup() {
         },
       ]);
 
+      const { error: finance_Error } = await supabase.from("finance").insert([
+        {
+          customer_id: data.user.id,
+          balance: 0
+        },
+      ]);
+
+      if (finance_Error) throw finance_Error;
+
       if (dbError?.code === "23505") {
         setError("Account already exists. Please login.");
         return;
