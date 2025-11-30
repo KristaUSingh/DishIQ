@@ -23,6 +23,7 @@ import UserRegistration from "./pages/DashBoard/Manager/UserRegistration";
 import ManageBids from "./pages/DashBoard/Manager/ManageBids";
 import ManagerCC from "./pages/DashBoard/Manager/ManagerCC";
 import StaffRating from "./pages/DashBoard/Manager/StaffRating";
+import ManagerKBReview from "./pages/DashBoard/Manager/ManagerKBReview";
 import Finances from "./pages/DashBoard/Manager/Finances";
 
 import RestaurantMenu from "./pages/RestaurantMenu/RestaurantMenu";
@@ -80,6 +81,7 @@ function App() {
           <Route path="/manager/compliment-complaint" element={<ManagerCC />} />
           <Route path="/manager/staffrating" element={<StaffRating />} />
           <Route path="/manager/finances" element={<Finances />} />
+          <Route path="/manager/kb-review" element={<ManagerKBReview />} />
 
           {/* ---------------------- DRIVER ROUTES ---------------------- */}
 
