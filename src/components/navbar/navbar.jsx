@@ -27,7 +27,7 @@ const Navbar = () => {
 
   return (
     <div className='navbar'>
-      <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
+      <img src={assets.logo} alt="" className="logo" />
 
       <ul className="navbar-menu">
 
@@ -44,6 +44,7 @@ const Navbar = () => {
             <li onClick={() => navigate("/")}>Home</li>
             <li onClick={() => navigate("/restaurants")}>Restaurants</li>
             <li onClick={() => navigate("/order-history")}>Order History</li>
+            <li onClick={() => navigate("/customer-feedback")}>Feedback</li>
             <li onClick={() => navigate("/contact")}>Contact Us</li>
           </>
         )}
@@ -61,7 +62,7 @@ const Navbar = () => {
           <>
             <li onClick={() => navigate('/manager/user')}>User Registrations</li>
             <li onClick={() => navigate('/manager/manage-bids')}>Manage Bids</li>
-            <li onClick={() => navigate('/manager/complaints')}>Complaints</li>
+            <li onClick={() => navigate('/manager/compliment-complaint')}>Compliments/Complaints</li>
             <li onClick={() => navigate('/manager/staffrating')}>Staff Rating</li>
             <li onClick={() => navigate('/manager/finances')}>Finances</li>
           </>
@@ -71,6 +72,7 @@ const Navbar = () => {
           <>
             <li onClick={() => navigate('/driver/bids')}>Bid Deliveries</li>
             <li onClick={() => navigate('/driver/transport')}>Transport Orders</li>
+            <li onClick={() => navigate('/driver/review-customers')}>Review Customers</li>
             <li onClick={() => navigate('/driver/ratings')}>Delivery Ratings</li>
           </>
         )}
