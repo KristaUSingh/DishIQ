@@ -9,13 +9,21 @@ import { FiShoppingCart } from "react-icons/fi";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, authLoading } = useAuth();
   const { cartItems } = useContext(StoreContext);
+
+  // ⭐ PREVENT NAVBAR FROM DISAPPEARING DURING REFRESH
+  if (authLoading) {
+    return (
+      <div className="navbar">
+        <img src={assets.logo} alt="" className="logo" />
+      </div>
+    );
+  }
 
   const isLoggedIn = auth?.isLoggedIn || false;
   const role = auth?.role || null;
 
-  // ---- LIVE CART COUNT ----
   const cartCount = Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
 
   const handleLogoutClick = async () => {
@@ -30,7 +38,6 @@ const Navbar = () => {
       <img src={assets.logo} alt="" className="logo" />
 
       <ul className="navbar-menu">
-
         {!isLoggedIn && (
           <>
             <li onClick={() => navigate("/")}>Home</li>
@@ -76,19 +83,15 @@ const Navbar = () => {
             <li onClick={() => navigate('/driver/ratings')}>Delivery Ratings</li>
           </>
         )}
-
       </ul>
 
       <div className="navbar-right">
 
-        {/* ---- CUSTOMER CART ICON ---- */}
+        {/* CUSTOMER CART ICON */}
         {isLoggedIn && role === "customer" && (
           <Link to="/cart" className="navbar-cart-icon">
             <FiShoppingCart size={26} />
-
-            {cartCount > 0 && (
-              <span className="cart-badge">{cartCount}</span>
-            )}
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
         )}
 
