@@ -1,7 +1,11 @@
+/* ---------------------------
+   Container + Header
+---------------------------- */
 .feedback-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1rem;
+  font-family: "Inter", sans-serif;
 }
 
 .feedback-title {
@@ -11,14 +15,54 @@
   text-align: center;
 }
 
+/* ---------------------------
+   Tabs (Compliments / Complaints)
+---------------------------- */
+.fb-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.fb-tabs button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid #a3c4f3;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.fb-tabs button:hover {
+  background: #e7f0ff;
+}
+
+.fb-tabs .active-tab {
+  background: #a3c4f3;
+  color: #000;
+  border-color: #7da5e1;
+}
+
+/* ---------------------------
+   Feedback Cards
+---------------------------- */
 .feedback-card-clean {
   background: white;
   padding: 25px;
   border-radius: 14px;
   margin-bottom: 30px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+  transition: 0.2s ease;
 }
 
+.feedback-card-clean:hover {
+  transform: translateY(-3px);
+}
+
+/* Header row */
 .fb-header {
   display: flex;
   justify-content: space-between;
@@ -31,17 +75,12 @@
   opacity: 0.6;
 }
 
+/* Row flex layout */
 .fb-row {
   display: flex;
   align-items: center;
   margin: 12px 0;
   gap: 10px;
-}
-
-.fb-label {
-  min-width: 200px;
-  font-size: 1.3rem;
-  font-weight: 140px;
 }
 
 .comment-row {
@@ -53,28 +92,77 @@
   line-height: 1.4;
 }
 
+/* ---------------------------
+   Stars
+---------------------------- */
 .stars {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .star {
   width: 24px;
   height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.svg-full {
-  fill: #4CAF50;
+.svg-full path {
+  fill: #4caf50;
 }
 
-.svg-empty {
+.svg-empty path {
   fill: #ddd;
 }
 
 .svg-half {
   fill: url(#half-fill);
+}
+
+/* ---------------------------
+   Dispute Section
+---------------------------- */
+.fb-dispute-box {
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #eee;
+}
+
+/* Dispute Button */
+.fb-dispute-btn {
+  background: #ff6961;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.fb-dispute-btn:hover {
+  background: #e85a53;
+}
+
+/* Pending Dispute */
+.fb-pending {
+  margin-top: 8px;
+  font-weight: 600;
+  color: #c27b00;
+}
+
+/* Resolved Dispute */
+.fb-resolved {
+  margin-top: 8px;
+  font-weight: 600;
+  color: #1565c0;
+}
+
+/* ---------------------------
+   Empty State
+---------------------------- */
+.no-feedback {
+  text-align: center;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  margin-top: 2rem;
 }

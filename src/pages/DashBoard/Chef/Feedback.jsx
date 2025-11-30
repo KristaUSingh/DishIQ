@@ -25,6 +25,7 @@ const HalfStarSVG = () => (
 );
 
 const Stars = ({ rating }) => {
+  if (!rating) rating = 0;
   const full = Math.floor(rating);
   const half = rating % 1 !== 0;
   const empty = 5 - full - (half ? 1 : 0);
@@ -46,6 +47,7 @@ const Stars = ({ rating }) => {
 
 const Feedback = ({ restaurant_name }) => {
   const [feedback, setFeedback] = useState([]);
+  const [activeTab, setActiveTab] = useState("compliments");
 
   useEffect(() => {
     if (restaurant_name) fetchFeedback();
@@ -59,85 +61,152 @@ const Feedback = ({ restaurant_name }) => {
         food_rating,
         comment,
         created_at,
+        review_type,
+        dispute_status,
+        manager_action,
         dish_id,
         customer:customer_id ( first_name, last_name )
       `)
-      .eq("restaurant_name", restaurant_name);
-  
+      .eq("restaurant_name", restaurant_name)
+      .eq("review_target", "dish"); // Only reviews targeted at the chef
+
     if (error) {
       console.error("Error loading feedback:", error);
       return;
     }
-  
-    // Filter out NULL dish ids BEFORE querying menus
+
+    // Extract dish IDs
     const dishIds = [
       ...new Set(
         data
           .map((r) => r.dish_id)
-          .filter((id) => id !== null && id !== undefined) // <--- FIX
+          .filter((id) => id !== null && id !== undefined)
       ),
     ];
-  
+
     let menuMap = {};
-  
+
     if (dishIds.length > 0) {
-      const { data: menuData, error: menuErr } = await supabase
+      const { data: menuData } = await supabase
         .from("menus")
         .select("dish_id, name")
-        .in("dish_id", dishIds); // dishIds now contains ONLY integers
-  
-      if (!menuErr && menuData) {
+        .in("dish_id", dishIds);
+
+      if (menuData) {
         menuData.forEach((m) => {
           menuMap[m.dish_id] = m.name;
         });
       }
     }
-  
+
     const formatted = data.map((item) => ({
       id: item.rating_id,
       customer: `${item.customer.first_name} ${item.customer.last_name}`,
       food_rating: item.food_rating,
       comment: item.comment,
+      review_type: item.review_type,
+      dispute_status: item.dispute_status,
+      manager_action: item.manager_action,
       dish_name: item.dish_id ? menuMap[item.dish_id] : null,
       created_at: new Date(item.created_at).toLocaleString(),
     }));
-  
+
     setFeedback(formatted);
-  };  
+  };
+
+  // Handle dispute
+  const handleDispute = async (rating_id) => {
+    const { error } = await supabase
+      .from("ratings")
+      .update({ dispute_status: "pending" })
+      .eq("rating_id", rating_id);
+
+    if (error) console.error(error);
+    fetchFeedback();
+  };
+
+  // Filter by compliments/complaints
+  const filtered = feedback.filter((fb) =>
+    activeTab === "compliments"
+      ? fb.review_type === "compliment"
+      : fb.review_type === "complaint"
+  );
 
   return (
     <div className="feedback-container">
       <h2 className="feedback-title">Customer Feedback</h2>
 
-      {feedback.length === 0 ? (
-        <p>No feedback available yet.</p>
-      ) : (
-        feedback.map((fb) => (
-          <div key={fb.id} className="feedback-card-clean">
+      {/* FILTER TABS */}
+      <div className="fb-tabs">
+        <button
+          className={activeTab === "compliments" ? "active-tab" : ""}
+          onClick={() => setActiveTab("compliments")}
+        >
+          Compliments
+        </button>
 
+        <button
+          className={activeTab === "complaints" ? "active-tab" : ""}
+          onClick={() => setActiveTab("complaints")}
+        >
+          Complaints
+        </button>
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="no-feedback">No {activeTab} yet.</p>
+      ) : (
+        filtered.map((fb) => (
+          <div key={fb.id} className="feedback-card-clean">
             <div className="fb-header">
               <span className="fb-name">{fb.customer}</span>
               <span className="fb-date">{fb.created_at}</span>
             </div>
 
-            {/* Dish Name */}
+            {/* Dish */}
             <div className="fb-row">
-              <span className="fb-label"><strong>Dish:</strong></span>
-              <span className="fb-comment">{fb.dish_name || "Delivery Review"}</span>
+              <strong>Dish:</strong> {fb.dish_name || "N/A"}
             </div>
 
             {/* Rating */}
             <div className="fb-row">
-              <span className="fb-label"><strong>Food Rating:</strong></span>
-              <Stars rating={fb.food_rating || 0} />
+              <strong>Food Rating:</strong>
+              <Stars rating={fb.food_rating} />
             </div>
-
 
             {/* Comment */}
             <div className="fb-row comment-row">
-              <span className="fb-label"><strong>Comment:</strong></span>
-              <span className="fb-comment">{fb.comment}</span>
+              <strong>Comment:</strong> {fb.comment}
             </div>
+
+            {/* Dispute logic */}
+            {activeTab === "complaints" && (
+              <div className="fb-dispute-box">
+                {fb.dispute_status === "none" && (
+                  <button
+                    className="fb-dispute-btn"
+                    onClick={() => handleDispute(fb.id)}
+                  >
+                    Dispute Complaint
+                  </button>
+                )}
+
+                {fb.dispute_status === "pending" && (
+                  <p className="fb-pending">Dispute submitted. Awaiting manager review.</p>
+                )}
+
+                {fb.dispute_status === "resolved" && (
+                  <p className="fb-resolved">
+                    Manager Decision:{" "}
+                    <strong>
+                      {fb.manager_action === "dismissed"
+                        ? "Complaint dismissed"
+                        : "Warning issued"}
+                    </strong>
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         ))
       )}
