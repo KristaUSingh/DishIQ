@@ -6,8 +6,8 @@ const Header = () => {
     <div className='header'>
       <div className="header-contents">
         <h2>Order Here</h2>
-        <h3>Choose from the Four Restaurants Located in the NAC Cafeteria</h3>
-        <button>View Restaurants</button>
+        <h3>Choose from the Restaurants Located in the NAC Cafeteria</h3>
+        
       </div>
     </div>
   )

@@ -1,9 +1,9 @@
 import { supabase } from "../api/supabaseClient";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const ai = new GoogleGenerativeAI(GEMINI_API_KEY);
 const LLM_MODEL = "gemini-2.5-flash"; 
 
 export async function getChatbotResponse(userMessage) {
