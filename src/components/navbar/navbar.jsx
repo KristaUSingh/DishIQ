@@ -51,6 +51,7 @@ const Navbar = () => {
             <li onClick={() => navigate("/")}>Home</li>
             <li onClick={() => navigate("/restaurants")}>Restaurants</li>
             <li onClick={() => navigate("/order-history")}>Order History</li>
+            <li onClick={() => navigate("/deposit-account")}>Deposit Account</li>
             <li onClick={() => navigate("/customer-feedback")}>Feedback</li>
             <li onClick={() => navigate("/contact")}>Contact Us</li>
           </>

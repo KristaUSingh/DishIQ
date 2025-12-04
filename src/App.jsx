@@ -10,6 +10,7 @@ import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import OrderHistory from "./pages/OrderHistory/OrderHistory";
 import CustomerFeedback from "./pages/CustomerFeedback/CustomerFeedback";
+import FundingApp from "./pages/FundingApp/FundingApp";
 
 import ChefMenu from "./pages/DashBoard/Chef/ChefMenu";
 import ChefOrders from "./pages/DashBoard/Chef/ChefOrders";
@@ -54,6 +55,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path='/order-history' element={<OrderHistory />} />
           <Route path='/customer-feedback' element={<CustomerFeedback />} />
+          {/* FIX: Changed path to '/deposit-account' to match the navbar link */}
+          <Route path='/deposit-account' element={<FundingApp />} /> 
 
 
           {/* ---------------------- CHEF ROUTES ---------------------- */}
