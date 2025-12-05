@@ -1,22 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import { useAuth } from "../../context/useAuth";
 import { supabase } from "../../api/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "./PlaceOrder.css";
 
-//adding
-//inefficent funds and give a warning
-
-//success
-//subtract from balance
-//ADD TO ORDER COUNT WHEN TRANSCATION GOES THROUGH
-//add finalTotal to total_spent
-
-
 const PlaceOrder = () => {
-  const { cartItems, menuItems, delivery, finalTotal, getTotalCartAmount, deleteFromCart } =
-    useContext(StoreContext);
+  const {
+    cartItems,
+    menuItems,
+    delivery,
+    finalTotal,
+    getTotalCartAmount,
+    deleteFromCart,
+    clearCart,
+    deductBalance,
+  } = useContext(StoreContext);
 
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -35,147 +34,138 @@ const PlaceOrder = () => {
   const [phone, setPhone] = useState("");
 
   // Build items list
-  const cartDetails = menuItems
-    .filter((item) => cartItems[item.dish_id])
-    .map((item) => ({
-      dish_id: item.dish_id,
-      name: item.name,
-      quantity: cartItems[item.dish_id],
-      price: item.price,
-      restaurant_name: item.restaurant_name,
-    }));
+  const cartDetails = useMemo(
+    () =>
+      menuItems
+        .filter((item) => cartItems[item.dish_id])
+        .map((item) => ({
+          dish_id: item.dish_id,
+          name: item.name,
+          quantity: cartItems[item.dish_id],
+          price: item.price,
+          restaurant_name: item.restaurant_name,
+        })),
+    [menuItems, cartItems]
+  );
 
   const handlePlaceOrder = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!auth || auth.role !== "customer") {
-    alert("You must be logged in as a customer to place an order.");
-    return;
-  }
-
-  if (cartDetails.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const customer_id = auth.user_id;
-    const restaurant_name = cartDetails[0].restaurant_name;
-    const total_price = finalTotal; 
-    const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
-
-    // --------------------------------------------------
-    // 1️⃣ GET CUSTOMER BALANCE FROM FINANCE
-    // --------------------------------------------------
-    const { data: financeData, error: financeError } = await supabase
-      .from("finance")
-      .select("balance, num_orders, total_spent")
-      .eq("customer_id", auth.user_id)
-      .single();
-
-    if (financeError) throw financeError;
-
-    const balance = financeData?.balance ?? 0;
-
-    // --------------------------------------------------
-    // 2️⃣ NOT ENOUGH FUNDS → ADD WARNING, DO NOT PLACE ORDER
-    // --------------------------------------------------
-    if (balance < finalTotal) {
-      const { data: userData, error: userError } = await supabase
-      .from("users")
-      .select("warnings")
-      .eq("user_id", customer_id)
-      .single();
-
-    if (userError) throw userError;
-
-    const currentWarnings = userData?.warnings ?? 0;
-
-    // 2️⃣ Update warnings
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ warnings: currentWarnings + 1 })
-      .eq("user_id", customer_id);
-
-    if (updateError) throw updateError;
-
-      alert("Insufficient funds! Your balance is too low. A warning has been added to your account.");
-      setLoading(false);
+    if (!auth || auth.role !== "customer") {
+      alert("You must be logged in as a customer to place an order.");
       return;
     }
 
-    // --------------------------------------------------
-    // 3️⃣ ENOUGH FUNDS → START ORDER PROCESS
-    // --------------------------------------------------
-    const { data: orderData, error: orderError } = await supabase
-      .from("orders")
-      .insert([
-        {
-          customer_id,
-          restaurant_name,
-          status: "pending",
-          total_price,
-          delivery_address,
-        },
-      ])
-      .select()
-      .single();
+    if (cartDetails.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
 
-    if (orderError) throw orderError;
+    setLoading(true);
 
-    const order_id = orderData.order_id;
+    try {
+      const customer_id = auth.customer_id; // as confirmed
+      const restaurant_name = cartDetails[0].restaurant_name;
+      // Use finalTotal computed in Cart; fallback to recompute
+      const total_price = Number(finalTotal ?? (getTotalCartAmount() + (delivery ?? 2)));
 
-    // --------------------------------------------------
-    // 4️⃣ INSERT ORDER ITEMS
-    // --------------------------------------------------
-    const itemsToInsert = cartDetails.map((item) => ({
-      order_id,
-      dish_id: item.dish_id,
-      quantity: item.quantity,
-      price: item.price,
-    }));
+      // 1) Check finance balance + deduct using context helper (atomic update)
+      const deductResult = await deductBalance(total_price, {
+        incrementOrders: 1,
+        addTotalSpent: total_price,
+      });
 
-    const { error: itemsError } = await supabase
-      .from("order_items")
-      .insert(itemsToInsert);
+      if (!deductResult.success) {
+        // If insufficient, add a warning to users table (as your previous code did)
+        if (deductResult.message === "Insufficient balance.") {
+          // add warning count
+          try {
+            const { data: userData, error: userError } = await supabase
+              .from("users")
+              .select("warnings")
+              .eq("user_id", customer_id)
+              .single();
 
-    if (itemsError) throw itemsError;
+            if (userError && userError.code !== "PGRST116") {
+              console.error("User fetch error when adding warning:", userError);
+            } else {
+              const currentWarnings = Number(userData?.warnings ?? 0);
+              const { error: updateError } = await supabase
+                .from("users")
+                .update({ warnings: currentWarnings + 1 })
+                .eq("user_id", customer_id);
 
-    // --------------------------------------------------
-    // 5️⃣ UPDATE FINANCE RECORD
-    // --------------------------------------------------
-    const newBalance = balance - finalTotal;
-    const newNumOrders = financeData.num_orders + 1;
-    const newTotalSpent = financeData.total_spent + total_price;
+              if (updateError) console.error("Error updating warnings:", updateError);
+            }
+          } catch (warnErr) {
+            console.error("Warning update failed:", warnErr);
+          }
 
-    const { error: financeUpdateError } = await supabase
-      .from("finance")
-      .update({
-        balance: newBalance,
-        num_orders: newNumOrders,
-        total_spent: newTotalSpent,
-      })
-      .eq("customer_id", customer_id);
+          alert("Insufficient funds! Your balance is too low. A warning has been added to your account.");
+          setLoading(false);
+          return;
+        }
 
-    if (financeUpdateError) throw financeUpdateError;
+        // other deduction errors
+        alert(deductResult.message || "Failed to deduct balance.");
+        setLoading(false);
+        return;
+      }
 
-    // --------------------------------------------------
-    // 6️⃣ CLEAR CART + SUCCESS
-    // --------------------------------------------------
-    cartDetails.forEach((item) => deleteFromCart(item.dish_id));
+      // 2) Create order row in orders table
+      const delivery_address = `${street}, ${city}, ${stateVal} ${zip}`;
+      const orderPayload = {
+        customer_id,
+        restaurant_name,
+        status: "paid",
+        total_price,
+        delivery_address,
+        delivery_fee: delivery ?? 2,
+      };
 
-    alert("Order placed successfully!");
-    navigate("/");
+      const { data: orderData, error: orderError } = await supabase
+        .from("orders")
+        .insert(orderPayload)
+        .select()
+        .single();
 
-  } catch (err) {
-    console.error("Order Error:", err);
-    alert("Something went wrong placing your order. Try again.");
-  }
+      if (orderError) {
+        console.error("Order insert error:", orderError);
+        alert("Order creation failed; please contact support.");
+        setLoading(false);
+        return;
+      }
 
-  setLoading(false);
-};
+      const order_id = orderData.order_id;
+
+      // 3) Insert order items
+      const itemsToInsert = cartDetails.map((item) => ({
+        order_id,
+        dish_id: item.dish_id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supabase.from("order_items").insert(itemsToInsert);
+      if (itemsError) {
+        console.error("Order items insert error:", itemsError);
+        alert("Failed to create order items; please contact support.");
+        setLoading(false);
+        return;
+      }
+
+      // 4) Clear cart (use clearCart for convenience)
+      clearCart();
+
+      alert("Order placed successfully!");
+      setLoading(false);
+      navigate("/order-confirmation", { state: { order: orderData } });
+    } catch (err) {
+      console.error("Order Error:", err);
+      alert("Something went wrong placing your order. Try again.");
+      setLoading(false);
+    }
+  };
 
   return (
     <form className="place-order" onSubmit={handlePlaceOrder}>
@@ -264,29 +254,28 @@ const PlaceOrder = () => {
 
           <div className="cart-total-details">
             <p>Subtotal</p>
-
             <p>${getTotalCartAmount().toFixed(2)}</p>
           </div>
 
           <div className="cart-total-details">
             <p>Delivery Fee</p>
-            <p>${delivery ?? "0.00"}</p>
+            <p>${(delivery ?? 2).toFixed(2)}</p>
           </div>
 
           <hr />
 
           <div className="cart-total-details">
             <b>Total</b>
-            <b>{"$"}{finalTotal ?? "0.00"}</b>
-          </div> 
+            <b>{"$"}{(finalTotal ?? (getTotalCartAmount() + (delivery ?? 2))).toFixed(2)}</b>
+          </div>
 
           <div className="cart-total-details" style={{ marginLeft: "auto" }}>
-          {/* original price */}
-          {((getTotalCartAmount() + delivery).toFixed(2) !== Number(finalTotal).toFixed(2) && getTotalCartAmount() !== 0)&& (
-            <div style={{ fontSize: "0.9rem", color: "#777" }}>
-              Original price without discount: ${(getTotalCartAmount() + delivery).toFixed(2)}
-            </div>
-          )} </div>
+            {((getTotalCartAmount() + (delivery ?? 2)).toFixed(2) !== Number(finalTotal ?? 0).toFixed(2) && getTotalCartAmount() !== 0) && (
+              <div style={{ fontSize: "0.9rem", color: "#777" }}>
+                Original price without discount: ${(getTotalCartAmount() + (delivery ?? 2)).toFixed(2)}
+              </div>
+            )}
+          </div>
 
           <button style={{ marginLeft: "auto" }} disabled={loading}>
             {loading ? "Placing Order..." : "PROCEED TO PAYMENT"}
@@ -298,3 +287,4 @@ const PlaceOrder = () => {
 };
 
 export default PlaceOrder;
+

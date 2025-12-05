@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Cart.css";
-import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import { assets } from "../../assets/assets"; // make sure trash icon is inside assets
-import { useAuth } from "../../context/useAuth"; 
-import { supabase } from "../../api/supabaseClient";
+import { assets } from "../../assets/assets";          // FIXED
+import { useAuth } from "../../context/useAuth";       // FIXED
+import { StoreContext } from "../../context/StoreContext"; // FIXED
+
 
 
 const Cart = () => {
   const {
-    cartItems,
     menuItems,
+    cartItems,
     addToCart,
     removeFromCart,
     deleteFromCart,
@@ -18,100 +18,55 @@ const Cart = () => {
     finalTotal,
     setFinalTotal,
     delivery,
-    setDelivery
+    setDelivery,
+    userBalance,
+    balanceLoading,
   } = useContext(StoreContext);
 
-  const [promoCode, setPromoCode] = useState("");
-  const [discountApplied, setDiscountApplied] = useState(false);
-  const auth = JSON.parse(localStorage.getItem("auth"));
-  const isVip = auth?.vip_flag === true;
-
-  const { setAuth } = useAuth();
-
-
-  const [itemToDelete, setItemToDelete] = useState(null);
+  const { auth } = useAuth();
   const navigate = useNavigate();
+
+  const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  const [find_delivery, global_delivery] = useState(0); 
+  const [newBalance, setNewBalance] = useState(0);
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
 
-React.useEffect(() => {
-  const subtotal = getTotalCartAmount();
+  useEffect(() => {
+    const s = getTotalCartAmount();
+    setSubtotal(s);
 
-  if (subtotal === 0) {
-    const delivery = 0;
-    setDelivery(delivery);
-    global_delivery(delivery);
+    // Flat delivery fee is already stored in context (default 2)
+    const deliveryFee = delivery ?? 2;
+    setDelivery(deliveryFee);
 
-    const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-    const totalAmount = (finalSubtotal + delivery).toFixed(2);
+    const finalSub = discountApplied ? s * 0.95 : s;
+    const totalAmount = Number((finalSub + deliveryFee).toFixed(2));
     setTotal(totalAmount);
     setFinalTotal(totalAmount);
-    return;
-  }
 
-  // Fetch number of orders directly from Supabase
-  const fetchOrders = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("finance")
-        .select("num_orders")
-        .eq("customer_id", auth.user_id)
-        .single();
-
-      if (error) throw error;
-
-      const numOrders = data?.num_orders ?? 0;
-
-      // Every 3rd order is free for VIP only
-      const delivery = ((numOrders + 1) % 3 === 0 && isVip) ? 0 : 2;
-
-      setDelivery(delivery);
-      global_delivery(delivery);
-
-      const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-      const totalAmount = (finalSubtotal + delivery).toFixed(2);
-      setTotal(totalAmount);
-      setFinalTotal(totalAmount);
-    } catch (err) {
-      console.error("Failed to fetch order info from Supabase:", err);
-      const delivery = 2;
-      setDelivery(delivery);
-      global_delivery(delivery);
-
-      const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-      const totalAmount = (finalSubtotal + delivery).toFixed(2);
-      setTotal(totalAmount);
-      setFinalTotal(totalAmount);
-    }
-  };
-
-  fetchOrders();
-}, [cartItems, discountApplied, auth, isVip]);
+    // compute new balance
+    setNewBalance(Number((userBalance - totalAmount).toFixed(2)));
+  }, [cartItems, menuItems, discountApplied, delivery, userBalance, getTotalCartAmount, setFinalTotal, setDelivery]);
 
   const handlePromoSubmit = () => {
-
-    if (promoCode !== "CUNYVIP") {
-    alert("Invalid promo code");
-    }
-
-    if (!isVip) {
+    if (!auth?.vip_flag) {
       alert("Promo Code can only be applied by VIP customers");
       return;
     }
-
     if (discountApplied) {
       alert("Promo code already applied");
       return;
     }
-
     if (promoCode === "CUNYVIP") {
       setDiscountApplied(true);
       alert("Promo code applied!");
     } else {
       alert("Invalid promo code");
     }
-};
+  };
 
+  const isInsufficient = Number(newBalance) < 0;
 
   return (
     <div className="cart">
@@ -170,7 +125,7 @@ React.useEffect(() => {
                     src={assets.trash_icon_red}
                     alt="delete"
                     className="trash-icon"
-                    onClick={() => setItemToDelete(item.dish_id)}
+                    onClick={() => deleteFromCart(item.dish_id)}
                   />
                 </div>
 
@@ -188,75 +143,75 @@ React.useEffect(() => {
           <h2>Cart Total</h2>
 
           <div>
+            {/* Current Balance */}
+            <div className="cart-total-details">
+              <p>Current Balance</p>
+              <p>
+                {balanceLoading ? "Loading..." : `$${Number(userBalance).toFixed(2)}`}
+              </p>
+            </div>
+
+            {/* New Balance After Order */}
+            <div className={`cart-total-details ${isInsufficient ? "insufficient" : ""}`}>
+              <p>New Balance After Order</p>
+              <p>${isNaN(newBalance) ? "0.00" : Number(newBalance).toFixed(2)}</p>
+            </div>
+
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount().toFixed(2)}</p>
+              <p>${subtotal.toFixed(2)}</p>
             </div>
 
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${delivery}</p>
+              <p>${(delivery ?? 2).toFixed(2)}</p>
             </div>
 
             <hr />
 
             <div className="cart-total-details">
               <b>Total</b>
-
-              <b>${total}</b>
+              <b>${total.toFixed(2)}</b>
             </div>
           </div>
 
-          <button onClick={() => navigate("/order")}>
+          {/* Warning */}
+          {isInsufficient && (
+            <div className="balance-warning">
+              <p>
+                Insufficient balance. Please add funds or remove items from your
+                cart to proceed.
+              </p>
+            </div>
+          )}
+
+          <button
+            onClick={() => navigate("/place-order")}
+            disabled={isInsufficient || subtotal === 0}
+            className={`checkout-btn ${isInsufficient || subtotal === 0 ? "disabled" : ""}`}
+          >
             PROCEED TO CHECKOUT
           </button>
         </div>
+
         <div className="cart-promocode">
           <div>
             <p>If you are a VIP customer, enter your promo code here</p>
             <div className="cart-promocode-input">
-            <input 
-              type="text" 
-              placeholder="promo code"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-            />
+              <input
+                type="text"
+                placeholder="promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+              />
               <button onClick={handlePromoSubmit}>Submit</button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* DELETE CONFIRMATION MODAL */}
-      {itemToDelete && (
-        <div className="delete-modal-overlay">
-          <div className="delete-modal">
-            <h3>Remove Item?</h3>
-            <p>Are you sure you want to remove this item from your cart?</p>
-
-            <div className="delete-modal-buttons">
-              <button
-                className="delete-confirm"
-                onClick={() => {
-                  deleteFromCart(itemToDelete);
-                  setItemToDelete(null);
-                }}
-              >
-                Yes, Remove
-              </button>
-
-              <button
-                className="delete-cancel"
-                onClick={() => setItemToDelete(null)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 export default Cart;
+

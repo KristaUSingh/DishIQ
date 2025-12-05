@@ -1,176 +1,229 @@
+/* Palette:
+   #a3c4f3 (soft blue)
+   #cde8d5 (mint green)
+   #ffe59d (pastel yellow)
+   #657080 (slate gray)
+   #f8f7f3 (off-white)
+*/
+
 .cart{
-    margin-top: 100px;
-    padding: 20px; 
+  margin-top: 60px;
+  padding: 20px;
+  background: #f8f7f3;
+  border-radius: 12px;
 }
+
+/* Header row */
 .cart-items-title{
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr 0.5fr;
-    align-items: center;
-    color: gray;
-    font-size: max(1vw, 12px);
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr 1fr 1fr 0.6fr;
+  align-items: center;
+  color: #657080;
+  font-size: max(1vw, 12px);
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(163,196,243,0.12), transparent);
+  border-radius: 8px;
 }
+
+/* Item row */
+.cart-row {
+  padding: 12px 0;
+}
+
 .cart-items-item{
-    margin: 10px 0px;
-    color: black;
+  margin: 10px 0px;
+  color: #000;
+  display: grid;
+  grid-template-columns: 60px 1.5fr 1fr 1fr 1fr 0.6fr;
+  align-items: center;
+  gap: 8px;
 }
+
 .cart-items-item img{
-    width: 50px;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
 }
+
+/* Dividers */
 .cart hr{
-    height: 1px;
-    background-color: #f8f7f3;
-    border: none;
+  height: 1px;
+  background-color: #cde8d5;
+  border: none;
 }
-.cart-items-item .cross{
-    cursor: pointer;
-}
+
+/* Bottom area */
 .cart-bottom{
-    margin-top: 80px;
-    display: flex;
-    justify-content: space-between;
-    gap: max(12vw, 20px);  
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: max(12vw, 20px);
 }
+
+/* Totals card */
 .cart-total{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  flex: 1;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  background: #ffe59d;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(101,112,128,0.08);
 }
+
+.cart-total h2{
+  color: #657080;
+  margin: 0;
+}
+
 .cart-total-details{
-    display: flex;
-    justify-content: space-between;
-    color: black;
+  display: flex;
+  justify-content: space-between;
+  color: #657080;
+  padding: 6px 0;
 }
+
+.cart-total-details b{
+  color: #000;
+}
+
+/* Delivery & Subtotal lines */
 .cart-total hr{
-    margin: 10px 0px;
+  margin: 8px 0;
+  border: none;
+  height: 1px;
+  background: rgba(101,112,128,0.08);
 }
-.cart-total button{
-    border: none;
-    color: black;
-    background-color:#cde8d5;; 
-    width: max(15vw, 200px);
-    padding: 12px 0px;
-    border-radius: 4px;
-    cursor: pointer;
+
+/* Checkout button */
+.checkout-btn {
+  border: none;
+  color: #f8f7f3;
+  background-color: #657080;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 6px;
 }
+
+.checkout-btn.disabled,
+.checkout-btn[disabled] {
+  background-color: rgba(101,112,128,0.4);
+  cursor: not-allowed;
+}
+
+/* Promo card */
 .cart-promocode{
-    flex:1;
+  flex:1;
+  max-width: 420px;
+  padding: 18px;
+  background: #cde8d5;
+  border-radius: 12px;
 }
+
 .cart-promocode p{
-    color: #657080;
+  color: #657080;
 }
+
 .cart-promocode-input{
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ffe59d;
-    border-radius: 4px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 6px;
 }
+
 .cart-promocode-input input{
-    background: transparent;
-    border: none;
-    outline: none;
-    padding-left: 10px;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding-left: 10px;
+  width: 60%;
+  color: #657080;
 }
+
 .cart-promocode-input button{
-    width: max(10vw, 150px);
-    padding: 12px 5px;
-    background-color: black;
-    border: none;
-    color: white;
-    border-radius: 4px;
+  width: max(10vw, 120px);
+  padding: 10px 6px;
+  background-color: #657080;
+  border: none;
+  color: #f8f7f3;
+  border-radius: 6px;
 }
 
-/* Quantity box */
+/* Qty buttons */
 .cart-qty-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .qty-btn {
-    background: #3c973c;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    font-size: 18px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .qty-btn:hover {
-    background: #2d7c2d;
-  }
-  
-  .qty-number {
-    font-size: 18px;
-    font-weight: 600;
-  }
-  
-  /* Trash icon */
-  .trash-icon {
-    width: 22px;
-    cursor: pointer;
-    filter: invert(32%) sepia(78%) saturate(2200%) hue-rotate(355deg) brightness(90%) contrast(95%);
-    transition: 0.2s;
-  }
-  
-  .trash-icon:hover {
-    transform: scale(1.15);
-  }
-  
-  /* Modal overlay */
-  .delete-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  /* Modal box */
-  .delete-modal {
-    background: white;
-    padding: 25px 30px;
-    border-radius: 12px;
-    width: 320px;
-    text-align: center;
-  }
-  
-  .delete-modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .cancel-btn {
-    background: #bbbbbb;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .confirm-btn {
-    background: #e63946;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .login-card .alert {
-  color: red;
-  font-size: 0.9rem;
-  text-align: center;
+.qty-btn {
+  background: #3c973c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.qty-btn:hover {
+  background: #2d7c2d;
+}
+
+.qty-count {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Trash icon */
+.trash-icon {
+  width: 22px;
+  cursor: pointer;
+  filter: invert(32%) sepia(78%) saturate(2200%) hue-rotate(355deg) brightness(90%) contrast(95%);
+  transition: 0.2s;
+}
+
+.trash-icon:hover {
+  transform: scale(1.12);
+}
+
+/* Insufficient balance highlight */
+.cart-total-details.insufficient p,
+.cart-total-details.insufficient b {
+  color: #b23b3b;
+}
+
+.balance-warning {
+  margin-top: 8px;
+  background: rgba(178,59,59,0.08);
+  color: #b23b3b;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Modal overlay (if needed elsewhere) */
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
   

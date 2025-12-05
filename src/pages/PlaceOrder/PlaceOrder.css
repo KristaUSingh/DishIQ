@@ -4,76 +4,120 @@
     justify-content: space-between;
     gap: 50px;
     padding: 20px; 
-    margin-top: 100px;
+    margin-top: 60px;
+    background: #f8f7f3;
+    border-radius: 12px;
 }
+
 .place-order-left{
     width: 100%;
     max-width: max(30%, 500px);
 }
+
 .place-order-left .title{
     font-size: 30px;
     font-weight: 600;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+    color: #657080;
 }
+
 .place-order-left input{
     margin-bottom: 15px;
     width: 100%;
     padding: 10px;
-    border: 1px solid #f8f7f3;
-    border-radius: 4px;
+    border: 1px solid #e9efe9;
+    border-radius: 6px;
     outline-color: #a3c4f3;
+    background: white;
+    color: #657080;
 }
-.place-order-left .multi-field{
+
+.multi-fields{
     display: flex;
     gap: 10px;
 }
+
+/* Right column / totals */
 .place-order-right{
     width: 100%;
-    max-width: max(40% 500px);
-}
-.place-order .cart-total button{
-    margin-top: 30px;
-    background-color: #cde8d5;
+    max-width: max(40%, 500px);
 }
 
+.place-order .cart-total{
+    padding: 18px;
+    background: #ffe59d;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(101,112,128,0.06);
+}
+
+.place-order .cart-total h2{
+    margin: 0 0 8px 0;
+    color: #657080;
+}
+
+.place-order .cart-total-details{
+    display: flex;
+    justify-content: space-between;
+    color: #657080;
+    padding: 8px 0;
+}
+
+.place-order .cart-total hr{
+    margin: 8px 0;
+    border: none;
+    height: 1px;
+    background: rgba(101,112,128,0.08);
+}
+
+.place-order .cart-total button{
+    margin-top: 18px;
+    margin-left: auto;
+    background-color: #657080;
+    color: #f8f7f3;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Order items list visuals (if used) */
 .order-items-list {
-    margin-top: 10px;
+    margin-top: 12px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-  }
+}
   
-  .order-item-row {
+.order-item-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-  }
+}
   
-  .order-item-img {
+.order-item-img {
     width: 60px;
     height: 60px;
     border-radius: 6px;
     object-fit: cover;
-  }
+}
   
-  .order-item-info {
+.order-item-info {
     flex: 1;
     margin-left: 15px;
-  }
+}
   
-  .item-name {
+.item-name {
     font-weight: 600;
     margin: 0;
-  }
+}
   
-  .item-sub {
+.item-sub {
     font-size: 14px;
     color: #444;
     margin: 2px 0 0 0;
-  }
+}
   
-  .order-item-total {
+.order-item-total {
     font-weight: 600;
-  }
-  
+}
