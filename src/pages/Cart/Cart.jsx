@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import { assets } from "../../assets/assets"; // make sure trash icon is inside assets
-import { useAuth } from "../../context/useAuth"; 
+import { assets } from "../../assets/assets";
+import { useAuth } from "../../context/useAuth";
 import { supabase } from "../../api/supabaseClient";
-
 
 const Cart = () => {
   const {
@@ -23,75 +22,102 @@ const Cart = () => {
 
   const [promoCode, setPromoCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(false);
+
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isVip = auth?.vip_flag === true;
 
   const { setAuth } = useAuth();
 
-
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
+
   const [total, setTotal] = useState(0);
-  const [find_delivery, global_delivery] = useState(0); 
+  const [find_delivery, global_delivery] = useState(0);
 
-React.useEffect(() => {
-  const subtotal = getTotalCartAmount();
+  // ------------------------------
+  // FETCH USER BALANCE FROM FINANCE TABLE
+  // ------------------------------
+  const [balance, setBalance] = useState(0);
 
-  if (subtotal === 0) {
-    const delivery = 0;
-    setDelivery(delivery);
-    global_delivery(delivery);
-
-    const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-    const totalAmount = (finalSubtotal + delivery).toFixed(2);
-    setTotal(totalAmount);
-    setFinalTotal(totalAmount);
-    return;
-  }
-
-  // Fetch number of orders directly from Supabase
-  const fetchOrders = async () => {
-    try {
+  useEffect(() => {
+    const fetchBalance = async () => {
       const { data, error } = await supabase
         .from("finance")
-        .select("num_orders")
+        .select("balance")
         .eq("customer_id", auth.user_id)
         .single();
 
-      if (error) throw error;
+      if (!error && data) {
+        setBalance(data.balance ?? 0);
+      }
+    };
 
-      const numOrders = data?.num_orders ?? 0;
+    fetchBalance();
+  }, [auth]);
 
-      // Every 3rd order is free for VIP only
-      const delivery = ((numOrders + 1) % 3 === 0 && isVip) ? 0 : 2;
+  // Compute new balance after order
+  const newBalance = balance - Number(total);
 
+  useEffect(() => {
+    const subtotal = getTotalCartAmount();
+
+    if (subtotal === 0) {
+      const delivery = 0;
       setDelivery(delivery);
       global_delivery(delivery);
 
       const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-      const totalAmount = (finalSubtotal + delivery).toFixed(2);
-      setTotal(totalAmount);
-      setFinalTotal(totalAmount);
-    } catch (err) {
-      console.error("Failed to fetch order info from Supabase:", err);
-      const delivery = 2;
-      setDelivery(delivery);
-      global_delivery(delivery);
+      const totalAmount = Math.round((finalSubtotal + delivery) * 100) / 100;
 
-      const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
-      const totalAmount = (finalSubtotal + delivery).toFixed(2);
       setTotal(totalAmount);
       setFinalTotal(totalAmount);
+      return;
     }
-  };
 
-  fetchOrders();
-}, [cartItems, discountApplied, auth, isVip]);
+    const fetchOrders = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("finance")
+          .select("num_orders")
+          .eq("customer_id", auth.user_id)
+          .single();
+
+        if (error) throw error;
+
+        const numOrders = data?.num_orders ?? 0;
+
+        const delivery =
+          (numOrders + 1) % 3 === 0 && isVip ? 0 : 2;
+
+        setDelivery(delivery);
+        global_delivery(delivery);
+
+        const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+        const totalAmount = Math.round((finalSubtotal + delivery) * 100) / 100;
+
+        setTotal(totalAmount);
+        setFinalTotal(totalAmount);
+      } catch (err) {
+        console.error("Failed to fetch order info:", err);
+
+        const delivery = 2;
+        setDelivery(delivery);
+        global_delivery(delivery);
+
+        const finalSubtotal = discountApplied ? subtotal * 0.95 : subtotal;
+        const totalAmount = Math.round((finalSubtotal + delivery) * 100) / 100;
+
+        setTotal(totalAmount);
+        setFinalTotal(totalAmount);
+      }
+    };
+
+    fetchOrders();
+  }, [cartItems, discountApplied, auth, isVip]);
 
   const handlePromoSubmit = () => {
-
     if (promoCode !== "CUNYVIP") {
-    alert("Invalid promo code");
+      alert("Invalid promo code");
     }
 
     if (!isVip) {
@@ -100,18 +126,15 @@ React.useEffect(() => {
     }
 
     if (discountApplied) {
-      alert("Promo code already applied");
+      alert("Promo already applied");
       return;
     }
 
     if (promoCode === "CUNYVIP") {
       setDiscountApplied(true);
-      alert("Promo code applied!");
-    } else {
-      alert("Invalid promo code");
+      alert("Promo applied!");
     }
-};
-
+  };
 
   return (
     <div className="cart">
@@ -136,9 +159,8 @@ React.useEffect(() => {
                   <img src={item.image_url} alt="" />
 
                   <p>{item.name}</p>
-                  <p>${Number(item.price).toFixed(2)}</p>
+                  <p>${Math.round(Number(item.price) * 100) / 100}</p>
 
-                  {/* QUANTITY BUTTONS */}
                   <div className="cart-qty-box">
                     <button
                       className="qty-btn"
@@ -157,15 +179,13 @@ React.useEffect(() => {
                     </button>
                   </div>
 
-                  {/* ITEM TOTAL */}
                   <p>
                     $
-                    {(
-                      Number(item.price) * cartItems[item.dish_id]
-                    ).toFixed(2)}
+                    {Math.round(
+                      Number(item.price) * cartItems[item.dish_id] * 100
+                    ) / 100}
                   </p>
 
-                  {/* TRASH DELETE ICON */}
                   <img
                     src={assets.trash_icon_red}
                     alt="delete"
@@ -188,22 +208,33 @@ React.useEffect(() => {
           <h2>Cart Total</h2>
 
           <div>
+            {/* CURRENT BALANCE */}
+            <div className="cart-total-details">
+              <p>Current Balance</p>
+              <p>${Math.round(balance * 100) / 100}</p>
+            </div>
+
+            {/* NEW BALANCE */}
+            <div className="cart-total-details">
+              <p>New Balance After Order</p>
+              <p>${Math.round(newBalance * 100) / 100}</p>
+            </div>
+
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount().toFixed(2)}</p>
+              <p>${Math.round(getTotalCartAmount() * 100) / 100}</p>
             </div>
 
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${delivery}</p>
+              <p>${Math.round(delivery * 100) / 100}</p>
             </div>
 
             <hr />
 
             <div className="cart-total-details">
               <b>Total</b>
-
-              <b>${total}</b>
+              <b>${Math.round(total * 100) / 100}</b>
             </div>
           </div>
 
@@ -211,16 +242,18 @@ React.useEffect(() => {
             PROCEED TO CHECKOUT
           </button>
         </div>
+
+        {/* PROMO */}
         <div className="cart-promocode">
           <div>
             <p>If you are a VIP customer, enter your promo code here</p>
             <div className="cart-promocode-input">
-            <input 
-              type="text" 
-              placeholder="promo code"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-            />
+              <input
+                type="text"
+                placeholder="promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+              />
               <button onClick={handlePromoSubmit}>Submit</button>
             </div>
           </div>
@@ -232,7 +265,7 @@ React.useEffect(() => {
         <div className="delete-modal-overlay">
           <div className="delete-modal">
             <h3>Remove Item?</h3>
-            <p>Are you sure you want to remove this item from your cart?</p>
+            <p>Are you sure you want to remove this item?</p>
 
             <div className="delete-modal-buttons">
               <button

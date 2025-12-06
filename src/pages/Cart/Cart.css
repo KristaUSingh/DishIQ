@@ -173,4 +173,17 @@
   text-align: center;
 }
 
-  
+.negative-balance {
+  color: #e63946;
+  font-weight: 600;
+}
+
+.balance-warning {
+  background: #ffe2e2;
+  border-left: 4px solid #e63946;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+  color: #e63946;
+  font-size: 0.95rem;
+}
