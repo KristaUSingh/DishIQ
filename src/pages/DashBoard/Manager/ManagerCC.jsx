@@ -56,7 +56,7 @@ const ManagerCC = () => {
     if (userIds.length > 0) {
       const { data: usersData } = await supabase
         .from("users")
-        .select("user_id, first_name, last_name, role")
+        .select("user_id, first_name, last_name, role, vip_flag")
         .in("user_id", userIds);
 
       usersData.forEach((u) => (userMap[u.user_id] = u));
@@ -72,20 +72,104 @@ const ManagerCC = () => {
     setRatings(merged);
   };
 
-  // -----------------------------------------
-  // MANAGER ACTION: DISMISS OR WARNING
-  // -----------------------------------------
   const handleManagerAction = async (rating_id, action) => {
-    const { error } = await supabase
-      .from("ratings")
-      .update({
-        dispute_status: "resolved",
-        manager_action: action,
-      })
-      .eq("rating_id", rating_id);
+  // First, update the rating
+  const { error } = await supabase
+    .from("ratings")
+    .update({
+      dispute_status: "resolved",
+      manager_action: action,
+    })
+    .eq("rating_id", rating_id);
 
-    if (error) console.error(error);
-    fetchAllRatings();
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  // -----------------------------------------
+  // Find the specific rating we're acting on
+  // -----------------------------------------
+  const currentRating = ratings.find(r => r.rating_id === rating_id);
+  if (!currentRating) return;
+
+  // -----------------------------------------
+  // Helper function to increment a column
+  // -----------------------------------------
+  const incrementColumn = async (user_id, column) => {
+    const { data, error: selectError } = await supabase
+      .from("users")
+      .select(column)
+      .eq("user_id", user_id)
+      .single();
+
+    if (selectError) {
+      console.error("Failed to get current value:", selectError);
+      return;
+    }
+
+    const currentValue = data[column] ?? 0;
+
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ [column]: currentValue + 1 })
+      .eq("user_id", user_id);
+
+    if (updateError) console.error("Failed to increment:", updateError);
+  };
+
+  const decrementColumn = async (user_id, column, amount = 1) => {  
+  const { data, error: selectError } = await supabase
+    .from("users")
+    .select(column)
+    .eq("user_id", user_id)
+    .single();
+
+  if (selectError) {
+    console.error("Failed to get current value:", selectError);
+    return;
+  }
+
+  const currentValue = data[column] ?? 0;
+
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ [column]: currentValue - amount })  
+    .eq("user_id", user_id);
+
+  if (updateError) console.error("Failed to decrement:", updateError);
+};
+
+// -----------------------------------------
+// If action is "warning" → warn chef/driver + reduce feedback
+// -----------------------------------------
+if (action === "warning") {
+  let targetUserId = null;
+
+  if (currentRating.review_target === "chef") targetUserId = currentRating.chef_id;
+  if (currentRating.review_target === "driver") targetUserId = currentRating.driver_id;
+
+  if (targetUserId) {
+    await incrementColumn(targetUserId, "warnings");
+    
+    // ⭐ Check if the customer who left the complaint is VIP
+    const isCustomerVip = currentRating.customer?.vip_flag === true;
+    const feedbackDecrement = isCustomerVip ? 2 : 1;
+    console.log(isCustomerVip);
+    
+    console.log("Decrementing feedback by", feedbackDecrement, "- Customer VIP:", isCustomerVip);
+    await decrementColumn(targetUserId, "feedback", feedbackDecrement);
+  }
+}
+  // -----------------------------------------
+  // If action is "dismissed" → warning customer for false complaint
+  // -----------------------------------------
+  else {
+    await incrementColumn(currentRating.customer_id, "warnings");
+  }
+
+  // Refresh the ratings list
+  fetchAllRatings();
   };
 
   // -----------------------------------------

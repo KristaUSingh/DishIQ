@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CreditCard, Wallet, AlertTriangle, CheckCircle, Banknote, Landmark } from 'lucide-react';
 import { supabase } from '../../api/supabaseClient'; // Make sure this path is correct
 
@@ -20,6 +20,25 @@ const App = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const auth = JSON.parse(localStorage.getItem('auth'));
+
+  // ✅ NEW — Load current balance on mount
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!auth?.user_id) return;
+
+      const { data, error } = await supabase
+        .from("finance")
+        .select("balance")
+        .eq("customer_id", auth.user_id)
+        .single();
+
+      if (!error) {
+        setBalance(data?.balance ?? 0);
+      }
+    };
+
+    fetchBalance();
+  }, []);
 
   const formatCentsToDisplay = (centsString) => {
     if (!centsString || centsString.length === 0) return '0.00';
@@ -109,19 +128,19 @@ const App = () => {
     let cursorPosition = e.target.selectionStart;
 
     if (name === 'number') {
-        const originalLength = cardDetails.number.length;
-        formattedValue = value.replace(/\s/g, '').replace(/[^0-9]/g, '').replace(/(\d{4})/g, '$1 ').trim();
-        formattedValue = formattedValue.substring(0, 19);
-        const newLength = formattedValue.length;
-        if (newLength > originalLength && newLength === cursorPosition && (newLength === 5 || newLength === 10 || newLength === 15)) {
-            cursorPosition++;
-        }
+      const originalLength = cardDetails.number.length;
+      formattedValue = value.replace(/\s/g, '').replace(/[^0-9]/g, '').replace(/(\d{4})/g, '$1 ').trim();
+      formattedValue = formattedValue.substring(0, 19);
+      const newLength = formattedValue.length;
+      if (newLength > originalLength && newLength === cursorPosition && (newLength === 5 || newLength === 10 || newLength === 15)) {
+        cursorPosition++;
+      }
     } else if (name === 'expiry') {
-        const cleanValue = value.replace(/\//g, '').replace(/[^0-9]/g, '');
-        formattedValue = cleanValue;
-        if (cleanValue.length > 2) formattedValue = cleanValue.substring(0, 2) + '/' + cleanValue.substring(2, 4);
-        formattedValue = formattedValue.substring(0, 5);
-        if (value.length === 2 && formattedValue.length === 3) cursorPosition = 3;
+      const cleanValue = value.replace(/\//g, '').replace(/[^0-9]/g, '');
+      formattedValue = cleanValue;
+      if (cleanValue.length > 2) formattedValue = cleanValue.substring(0, 2) + '/' + cleanValue.substring(2, 4);
+      formattedValue = formattedValue.substring(0, 5);
+      if (value.length === 2 && formattedValue.length === 3) cursorPosition = 3;
     } else if (name === 'cvc') formattedValue = value.replace(/[^0-9]/g, '').substring(0, 4);
     else if (name === 'name') formattedValue = value;
 
@@ -129,9 +148,9 @@ const App = () => {
 
     const inputRef = name === 'number' ? numberInputRef : (name === 'expiry' ? expiryInputRef : null);
     if (inputRef && inputRef.current) {
-        requestAnimationFrame(() => {
-            if (inputRef.current) inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
-        });
+      requestAnimationFrame(() => {
+        if (inputRef.current) inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      });
     }
   };
 
