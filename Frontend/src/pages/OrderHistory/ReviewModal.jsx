@@ -42,14 +42,69 @@ const ReviewModal = ({ data, onClose }) => {
     }
 
     const { error } = await supabase.from("ratings").insert(payload);
-    setLoading(false);
+    
 
-    if (!error) {
-      onClose();
-    } else {
-      console.error(error);
-      alert("There was an issue submitting your review.");
-    }
+  // Determine which user_id to update
+let targetId = type === "dish" ? order.chef_id : order.deliver_id;
+let ratingValue = type === "dish" ? Number(foodRating) : Number(deliveryRating);
+
+const { data: userData, error: userError } = await supabase
+  .from("users")
+  .select("vip_flag")
+  .eq("user_id", order.customer_id)
+  .single();
+
+if (userError) {
+  console.error("Failed to fetch user VIP status:", userError);
+}
+
+const isVip = userData?.vip_flag === true;
+
+// Helper function to increment a column
+const incrementColumn = async (user_id, column, amount = 1) => {  
+  const { data, error: selectError } = await supabase
+    .from("users")
+    .select(column)
+    .eq("user_id", user_id)
+    .single();
+
+  if (selectError) {
+    console.error("Failed to get current value:", selectError);
+    return;
+  }
+
+  const currentValue = data[column] ?? 0;
+
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ [column]: currentValue + amount })  // ⭐ Use amount instead of hardcoded 1
+    .eq("user_id", user_id);
+
+  if (updateError) console.error("Failed to increment:", updateError);
+};
+
+// ⭐ Update low/high rating
+if (ratingValue <= 2) {
+  await incrementColumn(targetId, "low_rating_count");
+} else {
+  await incrementColumn(targetId, "high_rating_count");
+}
+
+// ⭐ Compliment = feedback++ (or +2 if customer is VIP)
+if (reviewType === "compliment") {
+  const feedbackAmount = isVip ? 2 : 1;
+  console.log("About to increment feedback:", {
+    targetId,
+    feedbackAmount,
+    isVip,
+    reviewType
+  });
+  await incrementColumn(targetId, "feedback", feedbackAmount);
+}
+
+setLoading(false);
+onClose();
+
   };
 
   return (
