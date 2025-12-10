@@ -6,7 +6,6 @@ pillow
 opencv-python
 
 torch
-transformers
 ftfy
 regex
 tqdm
