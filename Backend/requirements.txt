@@ -7,21 +7,14 @@ opencv-python
 
 torch
 transformers
-sentence-transformers
 ftfy
 regex
 tqdm
 
-ultralytics
+clip-interrogator
 
 numpy
 requests
 python-dotenv
-
-google-generativeai
-
-pdfplumber
-unstructured
-unstructured-client
 
 supabase
