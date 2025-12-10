@@ -174,4 +174,3 @@ const UserRegistrations = () => {
 };
 
 export default UserRegistrations;
-
