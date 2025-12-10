@@ -110,7 +110,7 @@ const UserRegistrations = () => {
         return;
       }
     }
-    
+   
     else {
       if (action === "Demote") {
         updates = {
