@@ -1,0 +1,194 @@
+/* =========================================
+   DishIQ Wallet — FundingApp Styling
+   Modern, clean, smooth layout
+   ========================================= */
+
+/* Page Background */
+.funding-page {
+    min-height: 100vh;
+    background-color: #f8f7f3;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  
+  /* Main Container */
+  .funding-container {
+    width: 100%;
+    max-width: 700px;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
+    color: #657080;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  /* Wallet Header Card */
+  .wallet-header {
+    background-color: #a3c4f3;
+    padding: 32px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  .wallet-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .wallet-balance-label {
+    font-size: 12px;
+    opacity: 0.8;
+    text-transform: uppercase;
+  }
+  
+  .wallet-balance {
+    font-size: 48px;
+    font-weight: 800;
+    margin-top: 8px;
+  }
+  
+  /* Message Box */
+  .funding-message {
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  
+  .message-success {
+    background-color: #cde8d5;
+    color: #394b42;
+  }
+  
+  .message-error {
+    background-color: #ffe59d;
+    color: #7a6221;
+  }
+  
+  /* Section Headings */
+  .funding-section-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  /* Funding Method Cards */
+  .funding-method-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  @media (min-width: 600px) {
+    .funding-method-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .funding-method-card {
+    padding: 18px;
+    border-radius: 14px;
+    border: 2px solid #e2e8f0;
+    background: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .funding-method-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .funding-method-card.selected {
+    border-color: #a3c4f3;
+    background-color: #cde8d5;
+    transform: scale(1.03);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.10);
+  }
+  
+  /* Form Inputs */
+  .funding-input-label {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .funding-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2px solid #a3c4f3;
+    font-size: 16px;
+    color: #657080;
+  }
+  
+  .funding-input:focus {
+    outline: none;
+    border-color: #657080;
+    box-shadow: 0 0 0 3px rgba(163,196,243,0.3);
+  }
+  
+  /* Amount Input with $ symbol */
+  .amount-wrapper {
+    position: relative;
+  }
+  
+  .amount-dollar {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 26px;
+    font-weight: bold;
+    color: #657080;
+  }
+  
+  .amount-input {
+    padding-left: 42px;
+    font-size: 32px;
+    text-align: center;
+    font-weight: 700;
+    border-radius: 14px;
+    border: 2px solid #ffe59d;
+    color: #657080;
+  }
+  
+  .amount-input:focus {
+    outline: none;
+    border-color: #f2c54b;
+    box-shadow: 0 0 0 3px rgba(255,229,157,0.35);
+  }
+  
+  /* Submit Button */
+  .funding-submit-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background-color: #a3c4f3;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 14px rgba(163,196,243,0.5);
+  }
+  
+  .funding-submit-btn:hover {
+    transform: scale(1.02);
+  }
+  
+  .funding-submit-btn:active {
+    transform: scale(0.98);
+  }
+  
