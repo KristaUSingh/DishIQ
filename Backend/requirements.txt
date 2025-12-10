@@ -5,14 +5,14 @@ python-multipart
 pillow
 opencv-python
 
-torch==2.2.1
-transformers==4.39.3
-sentence-transformers==2.6.1
+torch
+transformers
+sentence-transformers
 ftfy
 regex
 tqdm
 
-ultralytics==8.1.0
+ultralytics
 
 numpy
 requests
