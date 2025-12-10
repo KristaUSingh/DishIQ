@@ -136,3 +136,7 @@ async def predict_food_url(url: str = Form(...)):
 @app.get("/")
 def home():
     return {"status": "Food Finder API is running!"}
+
+@app.get("/healthz")
+def health():
+    return {"status": "ok"}
