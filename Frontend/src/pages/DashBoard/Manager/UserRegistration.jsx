@@ -11,7 +11,7 @@ const UserRegistrations = () => {
   useEffect(() => {
     async function loadUsers() {
       try {
-        // 1️⃣ Get logged-in user (manager)
+        // Get logged-in user (manager)
         const { data: authData, error: authError } = await supabase.auth.getUser();
         if (authError) {
           console.error("Error fetching current user:", authError);
@@ -24,7 +24,7 @@ const UserRegistrations = () => {
           return;
         }
 
-        // 2️⃣ Get manager's restaurant
+        // Get manager's restaurant
         const { data: managerData, error: managerError } = await supabase
           .from("users")
           .select("restaurant_name, role")
@@ -40,7 +40,7 @@ const UserRegistrations = () => {
         const managerRestaurantId = managerData?.restaurant_name;
         setManagerRestaurant(managerRestaurantId);
 
-        // 3️⃣ Fetch all users
+        // Fetch all users
         const { data: allUsers, error: usersError } = await supabase
           .from("users")
           .select("*");
@@ -51,7 +51,7 @@ const UserRegistrations = () => {
           return;
         }
 
-        // 4️⃣ Filter users: exclude fired employees
+        // Filter users: exclude fired employees
         const filteredUsers = allUsers.filter(user => {
           if (user.fired_flag) return false; // exclude fired users
           if(user.role == "blacklist_customer") return false;
@@ -83,7 +83,35 @@ const UserRegistrations = () => {
       if (action === "Upgrade") updates.vip_flag = true;
       if (action === "Warning") updates.warnings = (user.warnings || 0) + 1;
       if (action === "Blacklist") updates.role = "blacklist_customer";
-    } else {
+    } 
+    else if (role === "close-account") {
+      if (action === "close-account") {
+        // 1️⃣ Delete from Supabase Auth table
+        const { error: authError } = await supabase.auth.admin.deleteUser(user.user_id);
+    
+        if (authError) {
+          console.error("Error deleting user from authentication table:", authError);
+        }
+    
+        // 2️⃣ Delete user profile row
+        const { error } = await supabase
+          .from("users")
+          .delete()
+          .eq("user_id", user.user_id);
+    
+        if (!error) {
+          // Remove from UI
+          setUsers(prev => prev.filter(u => u.user_id !== user.user_id));
+          setActiveMenu(null);
+        } else {
+          console.error("Error deleting user from users table:", error);
+        }
+    
+        return;
+      }
+    }
+    
+    else {
       if (action === "Demote") {
         updates = {
           demotion_count: (user.demotion_count || 0) + 1,
@@ -142,6 +170,10 @@ const UserRegistrations = () => {
                             <button onClick={() => handleAction("Warning", user)}>Warning</button>
                             <button onClick={() => handleAction("Blacklist", user)}>Blacklist</button>
                           </>
+                        ): role === "close-account" ? (
+                          <>
+                            <button onClick={() => handleAction("close-account", user)}>Close Account</button>
+                          </>
                         ) : (
                           <>
                             <button onClick={() => handleAction("Fire", user)}>Fire</button>
@@ -157,6 +189,7 @@ const UserRegistrations = () => {
                   Role: {role === "delivery_person" ? "Delivery Driver" :
                          role === "chef" ? "Chef" :
                          role === "manager" ? "Manager" :
+                         role === "close-account" ? "Close Account Request" :
                          "Customer"}
                 </p>
                 {user.salary != null && <p>Salary: ${user.salary}</p>}
