@@ -4,3 +4,4 @@ cache
 routers
 .env
 venv
+.DS_Store
