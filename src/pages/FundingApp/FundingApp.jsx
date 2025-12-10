@@ -21,7 +21,7 @@ const App = () => {
 
   const auth = JSON.parse(localStorage.getItem('auth'));
 
-  // ✅ NEW — Load current balance on mount
+  // Load current balance on mount
   useEffect(() => {
     const fetchBalance = async () => {
       if (!auth?.user_id) return;
@@ -374,9 +374,33 @@ const App = () => {
             Transfer Funds to Wallet
           </button>
         </form>
+        
+        <button
+          onClick={async () => {
+            if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+              try {
+                const { error } = await supabase
+                  .from('users')
+                  .update({ role: 'close-account' })
+                  .eq('user_id', auth.user_id);
+                
+                if (error) throw error;
+                
+                setMessage({ type: 'success', text: 'Account closure requested successfully.' });
+              } catch (err) {
+                console.error('Error closing account:', err);
+                setMessage({ type: 'error', text: 'Failed to close account. Please try again.' });
+              }
+            }
+          }}
+          className="w-full p-3 rounded-xl text-sm font-semibold text-white shadow-md transition duration-300 ease-in-out hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-opacity-50"
+          style={{ backgroundColor: '#ff6b6b', focus: { ringColor: '#ff6b6b' } }}
+        >
+          Delete Account
+        </button>
 
       </div>
-    </div>
+      </div>
   );
 };
 

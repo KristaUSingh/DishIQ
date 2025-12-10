@@ -29,12 +29,17 @@ function Login() {
 
       const user = data?.user;
 
-      const { data: profile } = await supabase
-        .from("users")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
+      const { data: profile, error: profileError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
 
+      if (profileError) {
+        console.error("PROFILE ERROR:", profileError);
+        setError("Profile not found. Create an account.");
+        return;
+  }
       // ✅ Save user globally
       setAuth({
         isLoggedIn: true,
