@@ -59,36 +59,39 @@ function Signup() {
       setError("Please select a restaurant.");
       return;
     }
-
     try {
-      // -----------------------------------
-      // 1️⃣ CREATE USER IN SUPABASE AUTH
-      // -----------------------------------
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/login`,
-        },
-      });
+  // -----------------------------------
+  // CREATE USER IN SUPABASE AUTH
+  // -----------------------------------
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
+    });
 
-      if (signUpError) throw signUpError;
+    if (signUpError) throw signUpError;
 
-      if (!data.user) {
-        setError("Signup failed. Try again.");
-        return;
-      }
+    if (!data.user) {
+      setError("Signup failed. Try again.");
+      return;
+    }
 
-      // Determine default salary per role
-      let salary = null;
-      if (role === "chef") salary = 70000;
-      if (role === "delivery_person") salary = 50000;
-      if (role === "manager") salary = 100000;
+    console.log("Auth user ID:", data.user.id); 
 
-      // -----------------------------------
-      // 2️⃣ INSERT INTO "users" TABLE
-      // -----------------------------------
-      const { error: dbError } = await supabase.from("users").insert([
+    // Determine default salary per role
+    let salary = null;
+    if (role === "chef") salary = 70000;
+    if (role === "delivery_person") salary = 50000;
+    if (role === "manager") salary = 100000;
+
+    // -----------------------------------
+    // INSERT INTO "users" TABLE
+    // -----------------------------------
+    const { data: insertedUser, error: dbError } = await supabase
+      .from("users")
+      .insert([
         {
           user_id: data.user.id,
           email,
@@ -99,16 +102,9 @@ function Signup() {
           restaurant_name:
             role === "chef" || role === "manager" ? restaurant : null,
         },
-      ]);
-
-      const { error: finance_Error } = await supabase.from("finance").insert([
-        {
-          customer_id: data.user.id,
-          balance: 0
-        },
-      ]);
-
-      if (finance_Error) throw finance_Error;
+      ])
+    .select()
+    .single();
 
       if (dbError?.code === "23505") {
         setError("Account already exists. Please login.");
@@ -117,9 +113,9 @@ function Signup() {
       if (dbError) throw dbError;
 
       // -----------------------------------
-      // 3️⃣ SUCCESS MESSAGE
+      // SUCCESS MESSAGE
       // -----------------------------------
-      setSuccess("Signup successful! Please check your email to verify your account.");
+      setSuccess("Signup successful!");
 
       // Redirect after short delay
       setTimeout(() => navigate("/login"), 2000);
