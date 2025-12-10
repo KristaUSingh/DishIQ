@@ -1,27 +1,27 @@
-fastapi==0.110.0
-uvicorn==0.29.0
+fastapi
+uvicorn
 
-python-multipart==0.0.9
-pillow==10.3.0
-opencv-python==4.9.0.80
+python-multipart
+pillow
+opencv-python
 
 torch==2.2.1
 transformers==4.39.3
 sentence-transformers==2.6.1
-ftfy==6.1.1
-regex==2024.5.15
-tqdm==4.66.2
+ftfy
+regex
+tqdm
 
 ultralytics==8.1.0
 
-numpy==1.26.4
-requests==2.31.0
-python-dotenv==1.0.1
+numpy
+requests
+python-dotenv
 
-google-generativeai==0.5.2
+google-generativeai
 
-pdfplumber==0.10.4
-unstructured==0.15.9
-unstructured-client==0.19.1
+pdfplumber
+unstructured
+unstructured-client
 
-supabase==2.4.0
+supabase
