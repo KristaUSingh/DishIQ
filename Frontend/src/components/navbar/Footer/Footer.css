@@ -1,0 +1,83 @@
+.footer{
+    color: #f8f7f3;
+    background-color: #657080;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 8vw;
+    padding-top: 40px;
+    margin-top: 60px;
+}
+.footer-content{
+    width: 100%;
+    min-width: 500px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.footer-content-left img{
+    width: 200px;
+    height: auto;
+    margin-bottom: 25px;
+}
+.footer-content-left, .footer-content-right, .footer-content-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.footer-content-left li, .footer-content-right li, .footer-content-center li{
+    list-style: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size:16px;
+}
+.footer-content-right h2, .footer-content-center h2{
+    color: #f8f7f3;
+}
+
+.footer-social-icons {
+    display: flex;
+    align-items: center;     /* keeps all icons aligned */
+    justify-content: start;
+    gap: 20px;
+}
+
+.footer-social-icons img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin: 0;               /* remove old spacing from each icon */
+}
+
+.footer hr{
+    width: 100%;
+    height: 1px;
+    margin: 20px 0 5px 0;
+    background-color: #657080;
+    border: none;
+}
+
+.footer-content-left {
+    justify-content: center;
+}
+
+.footer-copyright {
+    text-align: center;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px; 
+}
+
+/* Scale only the Instagram icon (2nd child) */
+.footer-social-icons img:nth-child(2) {
+    width: 58px;   /* slightly larger */
+    height: 58px;
+}
+
+.footer-content-left {
+    align-items: center !important;  /* center logo + icons */
+}
+
+

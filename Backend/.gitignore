@@ -1,0 +1,7 @@
+utils
+__pycache__
+cache
+routers
+.env
+venv
+.DS_Store

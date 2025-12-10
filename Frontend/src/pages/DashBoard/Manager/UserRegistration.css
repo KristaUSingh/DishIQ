@@ -1,0 +1,89 @@
+.user-dashboard-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.user-dashboard-container h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.user-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 250px;
+  transition: transform 0.2s;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+.user-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  justify-content: space-between; 
+}
+
+.user-info p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.dropdown-button {
+  cursor: pointer;
+  margin-left: 10px; 
+  font-size: 20px;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+.dropdown-button:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu {
+  display: none; 
+  position: absolute;
+  right: 0px;
+  margin-top: 5px;
+  min-width: 120px;
+  background-color: #a3c4fa;
+  border: 1px solid #a3c4fa;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 100;
+}

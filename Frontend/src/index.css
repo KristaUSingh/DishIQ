@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Outfit;
+}
+
+
+
+body{
+  min-height: 100vh;
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+
+@keyframes fadeIn{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* Prevents horizontal scrollbar if elements slightly exceed width */
+    overflow-x: hidden; 
+}
+
+/* In your global CSS file (e.g., index.css) */
+
+.main-content-wrapper {
+    /* 1. Center the content and prevent it from getting too wide on huge screens */
+    margin: 0 auto;    /* Centers the div horizontally */
+    
+    /* 2. Add padding on the left and right sides */
+    /* This ensures content doesn't touch the screen edge on smaller windows */
+}

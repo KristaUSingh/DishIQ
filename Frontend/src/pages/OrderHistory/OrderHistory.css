@@ -1,0 +1,106 @@
+.order-history-container {
+    padding: 40px;
+    background-color: #aac8f0;
+    min-height: 100vh;
+}
+
+  .order-history-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .no-orders-text {
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .order-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .order-date {
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  .order-info p {
+    margin: 6px 0;
+    font-size: 1rem;
+  }
+  
+  .order-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+  }
+  
+  .reviewed-card {
+    opacity: 0.75;
+    background: #e8f0ff;
+  }
+  
+  .review-box {
+    margin-top: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #ffc947;
+  }
+  
+  .review-btn {
+    background: #ffc947;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  /* Space between each dish row */
+.dish-row {
+    margin-bottom: 14px;  /* ADD SPACE HERE */
+  }
+  
+  /* Add space under each review button */
+  .review-btn {
+    margin-top: 6px;
+    margin-bottom: 12px; /* ADD SPACE HERE */
+  }
+  
+  /* Extra spacing before the driver review button */
+  .driver-btn {
+    margin-top: 20px !important;
+  }
+
+  .dish-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .review-btn {
+    padding: 10px 16px;
+    margin-top: 5px;
+  }
+  
+  .driver-btn {
+    margin-top: 14px;
+  }
+  
+  .disabled-review {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  
+  

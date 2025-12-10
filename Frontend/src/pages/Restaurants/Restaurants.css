@@ -1,0 +1,109 @@
+/* Styling for the entire dedicated Restaurants page */
+.restaurants-page {
+    padding: 60px 8%; 
+    background-color: #A3BFE7; /* Light blue background */
+    min-height: 100vh;
+}
+
+/* Header Section Styling */
+.restaurants-header-full {
+    margin-bottom: 50px;
+}
+
+.restaurants-header-full .title {
+    font-size: 3em;
+    color: #333; /* Darker title for contrast */
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.restaurants-header-full .subtitle {
+    font-size: 1.2em;
+    color: #4A6385; 
+    max-width: 900px;
+}
+
+/* Restaurant List Container (Grid Layout) */
+.restaurants-list-full-vertical {
+    display: grid;
+    /* Two columns for medium/large screens, stacking vertically */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    gap: 40px; 
+    padding: 20px 0;
+}
+
+/* Individual Restaurant Card Styling (Vertical Stack) */
+.restaurant-card-vertical {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff; /* White background for definition */
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer; 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-card-vertical:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Container (Visual Focus) */
+.restaurant-image-container-vertical {
+    width: 100%;
+    height: 220px; /* Consistent height for images */
+    overflow: hidden;
+}
+
+.restaurant-image-vertical {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    transition: transform 0.4s ease;
+}
+
+.restaurant-card-vertical:hover .restaurant-image-vertical {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Details Section */
+.restaurant-details-vertical {
+    padding: 25px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1; /* Ensures buttons align at the bottom if descriptions vary */
+}
+
+.restaurant-name-vertical {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #333; 
+    margin-bottom: 15px;
+}
+
+.restaurant-description-vertical {
+    font-size: 1.05em;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.view-menu-btn {
+    background-color: #4A6385; /* Blue button */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-menu-btn:hover {
+    background-color: #384e6f;
+}

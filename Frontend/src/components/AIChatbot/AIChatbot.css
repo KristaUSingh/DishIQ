@@ -1,0 +1,159 @@
+/* ============================ */
+/* FLOATING CHAT BUTTON */
+/* ============================ */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    background: #ffe59d;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.25s ease;
+    z-index: 999;
+  }
+  
+  .chat-toggle-btn:hover {
+    transform: scale(1.07);
+  }
+  
+  /* ============================ */
+  /* CHAT PANEL */
+  /* ============================ */
+  .chatbot-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 330px;
+    height: 440px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    animation: slideUp 0.3s ease;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .chatbot-header {
+    background: #ffe59d;
+    padding: 12px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 17px;
+  }
+  
+  .chatbot-messages {
+    padding: 10px;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+  
+  .chat-message {
+    margin-bottom: 10px;
+    padding: 7px;
+    border-radius: 6px;
+    max-width: 90%;
+    font-size: 14px;
+  }
+  
+  .ai-msg {
+    background: #e8f5ff;
+  }
+  
+  .user-msg {
+    background: #f1f1f1;
+    margin-left: auto;
+  }
+  
+  .loading-dots {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 10px;
+  }
+  
+  /* INPUT AREA */
+  .chat-input-area {
+    display: flex;
+    padding: 10px;
+    gap: 6px;
+  }
+  
+  .chat-input-area input {
+    flex-grow: 1;
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .chat-input-area button {
+    background: #a3c4f3;
+    border: none;
+    color: white;
+    padding: 0 15px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* RATING */
+  .rating-row {
+    margin-top: 5px;
+    border-top: 1px dotted #ccc;
+    padding-top: 4px;
+  }
+  
+  .rating-btn {
+    margin-right: 4px;
+    padding: 2px 5px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .rated-text {
+    color: #666;
+    font-size: 0.75rem;
+  }  
+
+  .chatbot-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+  }
+  
+  .chatbot-tab-btn {
+    flex: 1;
+    background: #f3f3f3;
+    padding: 8px;
+    margin: 0 5px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .chatbot-tab-btn.active {
+    background: #ffd778;
+  }
+  

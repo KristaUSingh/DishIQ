@@ -1,0 +1,131 @@
+.driver-transport-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.driver-transport-dashboard h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.transport-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.transport-card {
+  background: #cde8d5;
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.transport-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.transport-order {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.transport-status {
+  background: #4a90e2;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+/* ------------------ ACTION BUTTONS ------------------ */
+
+.action-btn-wrapper {
+  margin-top: 15px;
+}
+
+.action-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s ease-in-out;
+}
+
+.action-btn.pickedup {
+  background: #f5a623;
+}
+
+.action-btn.pickedup:hover {
+  background: #e38f17;
+}
+
+.action-btn.transit {
+  background: #4a90e2;
+}
+
+.action-btn.transit:hover {
+  background: #3a78c8;
+}
+
+.action-btn.delivered {
+  background: #52c41a;
+}
+
+.action-btn.delivered:hover {
+  background: #3aa212;
+}
+
+.empty-state-message {
+  text-align: center;
+  color: #555;
+  font-size: 16px;
+}
+
+.transport-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.transport-tabs button {
+  background: white;
+  border: 2px solid #aac4e8;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #2d3b55;
+  transition: 0.25s ease;
+}
+
+.transport-tabs button:hover {
+  background: #e9f1ff;
+}
+
+.transport-tabs button.active {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.transport-card.completed {
+  background-color: #d4eddc !important;
+}
+
+.transport-status.delivered {
+  background: #4bb543;
+  color: white;
+}

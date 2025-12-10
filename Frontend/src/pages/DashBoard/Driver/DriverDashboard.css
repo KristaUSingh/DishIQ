@@ -1,0 +1,16 @@
+.driver-dashboard-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.dashboard-section {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

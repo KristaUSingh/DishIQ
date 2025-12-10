@@ -1,0 +1,131 @@
+.food-item {
+    position: relative;
+    width: 320px;
+    border-radius: 14px;
+    background: #ccead1; /* soft green */
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.18);
+    transition: transform 0.2s ease;
+  }
+  
+  .food-item:hover {
+    transform: translateY(-4px);
+  }
+  
+  /* Image section */
+  .food-item-image-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .food-item-image {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 14px 14px 0 0;
+  }
+  
+  /* Add button */
+  .add-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #222;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  
+  .add-btn:hover {
+    background: black;
+    transform: scale(1.1);
+  }
+  
+  /* Info section */
+  .food-item-info {
+    padding: 16px;
+  }
+  
+  .food-item-name {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .restaurant-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2a6b3f;
+    margin-bottom: 10px;
+  }
+  
+  /* Rating row */
+  .food-item-rating {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+  }  
+
+  /* COUNTER MODE */
+.counter-wrapper {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    background: rgba(0,0,0,0.85);
+    padding: 6px 10px;
+    border-radius: 22px;
+    color: white;
+  }
+  
+  .counter-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #3abf54;
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .counter-btn:hover {
+    background: #2f9e46;
+  }
+  
+  .counter-qty {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    min-width: 12px;
+    text-align: center;
+  }
+
+  .chef-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #2d6a4f;
+    color: white;
+    font-size: 36px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* FIX: spacing above + centered */
+    margin: 15px auto 0;
+}
+
+  
+  

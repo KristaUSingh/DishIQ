@@ -1,0 +1,92 @@
+.kb-review-container {
+    padding: 40px;
+    max-width: 850px;
+    margin: auto;
+  }
+  
+  /* TITLE */
+  .kb-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px; /* add spacing below title */
+  }
+  
+  /* SUBTITLE */
+  .kb-subtitle {
+    text-align: center;
+    margin-bottom: 40px; /*  more spacing before the list */
+    font-size: 18px;
+    opacity: 0.75;
+  }
+  
+  /* EMPTY / LOADING MESSAGE */
+  .kb-loading,
+  .kb-none {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 40px; /*  spacing from subtitle */
+  }
+  
+  .kb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .kb-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #ffd2d2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  
+  .flagged {
+    background: #ffecec;
+  }
+  
+  .kb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .flag-badge {
+    background: #ff4d4d;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .kb-actions {
+    margin-top: 15px;
+  }
+  
+  .delete-btn {
+    background: #e63946;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }  
+
+  .keep-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: 600;
+  }
+  
+  .keep-btn:hover {
+    background-color: #3e9142;
+  }
+  

@@ -1,0 +1,99 @@
+.staff-rating-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.staff-rating-dashboard h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+.staff-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.staff-card {
+  background-color: #cde8d5;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 250px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.staff-card:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.staff-info {
+  margin-bottom: 0.5rem;
+}
+
+.staff-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.staff-role {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.staff-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.stars {
+  color: #52c41a;
+}
+
+.star.half {
+  color: #52c41a;
+}
+
+.rating-number {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.total-reviews {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  width: 24px;
+  height: 24px;
+}
+
+.svg-full path {
+  fill: #4CAF50;
+}
+
+.svg-empty path {
+  fill: #657080
+}
+
+.svg-half path {
+  fill: url(#half-fill);
+}
+

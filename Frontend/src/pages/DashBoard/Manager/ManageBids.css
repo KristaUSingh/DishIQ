@@ -1,0 +1,188 @@
+/* ================================
+   MANAGE BIDS DASHBOARD CONTAINER
+================================ */
+.manage-bids-dashboard {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  .manage-bids-dashboard h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.3rem;
+  }
+  
+  /* ================================
+     REQUEST CARD
+  ================================ */
+  .manager-card {
+    background-color: #f3f8ff;
+    padding: 1.3rem 1.5rem;
+    border-radius: 14px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dbe7ff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  
+  .manager-card h3 {
+    margin-bottom: 0.6rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+  
+  .manager-card h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  
+  .manager-card p {
+    margin: 4px 0;
+    line-height: 1.4;
+  }
+  
+  /* ================================
+     BID LIST
+  ================================ */
+  .bid-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+  
+  .bid-row {
+    background: #ffffff;
+    border: 2px solid #dce3f5;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .bid-row.lowest {
+    border-color: #4caf50;
+    background: #e8f7ea;
+  }
+  
+  .lowest-tag {
+    background: #4caf50;
+    color: white;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+  
+  /* ================================
+     APPROVE BUTTON
+  ================================ */
+  .approve-btn {
+    background-color: #4a90e2;
+    color: white;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease-in-out;
+  }
+  
+  .approve-btn:hover {
+    background-color: #3a78c8;
+    transform: translateY(-2px);
+  }
+  
+  .approve-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* ================================
+     MEMO BOX
+  ================================ */
+  .memo-box {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 12px;
+    border: 2px solid #d0dbf2;
+    border-radius: 10px;
+    min-height: 80px;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+    transition: 0.2s ease-in-out;
+  }
+  
+  .memo-box:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 6px rgba(74,144,226,0.4);
+  }
+  
+  /* ================================
+     EMPTY MESSAGE
+  ================================ */
+  .empty-state-message {
+    text-align: center;
+    font-weight: 500;
+    color: #666;
+    margin-top: 1.5rem;
+  }
+  
+  /* Extra spacing inside card sections */
+  .manager-card p,
+  .manager-card h4,
+  .bid-row p {
+    margin-bottom: 6px;
+  }  
+
+  .reject-btn {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+  
+  .reject-btn:hover {
+    background-color: #d9363e;
+    transform: translateY(-1px);
+  }
+  
+  .bid-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+/* Gray-out rejected bids */
+.bid-row.rejected {
+    background-color: #e6e6e6;
+    color: #777;
+    border: 1px solid #ccc;
+    opacity: 0.7;
+    pointer-events: none; /* makes buttons unclickable */
+  }
+  
+  /* Rejected tag label */
+  .rejected-tag {
+    background-color: #bfbfbf;
+    color: #444;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 6px;
+    margin-left: 8px;
+    font-weight: 600;
+  }
+  
+  
+  
