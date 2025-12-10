@@ -86,7 +86,7 @@ const incrementColumn = async (user_id, column, amount = 1) => {
 // ⭐ Update low/high rating
 if (ratingValue <= 2) {
   await incrementColumn(targetId, "low_rating_count");
-} else {
+} else if(ratingValue >=4) {
   await incrementColumn(targetId, "high_rating_count");
 }
 
