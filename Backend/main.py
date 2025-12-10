@@ -30,9 +30,10 @@ app.add_middleware(
 # ---------------------------------------------------------
 print("Loading CLIP model...")
 config = Config(
-    clip_model_name="ViT-L-14/openai",
-    caption_model_name="blip-large"
+    clip_model_name="ViT-B-32/openai",
+    caption_model_name=None
 )
+config.apply_low_vram_defaults()
 ci = Interrogator(config)
 print("CLIP model loaded.")
 
