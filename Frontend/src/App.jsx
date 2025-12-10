@@ -1,18 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar/navbar";
-import Footer from "./components/navbar/Footer/Footer";
-
 import Home from "./pages/Home/Home";
 import Restaurants from "./pages/Restaurants/Restaurants";
-import ContactUs from "./pages/Contact/ContactUs";
+import ContactUs from "./pages/Contact/ContactUs"; 
 import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
+import Footer from "./components/navbar/Footer/Footer";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import OrderHistory from "./pages/OrderHistory/OrderHistory";
 import CustomerFeedback from "./pages/CustomerFeedback/CustomerFeedback";
 import FundingApp from "./pages/FundingApp/FundingApp";
-import RestaurantMenu from "./pages/RestaurantMenu/RestaurantMenu";
 
 import ChefMenu from "./pages/DashBoard/Chef/ChefMenu";
 import ChefOrders from "./pages/DashBoard/Chef/ChefOrders";
@@ -31,168 +29,78 @@ import StaffRating from "./pages/DashBoard/Manager/StaffRating";
 import ManagerKBReview from "./pages/DashBoard/Manager/ManagerKBReview";
 import Finances from "./pages/DashBoard/Manager/Finances";
 
-import AIChatbot from "./components/AIChatbot/AIChatbot";
+import RestaurantMenu from "./pages/RestaurantMenu/RestaurantMenu";
 
 import { useAuth } from "./context/useAuth";
 
-/* ------------------------------------------------------
-   CUSTOMER LAYOUT — Chatbot + Navbar + Footer Wrapper
------------------------------------------------------- */
-function CustomerLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-
-      <div className="app main-content-wrapper">{children}</div>
-
-      {/* ⭐ Chatbot appears on ALL customer pages */}
-      <AIChatbot />
-
-      <Footer />
-    </>
-  );
-}
 
 function App() {
-  const { auth } = useAuth();
+  const { auth } = useAuth(); // <-- GLOBAL AUTH HERE
 
   return (
     <>
-      <Routes>
+      <div className="app main-content-wrapper">
+        <Navbar />
 
-        {/* ---------------------- CUSTOMER ROUTES ---------------------- */}
-        <Route
-          path="/"
-          element={
-            <CustomerLayout>
-              <Home />
-            </CustomerLayout>
-          }
-        />
+        <Routes>
+          {/* ---------------------- CUSTOMER ROUTES ---------------------- */}
 
-        <Route
-          path="/restaurant/:restaurantName"
-          element={
-            <CustomerLayout>
-              <RestaurantMenu />
-            </CustomerLayout>
-          }
-        />
+          <Route path="/" element={<Home />} />
+          <Route path="/restaurant/:restaurantName" element={<RestaurantMenu />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/order" element={<PlaceOrder />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/restaurants" element={<Restaurants />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path='/order-history' element={<OrderHistory />} />
+          <Route path='/customer-feedback' element={<CustomerFeedback />} />
+          {/* FIX: Changed path to '/deposit-account' to match the navbar link */}
+          <Route path='/deposit-account' element={<FundingApp />} /> 
 
-        <Route
-          path="/cart"
-          element={
-            <CustomerLayout>
-              <Cart />
-            </CustomerLayout>
-          }
-        />
 
-        <Route
-          path="/order"
-          element={
-            <CustomerLayout>
-              <PlaceOrder />
-            </CustomerLayout>
-          }
-        />
+          {/* ---------------------- CHEF ROUTES ---------------------- */}
 
-        <Route
-          path="/login"
-          element={
-            <CustomerLayout>
-              <Login />
-            </CustomerLayout>
-          }
-        />
+          <Route
+            path="/chef/menu"
+            element={<ChefMenu restaurant_name={auth?.restaurant_name} />}
+          />
 
-        <Route
-          path="/signup"
-          element={
-            <CustomerLayout>
-              <Signup />
-            </CustomerLayout>
-          }
-        />
+          <Route
+            path="/chef/orders"
+            element={<ChefOrders restaurant_name={auth?.restaurant_name} />}
+          />
 
-        <Route
-          path="/restaurants"
-          element={
-            <CustomerLayout>
-              <Restaurants />
-            </CustomerLayout>
-          }
-        />
+          <Route
+            path="/chef/feedback"
+            element={<Feedback restaurant_name={auth?.restaurant_name} />}
+          />
 
-        <Route
-          path="/contact"
-          element={
-            <CustomerLayout>
-              <ContactUs />
-            </CustomerLayout>
-          }
-        />
+          <Route
+            path="/chef/rating"
+            element={<Rating restaurant_name={auth?.restaurant_name} />}
+          />
 
-        <Route
-          path="/order-history"
-          element={
-            <CustomerLayout>
-              <OrderHistory />
-            </CustomerLayout>
-          }
-        />
+          {/* ---------------------- MANAGER ROUTES ---------------------- */}
 
-        <Route
-          path="/customer-feedback"
-          element={
-            <CustomerLayout>
-              <CustomerFeedback />
-            </CustomerLayout>
-          }
-        />
+          <Route path="/manager/user" element={<UserRegistration />} />
+          <Route path="/manager/manage-bids" element={<ManageBids />} />
+          <Route path="/manager/compliment-complaint" element={<ManagerCC />} />
+          <Route path="/manager/staffrating" element={<StaffRating />} />
+          <Route path="/manager/finances" element={<Finances />} />
+          <Route path="/manager/kb-review" element={<ManagerKBReview />} />
 
-        <Route
-          path="/deposit-account"
-          element={
-            <CustomerLayout>
-              <FundingApp />
-            </CustomerLayout>
-          }
-        />
+          {/* ---------------------- DRIVER ROUTES ---------------------- */}
 
-        {/* ---------------------- CHEF ROUTES ---------------------- */}
-        <Route
-          path="/chef/menu"
-          element={<ChefMenu restaurant_name={auth?.restaurant_name} />}
-        />
-        <Route
-          path="/chef/orders"
-          element={<ChefOrders restaurant_name={auth?.restaurant_name} />}
-        />
-        <Route
-          path="/chef/feedback"
-          element={<Feedback restaurant_name={auth?.restaurant_name} />}
-        />
-        <Route
-          path="/chef/rating"
-          element={<Rating restaurant_name={auth?.restaurant_name} />}
-        />
+          <Route path="/driver/bids" element={<DriverBid />} />
+          <Route path="/driver/transport" element={<DriverTransport />} />
+          <Route path="/driver/review-customers" element={<ReviewCustomers />} />
+          <Route path="/driver/ratings" element={<DriverRating />} />
 
-        {/* ---------------------- MANAGER ROUTES ---------------------- */}
-        <Route path="/manager/user" element={<UserRegistration />} />
-        <Route path="/manager/manage-bids" element={<ManageBids />} />
-        <Route path="/manager/compliment-complaint" element={<ManagerCC />} />
-        <Route path="/manager/staffrating" element={<StaffRating />} />
-        <Route path="/manager/finances" element={<Finances />} />
-        <Route path="/manager/kb-review" element={<ManagerKBReview />} />
+        </Routes>
+      </div>
 
-        {/* ---------------------- DRIVER ROUTES ---------------------- */}
-        <Route path="/driver/bids" element={<DriverBid />} />
-        <Route path="/driver/transport" element={<DriverTransport />} />
-        <Route path="/driver/review-customers" element={<ReviewCustomers />} />
-        <Route path="/driver/ratings" element={<DriverRating />} />
-
-      </Routes>
+      <Footer />
     </>
   );
 }
