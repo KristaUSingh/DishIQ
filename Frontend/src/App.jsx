@@ -33,9 +33,15 @@ import RestaurantMenu from "./pages/RestaurantMenu/RestaurantMenu";
 
 import { useAuth } from "./context/useAuth";
 
+// ⭐ Import Chatbot
+import AIChatbot from "./components/AIChatbot/AIChatbot";
 
 function App() {
-  const { auth } = useAuth(); // <-- GLOBAL AUTH HERE
+  const { auth } = useAuth();
+  const role = auth?.role || "guest";
+
+  // ⭐ Show chatbot ONLY for customers or guests
+  const showChatbot = role === "customer" || role === "guest";
 
   return (
     <>
@@ -55,9 +61,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path='/order-history' element={<OrderHistory />} />
           <Route path='/customer-feedback' element={<CustomerFeedback />} />
-          {/* FIX: Changed path to '/deposit-account' to match the navbar link */}
-          <Route path='/deposit-account' element={<FundingApp />} /> 
-
+          <Route path='/deposit-account' element={<FundingApp />} />
 
           {/* ---------------------- CHEF ROUTES ---------------------- */}
 
@@ -65,17 +69,14 @@ function App() {
             path="/chef/menu"
             element={<ChefMenu restaurant_name={auth?.restaurant_name} />}
           />
-
           <Route
             path="/chef/orders"
             element={<ChefOrders restaurant_name={auth?.restaurant_name} />}
           />
-
           <Route
             path="/chef/feedback"
             element={<Feedback restaurant_name={auth?.restaurant_name} />}
           />
-
           <Route
             path="/chef/rating"
             element={<Rating restaurant_name={auth?.restaurant_name} />}
@@ -96,9 +97,11 @@ function App() {
           <Route path="/driver/transport" element={<DriverTransport />} />
           <Route path="/driver/review-customers" element={<ReviewCustomers />} />
           <Route path="/driver/ratings" element={<DriverRating />} />
-
         </Routes>
       </div>
+
+      {/* ⭐ Chatbot appears ONLY for customer-facing pages */}
+      {showChatbot && <AIChatbot />}
 
       <Footer />
     </>
